@@ -1,0 +1,31 @@
+{
+  "name": "Polidium",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nw ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nekobato/Polidium.git"
+  },
+  "keywords": [],
+  "author": "nekobato",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nekobato/Polidium/issues"
+  },
+  "homepage": "https://github.com/nekobato/Polidium#readme",
+  "devDependencies": {
+    "grunt-nw-builder": "^2.0.0",
+    "nw": "^0.12.3"
+  },
+  "window": {
+    "frame": false,
+    "toolbar": false
+  },
+  "platformOverrides": {
+  }
+}
