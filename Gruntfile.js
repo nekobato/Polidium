@@ -1,11 +1,17 @@
-grunt.loadNpmTasks('grunt-nw-builder');
+module.exports = function(grunt) {
 
-grunt.initConfig({
-  nwjs: {
-    options: {
-        platforms: ['win','osx'],
-        buildDir: './webkitbuilds', // Where the build version of my NW.js app is saved
-    },
-    src: ['./example/public/**/*'] // Your NW.js app
-  },
-})
+  grunt.initConfig({
+    nwjs: {
+      options: {
+          platforms: ['osx'],
+          buildDir: './build',
+          version: '0.12.3'
+      },
+      src: ['./app/**/*']
+    }
+  })
+
+  grunt.loadNpmTasks('grunt-nw-builder');
+  grunt.registerTask('build', ['nwjs']);
+
+};
