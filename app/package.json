@@ -24,7 +24,9 @@
     "resizable": false,
     "always-on-top": true,
     "width": 600,
-    "height": 400
+    "height": 400,
+    "x": 0,
+    "y": 0
   },
   "platformOverrides": {}
 }

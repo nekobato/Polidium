@@ -1,4 +1,7 @@
 var gui = require('nw.gui');
 var win = gui.Window.get();
-win.setTransparent(!win.isTransparent);
-//gui.Window.get().setMaximumSize(0, screen.availHeight);
+gui.Screen.Init();
+var screens = gui.Screen.screens;
+
+win.width = screens[0].work_area.width;
+win.height = screens[0].work_area.height;
