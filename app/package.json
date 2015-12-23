@@ -18,6 +18,7 @@
     "nw": "^0.12.3"
   },
   "window": {
+    "icon": "./img/app_icon.png",
     "transparent": true,
     "toolbar": false,
     "frame": false,
@@ -28,5 +29,8 @@
     "x": 0,
     "y": 0
   },
-  "platformOverrides": {}
+  "platformOverrides": {},
+  "dependencies": {
+    "vue": "^1.0.12"
+  }
 }
