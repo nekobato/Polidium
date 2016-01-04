@@ -2,10 +2,10 @@ var WebpackNotifierPlugin = require('webpack-notifier');
 
 module.exports = {
   entry: {
-    "controller": "./src/controller.js"
+    "controller": "./src/script.js"
   },
   output: {
-    path: "./app",
+    path: "./",
     filename: "[name].js",
     publicPath: "/"
   },
