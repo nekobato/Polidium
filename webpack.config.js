@@ -2,7 +2,7 @@ var WebpackNotifierPlugin = require('webpack-notifier');
 
 module.exports = {
   entry: {
-    "web": "./src/web.js"
+    "controller": "./src/controller.js"
   },
   output: {
     path: "./app",
@@ -13,12 +13,15 @@ module.exports = {
     loaders: [
       {
         test: /\.(?:jpg|png|gif)$/,
-        loaders: ['file']
+        loader: "file"
       },
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: "babel"
+        loader: "babel",
+        query: {
+          presets: ['es2015']
+        }
       },
       {
         test: /\.jade$/,

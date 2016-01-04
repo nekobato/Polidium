@@ -2,33 +2,32 @@ var gui = require('nw.gui');
 var win = gui.Window.get();
 gui.Screen.Init();
 var screens = gui.Screen.screens;
+var CustomTrayMenu = require('./custom-tray');
 
-var tray, menu;
+var customTray;
+
+process.on('log', function(msg) { console.log(msg); });
 
 function init() {
 
-  win.width = screens[0].work_area.width;
-  win.height = screens[0].work_area.height;
+  // win.width = screens[0].work_area.width;
+  // win.height = screens[0].work_area.height;
 
   win.showDevTools();
 
-  trayMenu = new gui.Menu();
-  // https://github.com/nwjs/nw.js/wiki/MenuItem
-  // https://github.com/nwjs/nw.js/wiki/Menu
-  trayMenu.append(new gui.MenuItem({ label: 'Toggle Play <-> Stop' }));
-  trayMenu.append(new gui.MenuItem({ label: 'Preferences' }));
-  trayMenu.append(new gui.MenuItem({ type:  'separator' }));
-  trayMenu.append(new gui.MenuItem({ label: 'Quit Polidium' }));
-
-  tray = new gui.Tray({ icon: 'img/tray_icon.png' });
-  tray.menu = trayMenu;
-  process.emit('log', 'Add tray icon');
-
-  tray.click = function() {
-    process.emit('log', 'tray clicked');
-  };
+  if (!customTray) {
+    customTray = new CustomTrayMenu();
+  }
 
   // gui.App.quit();
 }
 
 init();
+
+var fs = require('fs');
+
+files = fs.readdirSync('/Users/nekobato');
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelector('#dir').innerText = files;
+}, false );

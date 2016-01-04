@@ -19,18 +19,15 @@
   },
   "window": {
     "icon": "./img/app_icon.png",
-    "transparent": true,
-    "toolbar": false,
-    "frame": false,
+    "transparent": false,
+    "toolbar": true,
+    "frame": true,
     "resizable": false,
-    "always-on-top": true,
+    "always-on-top": false,
     "width": 600,
     "height": 400,
-    "x": 0,
-    "y": 0
+    "x": 100,
+    "y": 100
   },
-  "platformOverrides": {},
-  "dependencies": {
-    "vue": "^1.0.12"
-  }
+  "platformOverrides": {}
 }
