@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
-    "webpack": "webpack"
+    "webpack": "webpack",
+    "build": "electron-packager ./build Polidium --platform=mac --arch=x64 --asar"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,7 @@
     "babel-loader": "^6.2.0",
     "babel-preset-es2015": "^6.3.13",
     "css-loader": "^0.21.0",
+    "electron-packager": "^5.2.0",
     "electron-prebuilt": "^0.36.2",
     "file-loader": "^0.8.4",
     "img-loader": "^1.2.0",

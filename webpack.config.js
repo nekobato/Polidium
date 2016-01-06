@@ -9,6 +9,7 @@ module.exports = {
     filename: "[name].js",
     publicPath: "/"
   },
+  target: "atom",
   module: {
     loaders: [
       {
