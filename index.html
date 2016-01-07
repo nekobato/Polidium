@@ -3,23 +3,11 @@
   <head>
     <meta charset="UTF-8"/>
     <title>Read Us</title>
+    <link rel="stylesheet" href="./vendor/materialize/css/materialize.min.css">
     <script src="./script.js" async defer></script>
   </head>
-  <style>
-body {
-  background-color: #fff;
-}
-  </style>
   <body id="polidium">
-    <div class="container">
-
-      <div class="page-header">
-        <h1>Electron app</h1>
-      </div>
-
-      <p v-for="file in files">{{files[$index]}}</p>
-
-    </div> <!-- .container -->
-
+    <player></player>
+    <controller></controller>
   </body>
 </html>

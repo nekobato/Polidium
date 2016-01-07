@@ -1,15 +1,22 @@
 var WebpackNotifierPlugin = require('webpack-notifier');
+var webpack = require('webpack');
 
 module.exports = {
   entry: {
-    "controller": "./src/script.js"
+    "script": "./src/script.js"
   },
   output: {
     path: "./",
     filename: "[name].js",
     publicPath: "/"
   },
-  target: "atom",
+  resolve: {
+    extensions: ['', '.js']
+  },
+  target: "node",
+  node: {
+    __dirname: false,
+  },
   module: {
     loaders: [
       {
@@ -25,6 +32,10 @@ module.exports = {
         }
       },
       {
+        test: /\.json$/,
+        loaders: ['json']
+      },
+      {
         test: /\.jade$/,
         loader: "jade"
       },
@@ -35,6 +46,7 @@ module.exports = {
     ]
   },
   plugins: [
+    new webpack.ExternalsPlugin('commonjs', ['electron', 'screen', 'remote']),
     new WebpackNotifierPlugin({title: 'Webpack'}),
   ],
   devtool: "#source-map",
