@@ -2,11 +2,12 @@
   "name": "Polidium-Project",
   "version": "1.0.0",
   "description": "Polid Movie Screen",
-  "main": "app/index.html",
+  "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nw ./app --disable-gpu --force-cpu-draw",
-    "build": "grunt build"
+    "start": "electron .",
+    "webpack": "webpack",
+    "build": "electron-packager . Polidium --platform=darwin --arch=x64 --version=0.36.2"
   },
   "repository": {
     "type": "git",
@@ -20,29 +21,27 @@
   },
   "homepage": "https://github.com/nekobato/Polidium#readme",
   "devDependencies": {
-    "grunt-cli": "^0.1.13",
-    "grunt-nw-builder": "^2.0.0",
-    "nw": "^0.12.3",
+    "babel-core": "^6.3.26",
+    "babel-loader": "^6.2.0",
+    "babel-preset-es2015": "^6.3.13",
     "css-loader": "^0.21.0",
-    "file-loader": "^0.8.4",
+    "electron-packager": "^5.2.0",
+    "electron-prebuilt": "^0.36.2",
+    "file-loader": "^0.8.5",
     "img-loader": "^1.2.0",
     "jade": "^1.11.0",
     "jade-loader": "^0.7.1",
+    "json-loader": "^0.5.4",
     "style-loader": "^0.13.0",
+    "stylus-loader": "^1.4.2",
     "webpack": "^1.12.9",
     "webpack-dev-server": "^1.12.1",
     "webpack-notifier": "^1.2.1"
   },
-  "window": {
-    "icon": "./app/img/app_icon.png",
-    "transparent": true,
-    "toolbar": false,
-    "frame": false,
-    "resizable": false,
-    "always-on-top": true,
-    "width": 600,
-    "height": 400,
-    "fullscreen": true
-  },
-  "platformOverrides": {}
+  "dependencies": {
+    "axios": "^0.8.1",
+    "materialize-css": "^0.97.5",
+    "superagent": "^1.6.1",
+    "vue": "^1.0.13"
+  }
 }

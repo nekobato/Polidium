@@ -1,24 +1,39 @@
 var WebpackNotifierPlugin = require('webpack-notifier');
+var webpack = require('webpack');
 
 module.exports = {
   entry: {
-    "web": "./src/web.js"
+    "script": "./src/script.js"
   },
   output: {
-    path: "./app",
+    path: "./",
     filename: "[name].js",
     publicPath: "/"
+  },
+  resolve: {
+    extensions: ['', '.js']
+  },
+  target: "node",
+  node: {
+    __dirname: false,
   },
   module: {
     loaders: [
       {
         test: /\.(?:jpg|png|gif)$/,
-        loaders: ['file']
+        loader: "file"
       },
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: "babel"
+        loader: "babel",
+        query: {
+          presets: ['es2015']
+        }
+      },
+      {
+        test: /\.json$/,
+        loaders: ['json']
       },
       {
         test: /\.jade$/,
@@ -31,6 +46,7 @@ module.exports = {
     ]
   },
   plugins: [
+    new webpack.ExternalsPlugin('commonjs', ['electron', 'screen', 'remote']),
     new WebpackNotifierPlugin({title: 'Webpack'}),
   ],
   devtool: "#source-map",

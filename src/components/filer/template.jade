@@ -1,0 +1,12 @@
+ul.collection.filer-component(v-el:nav)
+  li.collection-item.not-selectable.file-depth
+    i.fa.fa-spinner.fa-pulse(v-show='reaction.loadingDir')
+    i.mdi-navigation-chevron-right(
+      v-for='file in depth' v-on:click='onSelectDepth(file, $index)')
+    span(v-if='depth[0]') {{depth[depth.length-1].name}}
+  li.collection-item.file-item(
+    v-for='file in filelist'
+    v-on:click='selectItem(file)')
+    span
+      i(:class='file | file2IconName')
+    span.truncate {{file.name}}
