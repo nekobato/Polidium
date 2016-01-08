@@ -74,6 +74,6 @@ export default {
     }
   },
   ready: function() {
-    this.getDir({ path: '/Users/nekobato/', name: '/' });
+    this.getDir({ path: '/Users', name: '/' });
   }
 }
