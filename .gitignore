@@ -1,4 +1,7 @@
 node_modules
 .DS_Store
 cache
-
+build
+npm-debug.log
+*.map
+script.js
