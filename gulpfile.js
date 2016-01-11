@@ -16,7 +16,7 @@ const buildOption = {
   asar: false,
   prune: true,
   overwrite: true,
-  icon: './app.icon',
+  icon: './Polidium',
   out: './release'
 }
 
