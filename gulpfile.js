@@ -13,7 +13,7 @@ const buildOption = {
   'app-bundle-id': `${appPackage.author}.${appPackage.name}`,
   'app-version': appPackage.version,
   'build-version': appPackage.version,
-  asar: false,
+  asar: true,
   prune: true,
   overwrite: true,
   icon: './Polidium',

@@ -23,6 +23,7 @@ app.on('ready', function() {
     frame: false,
     transparent: true,
     alwaysOnTop: true,
+    'skip-taskbar': true
   });
 
   win.center();
