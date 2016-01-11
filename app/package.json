@@ -1,0 +1,12 @@
+{
+  "name": "Polidium",
+  "version": "0.0.1",
+  "description": "Polid Movie Screen",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "nekobato",
+  "dependencies": {},
+  "devDependencies": {}
+}

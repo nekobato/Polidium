@@ -1,6 +1,7 @@
 const electron = require('electron');
 const app = electron.app;
 const Tray = electron.Tray;
+const nativeImage = electron.nativeImage;
 const BrowserWindow = electron.BrowserWindow;
 const globalShortcut = electron.globalShortcut;
 
@@ -9,7 +10,7 @@ var clickThru = true;
 
 app.on('ready', function() {
 
-  var Screen = require('screen');
+  const Screen = require('screen');
   var size = Screen.getPrimaryDisplay().size;
 
   win = new BrowserWindow({
@@ -35,7 +36,8 @@ app.on('ready', function() {
   win.loadURL('file://' + __dirname + '/index.html');
   win.show();
 
-  tray = new Tray('./resource/tray_icon@5x.png');
+  trayIcon = nativeImage.createFromPath(__dirname + '/tray_icon.png');
+  tray = new Tray(trayIcon);
 
   tray.on('click', function(event, bounds) {
     toggleController();
@@ -50,7 +52,6 @@ app.on('ready', function() {
     win.setIgnoreMouseEvents(clickThru);
     win.webContents.send('controller:toggle');
   }
-
 });
 
 app.on('will-quit', function() {

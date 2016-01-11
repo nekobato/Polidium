@@ -5,3 +5,4 @@ build
 npm-debug.log
 *.map
 script.js
+release
