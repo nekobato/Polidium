@@ -8,6 +8,10 @@ Polid Screen on Desktop
 
 https://github.com/nekobato/Polidium/releases
 
+nekobato本人が使用できる状態をreleaseとしているので、動作異常の報告をお待ちしています
+
+https://github.com/nekobato/Polidium/issues
+
 ## 使い方
 
 - Click taskbar icon
