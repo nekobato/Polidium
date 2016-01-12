@@ -14,3 +14,4 @@ https://github.com/nekobato/Polidium/releases
  - ![](https://gyazo.com/767fb7a937854ccad2ae212d5a4c3712.png)
 - Select movie file
 
+ファイラーが出ている状態だとclick-throughは効きません
