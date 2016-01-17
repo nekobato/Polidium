@@ -1,0 +1,12 @@
+nav
+  div.nav-wrapper
+    ul
+      li(v-on:click="selectTab('web')")
+        i.fa.fa-chrome
+        span WEB
+      li(v-on:click="selectTab('file')")
+        i.fa.fa-film
+        span FILE
+      li(v-on:click="selectTab('service')")
+        i.fa.fa-youtube-play
+        span SERVICE

@@ -1,5 +1,6 @@
 import style from './style.styl';
 import filer from '../filer';
+import navbar from '../navbar';
 
 export default {
   template: require('./template.jade')(),
@@ -9,11 +10,15 @@ export default {
     }
   },
   components: {
+    navbar: navbar
     filer: filer
   },
   events: {
     'controller:toggle': function() {
       this.toggle();
+    },
+    'navTab:selected': function(tabName) {
+      // TODO anything
     }
   },
   methods: {
