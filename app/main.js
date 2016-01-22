@@ -5,6 +5,8 @@ const nativeImage = electron.nativeImage;
 const BrowserWindow = electron.BrowserWindow;
 const globalShortcut = electron.globalShortcut;
 
+const DEBUG = process.env.DEBUG ? true : false
+
 var win, tray;
 var clickThru = true;
 
@@ -27,8 +29,8 @@ app.on('ready', function() {
   });
 
   win.center();
-  win.setIgnoreMouseEvents(clickThru);
-  win.setVisibleOnAllWorkspaces(true);
+  win.setIgnoreMouseEvents(DEBUG ? false : clickThru);
+  win.setVisibleOnAllWorkspaces(!DEBUG);
 
   win.on('closed', function() {
     win = null;
@@ -45,7 +47,7 @@ app.on('ready', function() {
   });
 
   var ret = globalShortcut.register('ctrl+P', function() {
-    toggleController();
+    if (!DEBUG) toggleController();
   });
 
   function toggleController() {

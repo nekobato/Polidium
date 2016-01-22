@@ -10,7 +10,7 @@ export default {
     }
   },
   components: {
-    navbar: navbar
+    navbar: navbar,
     filer: filer
   },
   events: {
