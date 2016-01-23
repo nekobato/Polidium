@@ -1,12 +1,5 @@
-nav
+nav.navbar.blue-grey.lighten-5
   div.nav-wrapper
     ul
-      li(v-on:click="selectTab('web')")
-        i.fa.fa-chrome
-        span WEB
-      li(v-on:click="selectTab('file')")
-        i.fa.fa-film
-        span FILE
-      li(v-on:click="selectTab('service')")
-        i.fa.fa-youtube-play
-        span SERVICE
+      li(v-for="tab in tabs" v-on:click="selectTab(tab.id)")
+        a.blue-text.text-darken-2 {{tab.name}}

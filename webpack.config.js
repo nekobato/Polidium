@@ -20,8 +20,12 @@ module.exports = {
   module: {
     loaders: [
       {
-        test: /\.(?:jpg|png|gif)$/,
-        loader: "file"
+        test: /.(gif|jpg|png)(\?[a-z0-9=\.]+)?$/,
+        loader: 'url?name=img/[name].[ext]&limit=100000'
+      },
+      {
+        test: /.(woff2?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/,
+        loader: 'url?name=font/[name].[ext]&limit=100000'
       },
       {
         test: /\.js$/,
@@ -42,6 +46,10 @@ module.exports = {
       {
         test: /\.styl$/,
         loader: "style!css!stylus"
+      },
+      {
+        test: /\.css$/,
+        loader: "style!css"
       },
     ]
   },

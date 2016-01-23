@@ -4,4 +4,6 @@ cache
 build
 npm-debug.log
 *.map
-script.js
+app/script.js
+app/font
+app/img

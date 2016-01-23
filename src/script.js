@@ -1,6 +1,10 @@
 const renderer = require('electron').ipcRenderer
 import Vue from 'vue';
+
 import style from './style.styl';
+import materializeCss from 'materialize-css/dist/css/materialize.min.css';
+import fontAwesome from  'font-awesome/css/font-awesome.min.css';
+
 import controller from './components/controller';
 import player from './components/player';
 

@@ -24,7 +24,7 @@ app.on('ready', function() {
     resizable: false,
     frame: false,
     transparent: true,
-    alwaysOnTop: true,
+    alwaysOnTop: DEBUG ? false : true,
     'skip-taskbar': true
   });
 
