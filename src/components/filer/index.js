@@ -43,7 +43,6 @@ export default {
       this.$emit('getDir', file);
     },
     getDir: function(file) {
-      console.log(file);
       this.$data.reaction.loadingDir = true;
 
       if (fs.statSync(file.path).isDirectory()) {
@@ -68,6 +67,7 @@ export default {
     },
     addDepth: function(file) {
       this.$data.depth.push(file);
+      console.log(this.$data.depth);
     },
     addFilesAll: function() {
       this.$dispatch('all', 'files:get', this.$data.filelist);

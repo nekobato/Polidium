@@ -10,5 +10,6 @@ nav.breadcrumb-wrapper.blue-grey.lighten-2
   div.nav-wrapper
     i.left.material-icons(v-show='reaction.loadingDir') wifi
     div.col.s12
+      a.breadcrumb
       a.breadcrumb(v-for='file in depth' v-on:click='onSelectDepth(file, $index)')
       span {{depth[depth.length-1].name}}
