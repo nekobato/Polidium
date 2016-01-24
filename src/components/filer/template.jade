@@ -1,14 +1,14 @@
-div.filer-container
-  nav
-    div.nav-wrapper
-      i.fa.fa-spinner.fa-pulse(v-show='reaction.loadingDir')
-      i.material-icons(
-        v-for='file in depth' v-on:click='onSelectDepth(file, $index)') search
-      span(v-if='depth[0]') {{depth[depth.length-1].name}}
+div.filer-wrapper.z-depth-1
   ul.collection(v-el:nav)
     li.collection-item.file-item(
       v-for='file in filelist'
       v-on:click='selectItem(file)')
-      span
-        i(:class='file | file2IconName')
+      span.badge
+        i.material-icons(v-text='file | file2IconName')
       span.truncate {{file.name}}
+nav.breadcrumb-wrapper.blue-grey.lighten-2
+  div.nav-wrapper
+    i.left.material-icons(v-show='reaction.loadingDir') wifi
+    div.col.s12
+      a.breadcrumb(v-for='file in depth' v-on:click='onSelectDepth(file, $index)')
+      span {{depth[depth.length-1].name}}

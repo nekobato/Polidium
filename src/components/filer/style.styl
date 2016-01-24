@@ -1,9 +1,32 @@
 @require '../../variable'
 
-.filer-container {
+.breadcrumb-wrapper {
   display: inline-block;
   position: absolute;
   top: $navbar-height;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: $breadcrumb-height;
+  line-height: $breadcrumb-height;
+
+  span {
+    vertical-align: top;
+  }
+
+  .breadcrumb {
+    margin: 0 5px;
+
+    &:before {
+      margin: 0;
+    }
+  }
+}
+
+.filer-wrapper {
+  display: inline-block;
+  position: absolute;
+  top: $navbar-height + $breadcrumb-height;
   right: 0;
   bottom: 0;
   left: 0;

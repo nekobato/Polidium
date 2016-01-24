@@ -5,9 +5,9 @@ export default {
   data: function() {
     return {
       tabs: [
-        { id: 'file', name: 'FILE' },
-        { id: 'web', name: 'WEB' },
-        { id: 'SERVICE', name: 'SERVICE' },
+        { id: 'file', name: 'FILE', enabled: true },
+        { id: 'web', name: 'WEB', enabled: false },
+        { id: 'SERVICE', name: 'SERVICE', enabled: false },
       ]
     }
   },

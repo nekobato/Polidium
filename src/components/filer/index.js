@@ -18,9 +18,9 @@ export default {
   filters: {
     file2IconName: function(file) {
       if (/\.(mp4|mpe?g)$/.test(file.name)) {
-        return "fa fa-music";
+        return "video_library";
       } if (file.type === "directory") {
-        return "fa fa-folder";
+        return "folder";
       }
     }
   },

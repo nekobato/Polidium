@@ -7,3 +7,5 @@ npm-debug.log
 app/script.js
 app/font
 app/img
+release/*
+!release/*.zip
