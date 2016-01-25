@@ -29,8 +29,8 @@ app.on('ready', function() {
   });
 
   win.center();
-  win.setIgnoreMouseEvents(DEBUG ? false : clickThru);
-  win.setVisibleOnAllWorkspaces(!DEBUG);
+  win.setIgnoreMouseEvents(clickThru);
+  win.setVisibleOnAllWorkspaces(DEBUG ? false : true);
 
   win.on('closed', function() {
     win = null;
@@ -47,7 +47,7 @@ app.on('ready', function() {
   });
 
   var ret = globalShortcut.register('ctrl+P', function() {
-    if (!DEBUG) toggleController();
+    toggleController();
   });
 
   function toggleController() {

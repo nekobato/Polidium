@@ -6,7 +6,7 @@ export default {
   template: require('./template.jade')(),
   data: function() {
     return {
-      show: true
+      show: false
     }
   },
   components: {
@@ -15,15 +15,12 @@ export default {
   },
   events: {
     'controller:toggle': function() {
-      this.toggle();
+      this.show = this.show ? false : true;
     },
     'navTab:selected': function(tabName) {
       // TODO anything
     }
   },
   methods: {
-    toggle: function() {
-      this.show = this.show ? false : true;
-    }
   }
 }

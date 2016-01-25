@@ -7,16 +7,16 @@ export default {
     return {
       player: {
         src: null,
-        controls: true
+        controls: false
       }
     };
   },
   events: {
     'files:get': function(files) {
-      this.$data.player.src = files[0].path
+      this.player.src = files[0].path
     },
     'controller:toggle': function() {
-      this.$data.player.control = this.$data.player.control ? false : true;
+      this.player.controls = this.player.controls ? false : true;
     }
   }
 }
