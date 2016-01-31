@@ -12,7 +12,10 @@ module.exports = {
     publicPath: "/"
   },
   resolve: {
-    extensions: ['', '.js']
+    extensions: ['', '.js'],
+    root: [
+      path.resolve('./src/')
+    ]
   },
   target: "node",
   node: {

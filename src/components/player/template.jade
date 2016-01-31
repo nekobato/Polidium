@@ -1,1 +1,9 @@
-<video class="video-player" :src="player.src" autoplay v-bind="{ controls: player.controls }"></video>
+video.video-player(
+  v-if='playMode === "video"'
+  autoplay
+  v-bind='{ controls: player.controls, src: player.src }'
+)
+iframe.web-player(
+  v-if='playMode === "web"'
+  v-bind='{ src: player.src }'
+)

@@ -57,6 +57,11 @@ app.on('ready', function() {
   }
 });
 
+app.on('login', function(event, webContents, request, authInfo, callback) {
+  event.preventDefault();
+  callback('pitecan', 'masu1lab');
+})
+
 app.on('will-quit', function() {
   globalShortcut.unregisterAll();
 });

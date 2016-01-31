@@ -5,14 +5,15 @@ export default {
   data: function() {
     return {
       tabs: [
-        { id: 'file', name: 'FILE', available: true }
+        { id: 'filer', name: 'FILE', available: true },
+        { id: 'web', name: 'WEB', available: false }
       ]
     }
   },
   methods: {
-    selectTab: function(tabName) {
+    selectTab: function(tab) {
       // tabName = web || file || service
-      this.dispatch('navTab:selected', tabName);
+      this.$dispatch('navTab:selected', tab);
     }
   }
 }
