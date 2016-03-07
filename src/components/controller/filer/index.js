@@ -1,4 +1,5 @@
 const remote = require('remote');
+const ipcRenderer = require('electron').ipcRenderer;
 const fs = remote.require('fs');
 const path = remote.require('path');
 import style from './style.styl';
@@ -31,11 +32,10 @@ export default {
   },
   methods: {
     selectItem: function(file) {
-      console.log(file);
       if (file.type === 'directory') {
         this.$emit('getDir', file);
       } else if (file.type === 'file') {
-        this.$dispatch('all', 'files:get', [file]);
+        ipcRenderer.send('filer:selectFile', file);
       }
     },
     onSelectDepth: function(file, depth) {
@@ -67,7 +67,6 @@ export default {
     },
     addDepth: function(file) {
       this.$data.depth.push(file);
-      console.log(this.$data.depth);
     },
     addFilesAll: function() {
       this.$dispatch('all', 'files:get', this.$data.filelist);

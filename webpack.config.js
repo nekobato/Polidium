@@ -4,10 +4,11 @@ var path = require('path');
 
 module.exports = {
   entry: {
-    "script": "./src/script.js"
+    "controller": "./src/controller.js",
+    "player": "./src/player.js"
   },
   output: {
-    path: "./app",
+    path: "./app/js",
     filename: "[name].js",
     publicPath: "/"
   },

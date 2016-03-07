@@ -3,7 +3,3 @@ video.video-player(
   autoplay
   v-bind='{ controls: player.controls, src: player.src }'
 )
-iframe.web-player(
-  v-if='playMode === "web"'
-  v-bind='{ src: player.src }'
-)

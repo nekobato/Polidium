@@ -18,7 +18,7 @@ module.exports = class {
       show: false,
       resizable: false,
       frame: false,
-      transparent: false,
+      transparent: true,
       'skip-taskbar': true
     });
 
@@ -26,7 +26,7 @@ module.exports = class {
       this.win.hide();
     });
 
-    win.loadURL('file://' + __dirname + '/controller.html');
+    this.win.loadURL('file://' + __dirname + '/controller.html');
   }
 
   show(x) {

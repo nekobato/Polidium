@@ -1,5 +1,8 @@
+<<<<<<< HEAD
+=======
 "use strict"
 
+>>>>>>> 84b5a22a965018ea9a3916fe7bce462e5668f9aa
 const electron = require('electron');
 const BrowserWindow = electron.BrowserWindow;
 
@@ -19,15 +22,15 @@ module.exports = class {
       resizable: false,
       frame: true,
       transparent: true,
-      alwaysOnTop: false,
+      alwaysOnTop: true,
       'skip-taskbar': true
     });
 
     this.win.center();
     this.win.setIgnoreMouseEvents(true);
-    this.win.setVisibleOnAllWorkspaces(false);
+    this.win.setVisibleOnAllWorkspaces(true);
 
-    this.win.loadURL('file://' + __dirname + '/index.html');
+    this.win.loadURL('file://' + __dirname + '/player.html');
   }
 
   show() {

@@ -14,16 +14,13 @@ export default {
   data: function() {
     return {
       show: true,
-      currentView: 'web'
+      currentView: 'filer'
     }
   },
   components: {
     navbar: navbar
   },
   events: {
-    'controller:toggle': function() {
-      this.show = this.show ? false : true;
-    },
     'navTab:selected': function(tab) {
       this.currentView = tab.id;
     }

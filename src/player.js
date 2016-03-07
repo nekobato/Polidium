@@ -1,11 +1,16 @@
-const remote = require('remote');
-const electron = remote.require('electron');
+const renderer = require('electron').ipcRenderer
+import Vue from 'vue';
 
-import template from './template.jade';
-import style from './style.styl';
+import style from './player/style.styl';
 
-export default {
-  template: template(),
+import videoPlayer from './components/player/video-player';
+
+new Vue({
+  el: 'body',
+  comoponents: {
+    'video-player': videoPlayer,
+    // 'web-player': webPlayer // TODO
+  },
   data: function() {
     return {
       player: {
@@ -18,7 +23,7 @@ export default {
   events: {
     'files:get': function(files) {
       this.playMode = 'video'
-      this.player.src = files[0].path
+      this.player.src = files.path
     },
     'web:get': function(url) {
       this.playMode = 'web'
@@ -27,5 +32,6 @@ export default {
     'controller:toggle': function() {
       this.player.controls = this.player.controls ? false : true;
     }
-  }
-}
+  },
+  ready: function() {}
+});
