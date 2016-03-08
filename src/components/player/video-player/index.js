@@ -1,5 +1,5 @@
 import template from './template.jade';
-import style from './style.styl';
+// import style from './style.styl';
 
 export default {
   template: template(),
@@ -7,6 +7,7 @@ export default {
     return {
       src: null,
       controls: false
+    }
   },
   events: {
     'files:get': function(file) {
@@ -16,3 +17,4 @@ export default {
       this.controls = this.controls ? false : true;
     }
   }
+}

@@ -1,7 +1,7 @@
 const renderer = require('electron').ipcRenderer
 import Vue from 'vue';
 
-import style from './player/style.styl';
+import style from './components/player/style.styl';
 
 import videoPlayer from './components/player/video-player';
 

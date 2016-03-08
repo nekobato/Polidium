@@ -4,8 +4,8 @@ cache
 build
 npm-debug.log
 *.map
-app/script.js
 app/font
 app/img
+app/js
 release/*
 !release/*.zip
