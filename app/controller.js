@@ -1,6 +1,7 @@
 "use strict"
 
 const electron = require('electron');
+const ipcMain = electron.ipcMain;
 const BrowserWindow = electron.BrowserWindow;
 
 const WINDOW_WIDTH = 400;
@@ -29,9 +30,22 @@ module.exports = class {
     this.win.loadURL('file://' + __dirname + '/controller.html');
   }
 
-  show(x) {
+  showWindow(x) {
     this.win.setPosition(x - WINDOW_WIDTH/2, 0);
     this.win.show();
     this.win.focus();
   }
+
+  toggle(x) {
+    if (this.win.isVisible()) {
+      this.win.hide();
+    }else {
+      this.showWindow(x);
+    }
+  }
 }
+
+ipcMain.on('filer:selectFile', function(event, arg) {
+  console.log(arg);
+  event.sender.send('filer:selectFile', arg);
+});

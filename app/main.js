@@ -22,7 +22,7 @@ app.on('ready', function() {
   tray = new Tray(trayIcon);
 
   tray.on('click', function(event, bounds) {
-    controller.show(bounds.x);
+    controller.toggle(bounds.x);
   });
 
   player.show();

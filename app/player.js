@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-=======
 "use strict"
 
->>>>>>> 84b5a22a965018ea9a3916fe7bce462e5668f9aa
 const electron = require('electron');
 const BrowserWindow = electron.BrowserWindow;
 
