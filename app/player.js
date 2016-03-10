@@ -17,7 +17,7 @@ module.exports = class {
       height: size.height - 24, // Macの上のトレイ分短く
       show: false,
       resizable: false,
-      frame: true,
+      frame: false,
       transparent: true,
       alwaysOnTop: true,
       'skip-taskbar': true

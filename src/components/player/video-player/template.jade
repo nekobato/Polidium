@@ -1,5 +1,1 @@
-video.video-player(
-  v-if='playMode === "video"'
-  autoplay
-  v-bind='{ controls: player.controls, src: player.src }'
-)
+video.video-player(autoplay v-bind='{ controls: controls, src: src }')

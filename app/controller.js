@@ -1,7 +1,6 @@
 "use strict"
 
 const electron = require('electron');
-const ipcMain = electron.ipcMain;
 const BrowserWindow = electron.BrowserWindow;
 
 const WINDOW_WIDTH = 400;
@@ -44,8 +43,3 @@ module.exports = class {
     }
   }
 }
-
-ipcMain.on('filer:selectFile', function(event, arg) {
-  console.log(arg);
-  event.sender.send('filer:selectFile', arg);
-});

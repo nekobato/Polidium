@@ -1,29 +1,22 @@
-const renderer = require('electron').ipcRenderer
+const ipcRenderer = require('electron').ipcRenderer;
 import Vue from 'vue';
 
 import style from './components/player/style.styl';
 
 import videoPlayer from './components/player/video-player';
 
-new Vue({
+window.app = new Vue({
   el: 'body',
-  comoponents: {
-    'video-player': videoPlayer,
+  components: {
+    'video-player': videoPlayer
     // 'web-player': webPlayer // TODO
   },
-  data: function() {
-    return {
-      player: {
-        src: null,
-        controls: false
-      },
-      playMode: 'web'
-    };
+  data: {
+    viewMode: 'video-player'
   },
   events: {
-    'files:get': function(files) {
+    'player:receive-file': function(files) {
       this.playMode = 'video'
-      this.player.src = files.path
     },
     'web:get': function(url) {
       this.playMode = 'web'
@@ -33,5 +26,13 @@ new Vue({
       this.player.controls = this.player.controls ? false : true;
     }
   },
-  ready: function() {}
+  ready: function() {
+    ipcRenderer.on('filer:select-file', (event, fileStr) => {
+      console.log(fileStr);
+      let file = JSON.parse(fileStr);
+      console.log(file);
+      this     .$emit('player:receive-file', file);
+      this.$broadcast('player:receive-file', file);
+    });
+  }
 });

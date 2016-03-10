@@ -5,6 +5,7 @@ const app = electron.app;
 const Tray = electron.Tray;
 const nativeImage = electron.nativeImage;
 const globalShortcut = electron.globalShortcut;
+const ipcMain = electron.ipcMain;
 
 const DEBUG = process.env.DEBUG ? true : false
 
@@ -26,6 +27,12 @@ app.on('ready', function() {
   });
 
   player.show();
+
+  ipcMain.on('controller:ipc-bridge', function(event, channel, fileStr) {
+    console.log(channel);
+    console.log(fileStr);
+    player.win.webContents.send(channel, fileStr);
+  });
 });
 
 app.on('login', function(event, webContents, request, authInfo, callback) {

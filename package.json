@@ -6,7 +6,8 @@
   "scripts": {
     "start": "DEBUG=true electron ./app",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "webpack": "webpack",
+    "dev": "webpack -w",
+    "build": "webpack",
     "release": "gulp release"
   },
   "repository": {

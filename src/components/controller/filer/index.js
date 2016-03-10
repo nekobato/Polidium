@@ -35,7 +35,7 @@ export default {
       if (file.type === 'directory') {
         this.$emit('getDir', file);
       } else if (file.type === 'file') {
-        ipcRenderer.send('filer:selectFile', file);
+        ipcRenderer.send('controller:ipc-bridge', 'filer:select-file', JSON.stringify(file));
       }
     },
     onSelectDepth: function(file, depth) {

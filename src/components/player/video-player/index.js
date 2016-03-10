@@ -10,7 +10,7 @@ export default {
     }
   },
   events: {
-    'files:get': function(file) {
+    'player:receive-file': function(file) {
       this.src = file.path
     },
     'controller:toggle': function() {
