@@ -22,6 +22,8 @@ module.exports = class {
       'skip-taskbar': true
     });
 
+    this.win.setVisibleOnAllWorkspaces(true);
+
     this.win.on('blur', () => {
       this.win.hide();
     });

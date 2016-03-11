@@ -29,8 +29,6 @@ app.on('ready', function() {
   player.show();
 
   ipcMain.on('controller:ipc-bridge', function(event, channel, fileStr) {
-    console.log(channel);
-    console.log(fileStr);
     player.win.webContents.send(channel, fileStr);
   });
 });
