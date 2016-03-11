@@ -1,4 +1,4 @@
-div.controller.z-depth-1(v-show="show")
+div.controller(v-show="show")
   navbar
-  filer
+  component(:is="currentView")
   

@@ -5,7 +5,6 @@ import materializeCss from 'materialize-css/dist/css/materialize.min.css';
 import style from './style.styl';
 
 import controller from './components/controller';
-import player from './components/player';
 
 new Vue({
   el: 'body',
@@ -15,8 +14,7 @@ new Vue({
     }
   },
   components: {
-    controller: controller,
-    player: player,
+    controller: controller
   },
   ready: function() {
     renderer.on('controller:toggle', () => {
