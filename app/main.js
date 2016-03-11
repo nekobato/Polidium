@@ -34,15 +34,16 @@ app.on('ready', function() {
   });
 
   ipcMain.on('controller:toggle-player', (event) => {
-    console.log("toggle");
     if (player.win.isAlwaysOnTop()) {
       player.win.setIgnoreMouseEvents(false);
       player.win.setAlwaysOnTop(false);
       player.win.setVisibleOnAllWorkspaces(false);
+      player.win.webContents.send('main:toggle-player', false);
     } else {
       player.win.setIgnoreMouseEvents(true);
       player.win.setAlwaysOnTop(true);
       player.win.setVisibleOnAllWorkspaces(true);
+      player.win.webContents.send('main:toggle-player', true);
     }
   });
 });

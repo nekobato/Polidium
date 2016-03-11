@@ -6,6 +6,6 @@
     <script src="./js/player.js" async defer></script>
   </head>
   <body>
-    <component :is="viewMode"></component>
+    <component :is="viewMode" :class='{ half-transparent: clickThrough }'></component>
   </body>
 </html>

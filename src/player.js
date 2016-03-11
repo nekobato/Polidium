@@ -13,7 +13,8 @@ window.app = new Vue({
     'webview': webView
   },
   data: {
-    viewMode: 'webview'
+    viewMode: 'webview',
+    clickThrough: true
   },
   events: {
     'filer:select-file': function(fileStr) {
@@ -33,6 +34,11 @@ window.app = new Vue({
   ready: function() {
     ipcRenderer.on('main:ipc-bridge', (event, channel, data) => {
       this.$emit(channel, data);
+    });
+
+    ipcRenderer.on('main:toggle-player', (event, flag) => {
+      console.log(flag);
+      this.clickThrough = flag ? true : false;
     });
   }
 });
