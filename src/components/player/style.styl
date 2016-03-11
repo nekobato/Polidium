@@ -10,7 +10,8 @@ html, body {
 
 
 .video-player,
-.web-player {
+.web-player,
+.webview {
   position: fixed;
   top: 0;
   right: 0;
@@ -21,4 +22,8 @@ html, body {
   height: 100%;
   object-fit: contain;
   opacity: 0.08;
+
+  & >.half-transparent {
+    opacity: 0.5;
+  }
 }

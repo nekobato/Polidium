@@ -2,6 +2,7 @@
 
 const electron = require('electron');
 const BrowserWindow = electron.BrowserWindow;
+const ipcMain = electron.ipcMain;
 
 module.exports = class {
 

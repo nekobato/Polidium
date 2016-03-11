@@ -1,3 +1,5 @@
+const ipcRenderer = require('electron').ipcRenderer;
+
 import style from './style.styl';
 
 export default {
@@ -11,7 +13,7 @@ export default {
   },
   methods: {
     onSubmitURL: function() {
-      this.$dispatch('all', 'web:get', this.url);
+      ipcRenderer.send('controller:ipc-bridge', 'url:submit-url', this.url);
     }
   },
   ready: function() {

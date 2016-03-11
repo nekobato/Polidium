@@ -1,17 +1,16 @@
 import template from './template.jade';
-// import style from './style.styl';
 
 export default {
   template: template(),
   data: function() {
     return {
-      src: null,
+      src: "",
       controls: false
     }
   },
   events: {
-    'player:receive-file': function(file) {
-      this.src = file.path
+    'player:receive-url': function(url) {
+      this.src = url
     }
   }
 }
