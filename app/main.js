@@ -29,13 +29,27 @@ app.on('ready', function() {
   player.show();
 
   ipcMain.on('controller:ipc-bridge', function(event, channel, fileStr) {
-    player.win.webContents.send(channel, fileStr);
+    console.log(channel, fileStr);
+    player.win.webContents.send('main:ipc-bridge', channel, fileStr);
+  });
+
+  ipcMain.on('controller:toggle-player', (event) => {
+    console.log("toggle");
+    if (player.win.isAlwaysOnTop()) {
+      player.win.setIgnoreMouseEvents(false);
+      player.win.setAlwaysOnTop(false);
+      player.win.setVisibleOnAllWorkspaces(false);
+    } else {
+      player.win.setIgnoreMouseEvents(true);
+      player.win.setAlwaysOnTop(true);
+      player.win.setVisibleOnAllWorkspaces(true);
+    }
   });
 });
 
 app.on('login', function(event, webContents, request, authInfo, callback) {
   event.preventDefault();
-  callback('pitecan', 'masu1lab');
+  callback('', '');
 })
 
 app.on('will-quit', function() {

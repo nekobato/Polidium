@@ -4,35 +4,33 @@ import Vue from 'vue';
 import style from './components/player/style.styl';
 
 import videoPlayer from './components/player/video-player';
+import webView from './components/player/webview';
 
 window.app = new Vue({
   el: 'body',
   components: {
-    'video-player': videoPlayer
-    // 'web-player': webPlayer // TODO
+    'video-player': videoPlayer,
+    'webview': webView
   },
   data: {
-    viewMode: 'video-player'
+    viewMode: 'webview'
   },
   events: {
-    'player:receive-file': function(files) {
-      this.playMode = 'video'
+    'filer:select-file': function(fileStr) {
+      let file = JSON.parse(fileStr);
+      this.playMode = 'video-player';
+      this.$broadcast('player:receive-file', file);
     },
-    'web:get': function(url) {
-      this.playMode = 'web'
-      this.player.src= url
-    },
-    'controller:toggle': function() {
-      this.player.controls = this.player.controls ? false : true;
+    'url:submit-url': function(url) {
+      console.log(url);
+      this.playMode = 'webview';
+      this.$broadcast('player:receive-url', url);
     }
   },
   ready: function() {
-    ipcRenderer.on('filer:select-file', (event, fileStr) => {
-      console.log(fileStr);
-      let file = JSON.parse(fileStr);
-      console.log(file);
-      this     .$emit('player:receive-file', file);
-      this.$broadcast('player:receive-file', file);
+    ipcRenderer.on('main:ipc-bridge', (event, channel, data) => {
+      console.log(channel, data);
+      this.$emit(channel, data);
     });
   }
 });
