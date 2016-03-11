@@ -19,7 +19,7 @@ app.on('ready', function() {
   player = new PlayerWindow();
   controller = new ControllerWindow();
 
-  trayIcon = nativeImage.createFromPath(__dirname + '/tray_icon.png');
+  trayIcon = nativeImage.createFromPath(__dirname + '/img/tray_icon.png');
   tray = new Tray(trayIcon);
 
   tray.on('click', function(event, bounds) {
