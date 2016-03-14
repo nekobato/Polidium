@@ -3,7 +3,7 @@
 const electron = require('electron');
 const BrowserWindow = electron.BrowserWindow;
 
-const WINDOW_WIDTH = 400;
+const WINDOW_WIDTH = 320;
 
 module.exports = class {
 
