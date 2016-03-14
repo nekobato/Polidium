@@ -2,7 +2,6 @@ const renderer = require('electron').ipcRenderer
 import Vue from 'vue';
 
 import materializeCss from 'materialize-css/dist/css/materialize.min.css';
-import style from './style.styl';
 
 import controller from './components/controller';
 
@@ -16,7 +15,7 @@ new Vue({
   components: {
     controller: controller
   },
-  ready: function() {
+  created: function() {
     renderer.on('controller:toggle', () => {
       this.$broadcast('controller:toggle');
     });
