@@ -16,7 +16,10 @@ var tray, trayIcon, player, controller;
 
 app.on('ready', function() {
 
-  player = new PlayerWindow();
+  app.commandLine.appendSwitch('ppapi-flash-path', './PepperFlash/PepperFlashPlayer.plugin');
+  app.commandLine.appendSwitch('ppapi-flash-version', '21.0.0.182');
+
+  player     = new PlayerWindow();
   controller = new ControllerWindow();
 
   trayIcon = nativeImage.createFromPath(__dirname + '/trayicon.png');

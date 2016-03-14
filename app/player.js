@@ -21,7 +21,10 @@ module.exports = class {
       frame: false,
       transparent: true,
       alwaysOnTop: true,
-      'skip-taskbar': true
+      'skip-taskbar': true,
+      'web-preferences': {
+        'plugins': true
+      }
     });
 
     this.win.center();
