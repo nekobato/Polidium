@@ -1,6 +1,6 @@
 {
   "name": "Polidium",
-  "version": "0.0.2",
+  "version": "1.0.1",
   "description": "Polid Movie Screen",
   "main": "./app/main.js",
   "scripts": {
@@ -16,7 +16,6 @@
   },
   "keywords": [],
   "author": "nekobato",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/nekobato/Polidium/issues"
   },
