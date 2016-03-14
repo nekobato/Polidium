@@ -1,21 +1,34 @@
 # Polidium
 
-Polid Screen on Desktop
+## Polid Screen on Desktop
 
 - for Mac
 
-## Application
+透明度の高い動画ファイルやWebを常にデスクトップ最前面に表示する
 
-https://github.com/nekobato/Polidium/releases
+![](https://gyazo.com/92890152f1fa383eed9c7e8fb32a1be2.png)
 
-nekobato本人が使用できる状態をreleaseとしているので、動作異常の報告をお待ちしています
+## Usage
+
+Download latest release - Polidium-darwin-x64.zip
+https://github.com/nekobato/Polidium/releases/latest
+
+open Polidium and
+
+![](https://gyazo.com/45493a987b9ee9bbb29a40b00b8531f0.png)
+
+## Development
+
+```
+Clone this Repository
+cd Polidium
+npm install
+npm run build
+npm start
+```
+
+## Issue
+
+nekobatoが使用できる状態をreleaseとしているので、動作異常などissueをお待ちしています
 
 https://github.com/nekobato/Polidium/issues
-
-## 使い方
-
-- Click taskbar icon
- - ![](https://gyazo.com/767fb7a937854ccad2ae212d5a4c3712.png)
-- Select movie file
-
-ファイラーが出ている状態だとclick-throughは効きません
