@@ -8,17 +8,18 @@ export default {
     return {
       tabs: [
         { id: 'filer', name: 'FILE', available: true },
-        { id: 'web', name: 'WEB', available: false }
+        { id: 'web', name: 'WEB', available: false },
+        { id: 'settings', name: 'SETTINGS', available: false }
       ]
     }
   },
   methods: {
     selectTab: function(tab) {
       // tabName = web || file || service
-      this.$dispatch('navTab:selected', tab);
+      this.$dispatch('navTab:selected', tab)
     },
     togglePlayer: function() {
-      ipcRenderer.send('controller:toggle-player');
+      ipcRenderer.send('controller:toggle-player')
     }
   }
 }

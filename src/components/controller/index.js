@@ -3,11 +3,9 @@ import Vue from 'vue';
 import navbar from './navbar';
 import filer from './filer';
 import web from './web';
+import settings from './settings';
 
 import style from './style.styl';
-
-Vue.component('filer', filer);
-Vue.component('web', web);
 
 export default {
   template: require('./template.jade')(),
@@ -18,11 +16,18 @@ export default {
     }
   },
   components: {
-    navbar: navbar
+    navbar: navbar,
+    filer: filer,
+    web: web,
+    settings: settings
   },
   events: {
     'navTab:selected': function(tab) {
+      this.show = false;
       this.currentView = tab.id;
+      this.$nextTick(function() {
+        this.show = true;
+      });
     }
   },
   methods: {
