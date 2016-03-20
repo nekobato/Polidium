@@ -6,12 +6,19 @@ export default {
   data: function() {
     return {
       src: null,
-      controls: false
+      controls: false,
+      styleObject: {
+        opacity: 0.05
+      }
     }
   },
   events: {
     'player:receive-file': function(file) {
-      this.src = file.path
+      this.src = file.path;
+    },
+    'player:change-opacity': function(opacity) {
+      console.log(opacity);
+      this.styleObject.opacity = opacity / 100;
     }
   }
 }

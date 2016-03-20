@@ -28,9 +28,9 @@ app.on('ready', function() {
 
   player.show();
 
-  ipcMain.on('controller:ipc-bridge', function(event, channel, fileStr) {
-    console.log(channel, fileStr);
-    player.win.webContents.send('main:ipc-bridge', channel, fileStr);
+  ipcMain.on('controller:ipc-bridge', function(event, channel, data) {
+    console.log(channel);
+    player.win.webContents.send('main:ipc-bridge', channel, data);
   });
 
   ipcMain.on('controller:toggle-player', (event) => {

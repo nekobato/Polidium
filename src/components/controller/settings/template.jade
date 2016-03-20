@@ -1,2 +1,9 @@
-div.white
-  input.opacity-range(type="range")
+div.white.settings
+  div.input-field.row.center
+    input#opacity_range.opacity-range.validate(type="range"
+      v-model="config.opacity"
+      @change="onChangeOpacityRange")
+    label(for="opacity_range") Opacity {{config.opacity}}
+    label.opacity-range(for="opacity_range")
+      span.min-range 0
+      span.max-range 100

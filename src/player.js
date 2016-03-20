@@ -13,7 +13,7 @@ window.app = new Vue({
     'webview': webView
   },
   data: {
-    viewMode: 'webview',
+    viewMode: 'video-player',
     clickThrough: true
   },
   events: {
@@ -29,6 +29,9 @@ window.app = new Vue({
       this.$nextTick(function() {
         this.$broadcast('player:receive-url', url);
       });
+    },
+    'settings:change-opacity': function(opacity) {
+      this.$broadcast('player:change-opacity', opacity);
     }
   },
   ready: function() {

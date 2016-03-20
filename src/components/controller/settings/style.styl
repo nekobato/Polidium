@@ -1,4 +1,41 @@
-.opacity-range {
-  margin: auto;
-  width: 300px;
+.settings {
+
+  .input-field {
+    margin: auto;
+    width: 300px;
+  }
+
+  input[type=range].opacity-range {
+    margin: 20px auto 0;
+    width: 270px;
+    height: 3rem;
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    outline: none;
+    font-size: 1rem;
+    box-shadow: none;
+    box-sizing: border-box;
+    transition: all .3s;
+    text-align: center;
+  }
+
+  label.opacity-range {
+    width: 100%;
+    height: 1rem;
+    top: 3.6rem;
+    left: 0;
+
+    & > span {
+      position: absolute;
+    }
+
+    & > .min-range {
+      left: 0.75rem;
+    }
+
+    & > .max-range {
+      right: 0.75rem;;
+    }
+  }
 }
