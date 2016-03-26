@@ -33,7 +33,7 @@ new Vue({
       });
     },
     'settings:change-opacity': function(opacity) {
-      this.config.opacity = opacity / 100;
+      this.config.opacity = opacity;
     }
   },
   ready: function() {
