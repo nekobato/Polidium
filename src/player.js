@@ -5,8 +5,9 @@ import style from './components/player/style.styl';
 
 import videoPlayer from './components/player/video-player';
 import webView from './components/player/webview';
+import config from './models/config';
 
-window.app = new Vue({
+new Vue({
   el: 'body',
   components: {
     'video-player': videoPlayer,
@@ -14,7 +15,8 @@ window.app = new Vue({
   },
   data: {
     viewMode: 'video-player',
-    clickThrough: true
+    clickThrough: true,
+    config: config
   },
   events: {
     'filer:select-file': function(fileStr) {
@@ -31,7 +33,7 @@ window.app = new Vue({
       });
     },
     'settings:change-opacity': function(opacity) {
-      this.$broadcast('player:change-opacity', opacity);
+      this.config.opacity = opacity / 100;
     }
   },
   ready: function() {

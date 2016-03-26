@@ -1,5 +1,6 @@
 import template from './template.jade';
-// import style from './style.styl';
+
+import config from 'models/config';
 
 export default {
   template: template(),
@@ -7,18 +8,12 @@ export default {
     return {
       src: null,
       controls: false,
-      styleObject: {
-        opacity: 0.05
-      }
+      config: config
     }
   },
   events: {
     'player:receive-file': function(file) {
       this.src = file.path;
-    },
-    'player:change-opacity': function(opacity) {
-      console.log(opacity);
-      this.styleObject.opacity = opacity / 100;
     }
   }
 }
