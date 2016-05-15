@@ -14,6 +14,8 @@ const ControllerWindow = require('./controller');
 
 var tray, trayIcon, player, controller;
 
+app.dock.hide();
+
 app.on('ready', function() {
 
   player = new PlayerWindow();
