@@ -35,9 +35,10 @@
     "jade-loader": "^0.7.1",
     "json-loader": "^0.5.4",
     "style-loader": "^0.13.0",
-    "stylus-loader": "^1.4.2",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^2.0.0",
     "url-loader": "^0.5.7",
-    "webpack": "^1.12.9",
+    "webpack": "^1.13.0",
     "webpack-dev-server": "^1.12.1",
     "webpack-notifier": "^1.2.1"
   },
