@@ -3,7 +3,7 @@
 const electron = require('electron');
 const BrowserWindow = electron.BrowserWindow;
 
-const WINDOW_WIDTH = 320;
+const WINDOW_WIDTH = 400;
 
 module.exports = class {
 
@@ -14,7 +14,7 @@ module.exports = class {
 
     this.win = new BrowserWindow({
       width: WINDOW_WIDTH,
-      height: 640,
+      height: 560,
       show: false,
       resizable: false,
       frame: false,
