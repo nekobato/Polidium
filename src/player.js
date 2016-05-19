@@ -5,16 +5,18 @@ import style from './components/player/style.styl';
 
 import videoPlayer from './components/player/video-player';
 import webView from './components/player/webview';
+import config from './models/config';
 
-window.app = new Vue({
+new Vue({
   el: 'body',
   components: {
     'video-player': videoPlayer,
     'webview': webView
   },
   data: {
-    viewMode: 'webview',
-    clickThrough: true
+    viewMode: 'video-player',
+    clickThrough: true,
+    config: config
   },
   events: {
     'filer:select-file': function(fileStr) {
@@ -29,6 +31,9 @@ window.app = new Vue({
       this.$nextTick(function() {
         this.$broadcast('player:receive-url', url);
       });
+    },
+    'settings:change-opacity': function(opacity) {
+      this.config.opacity = opacity;
     }
   },
   ready: function() {
@@ -37,8 +42,8 @@ window.app = new Vue({
     });
 
     ipcRenderer.on('main:toggle-player', (event, flag) => {
-      console.log(flag);
       this.clickThrough = flag ? true : false;
+      this.$broadcast('main:toggle-player', flag);
     });
   }
 });

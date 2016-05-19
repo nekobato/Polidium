@@ -1,4 +1,8 @@
-div.filer-wrapper.z-depth-1
+div.breadcrumb-wrapper.col.s12.blue-grey.lighten-2
+  a.breadcrumb
+  a.breadcrumb(v-for='file in depth' v-on:click='onSelectDepth(file, $index)')
+  span(v-if='depth.length') {{depth[depth.length-1].name}}
+div.filer-wrapper
   ul.collection(v-el:nav)
     li.collection-item.file-item(
       v-for='file in filelist'
@@ -6,10 +10,3 @@ div.filer-wrapper.z-depth-1
       span.badge
         i.material-icons(v-text='file | file2IconName')
       span.truncate {{file.name}}
-nav.breadcrumb-wrapper.blue-grey.lighten-2
-  div.nav-wrapper
-    i.left.material-icons(v-show='reaction.loadingDir') wifi
-    div.col.s12
-      a.breadcrumb
-      a.breadcrumb(v-for='file in depth' v-on:click='onSelectDepth(file, $index)')
-      span(v-if='depth.length') {{depth[depth.length-1].name}}

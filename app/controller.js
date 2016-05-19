@@ -3,7 +3,7 @@
 const electron = require('electron');
 const BrowserWindow = electron.BrowserWindow;
 
-const WINDOW_WIDTH = 320;
+const WINDOW_WIDTH = 400;
 
 module.exports = class {
 
@@ -14,12 +14,13 @@ module.exports = class {
 
     this.win = new BrowserWindow({
       width: WINDOW_WIDTH,
-      height: size.height,
+      height: 560,
       show: false,
       resizable: false,
       frame: false,
       transparent: true,
-      'skip-taskbar': true
+      'skip-taskbar': true,
+      hasShadow: false
     });
 
     this.win.setVisibleOnAllWorkspaces(true);
