@@ -1,12 +1,20 @@
-div.white.settings
-  div.input-field.row.center
-    input#opacity_range.opacity-range.validate(type="range"
-      v-model="config.opacity"
-      @change="onChangeOpacityRange")
-    label(for="opacity_range") Opacity {{config.opacity}}
-    label.opacity-range(for="opacity_range")
-      span.min-range 0
-      span.max-range 100
-    a.btn(:class="{ red: !clickThrough }", @click="toggleClickThrough")
-      i.material-icons crop_3_2
+div.white.settings.container
+  div.row
+    h5 Opacity {{config.opacity}}
+    div.input-field.center
+      input#opacity_range.opacity-range.validate(type="range"
+        v-model="config.opacity"
+        @change="onChangeOpacityRange")
+      div.opacity-range
+        span.min-range 0
+        span.max-range 100
+  div.divider
+  div.row.center
+    div.btn(:class="{ red: !clickThrough }", @click="toggleClickThrough")
+      i.material-icons.left crop_3_2
       span Toggle Through
+  div.divider
+  div.row.center
+    div.btn(@click="closeApplication")
+      i.material-icons.left close
+      span close

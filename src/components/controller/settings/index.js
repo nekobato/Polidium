@@ -20,6 +20,9 @@ export default {
     toggleClickThrough: function() {
       ipcRenderer.send('controller:toggle-player');
       this.$data.clickThrough = this.$data.clickThrough ? false : true;
+    },
+    closeApplication: function() {
+      ipcRenderer.send('controller:close-application');
     }
   }
 }

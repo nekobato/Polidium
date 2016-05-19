@@ -30,6 +30,10 @@ app.on('ready', function() {
 
   player.show();
 
+  ipcMain.on('controller:close-application', function(event) {
+    app.quit();
+  });
+
   ipcMain.on('controller:ipc-bridge', function(event, channel, data) {
     player.win.webContents.send('main:ipc-bridge', channel, data);
   });
