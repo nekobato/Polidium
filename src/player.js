@@ -42,8 +42,8 @@ new Vue({
     });
 
     ipcRenderer.on('main:toggle-player', (event, flag) => {
-      console.log(flag);
       this.clickThrough = flag ? true : false;
+      this.$broadcast('main:toggle-player', flag);
     });
   }
 });

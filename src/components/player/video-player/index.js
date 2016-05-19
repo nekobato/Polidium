@@ -14,6 +14,10 @@ export default {
   events: {
     'player:receive-file': function(file) {
       this.src = file.path;
+    },
+    'main:toggle-player': function(clickThrough) {
+      this.$data.controls = !clickThrough;
+      console.log(this.$data.controls);
     }
   }
 }

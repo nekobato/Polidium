@@ -17,9 +17,6 @@ export default {
     selectTab: function(tab) {
       // tabName = web || file || service
       this.$dispatch('navTab:selected', tab)
-    },
-    togglePlayer: function() {
-      ipcRenderer.send('controller:toggle-player')
     }
   }
 }

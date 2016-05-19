@@ -7,3 +7,6 @@ div.white.settings
     label.opacity-range(for="opacity_range")
       span.min-range 0
       span.max-range 100
+    a.btn(:class="{ red: !clickThrough }", @click="toggleClickThrough")
+      i.material-icons crop_3_2
+      span Toggle Through
