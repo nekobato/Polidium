@@ -9,10 +9,9 @@ const buildOption = {
   name: appPackage.name,
   platform: 'darwin', // linux, win32, darwin, all
   arch: 'x64', // ia32, x64, all
-  version: process.env.ELECTRON || '0.36.3',
+  version: process.env.ELECTRON || '1.1.1',
   'app-bundle-id': `${appPackage.author}.${appPackage.name}`,
   'app-version': appPackage.version,
-  'build-version': appPackage.version,
   asar: true,
   prune: true,
   overwrite: true,

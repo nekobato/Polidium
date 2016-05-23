@@ -1,6 +1,6 @@
 {
-  "name": "Polidium",
-  "version": "1.0.1",
+  "name": "polidium",
+  "version": "1.2.1",
   "description": "Polid Movie Screen",
   "main": "main.js",
   "scripts": {

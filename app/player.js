@@ -1,15 +1,13 @@
-"use strict"
-
-const electron = require('electron');
-const BrowserWindow = electron.BrowserWindow;
-const ipcMain = electron.ipcMain;
+const electron = require('electron')
+const {BrowserWindow} = electron
+const {ipcMain} = electron
 
 module.exports = class {
 
   constructor() {
 
-    var electronScreen = electron.screen;
-    var size = electronScreen.getPrimaryDisplay().workAreaSize;
+    var electronScreen = electron.screen
+    var size = electronScreen.getPrimaryDisplay().workAreaSize
 
     this.win = new BrowserWindow({
       x: 0,
@@ -22,16 +20,20 @@ module.exports = class {
       transparent: true,
       alwaysOnTop: true,
       'skip-taskbar': true
-    });
+    })
 
-    this.win.center();
-    this.win.setIgnoreMouseEvents(true);
-    this.win.setVisibleOnAllWorkspaces(true);
+    this.win.center()
+    this.win.setIgnoreMouseEvents(true)
+    this.win.setVisibleOnAllWorkspaces(true)
 
-    this.win.loadURL('file://' + __dirname + '/player.html');
+    this.win.loadURL(`file://${__dirname}/player.html`)
+
+    this.win.on('closed', () => {
+      this.win = null
+    })
   }
 
   show() {
-    this.win.show();
+    this.win.show()
   }
 }
