@@ -10,7 +10,6 @@ export default {
   data: function() {
     return {
       depth: [],
-      current: {},
       filelist: [],
       reaction: {
         loadingDir: false
@@ -42,6 +41,7 @@ export default {
     onSelectDepth: function(file, depth) {
       this.$data.depth.length = depth
       this.$emit('getDir', file)
+      this.updateDepth()
     },
     getDir: function(file) {
       this.$data.reaction.loadingDir = true
@@ -65,24 +65,27 @@ export default {
     },
     setDir: function(files) {
       this.$set('filelist', files)
-      window.localStorage.setItem('depth', JSON.stringify(this.$data.depth))
     },
     addDepth: function(file) {
       this.$data.depth.push(file)
+      this.updateDepth()
+    },
+    updateDepth: function() {
+      window.localStorage.setItem('depth', JSON.stringify(this.$data.depth))
+      console.log(window.localStorage.depth)
     },
     addFilesAll: function() {
       this.$dispatch('all', 'files:get', this.$data.filelist)
     }
   },
-  ready: function() {
-    const depth = JSON.parse(window.localStorage.depth) || []
+  created: function() {
     // Resurrect
-    if (depth.length) {
-        const currentDir = depth[depth.length-1]
-        this.$data.depth = depth
-        this.getDir(currentDir)
-    } else {
-      this.getDir({ path: '/', name: '/' })
-    }
+    console.log(window.localStorage.depth)
+    let depth = JSON.parse(window.localStorage.depth) || [{ path: '/Users', name: '/' }]
+    console.log(depth)
+    const currentDir = depth.pop()
+    console.log(depth)
+    this.$data.depth = depth
+    this.getDir(currentDir)
   }
 }

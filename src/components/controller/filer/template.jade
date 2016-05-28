@@ -1,7 +1,6 @@
 div.breadcrumb-wrapper.col.s12.blue-grey.lighten-2
-  a.breadcrumb
-  a.breadcrumb(v-for='file in depth' v-on:click='onSelectDepth(file, $index)')
-  span(v-if='depth.length') {{depth[depth.length-1].name}}
+  a.breadcrumb(v-for='file in depth', track-by="$index", v-on:click='onSelectDepth(file, $index)')
+  span(v-if="depth.length") {{depth[depth.length-1].name}}
 div.filer-wrapper
   ul.collection(v-el:nav)
     li.collection-item.file-item(
