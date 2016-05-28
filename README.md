@@ -1,4 +1,4 @@
-[![GitHub issues](https://img.shields.io/github/issues/nekobato/Polidium.svg)](https://github.com/nekobato/Polidium/issues)
+[![GitHub issues](https://img.shields.io/github/release/nekobato/Polidium.svg)](https://github.com/nekobato/Polidium/release)
 
 # Polidium
 
