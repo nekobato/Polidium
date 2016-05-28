@@ -1,16 +1,18 @@
+[![GitHub issues](https://img.shields.io/github/issues/nekobato/Polidium.svg)](https://github.com/nekobato/Polidium/issues)
+
 # Polidium
 
 ## Polid Screen on Desktop
 
 - for Mac
 
-透明度の高い動画ファイルやWebを常にデスクトップ最前面に表示する
+半透明動画プレイヤー
 
 ![](https://gyazo.com/92890152f1fa383eed9c7e8fb32a1be2.png)
 
 ## Usage
 
-Download latest release - Polidium-darwin-x64.zip
+Download latest release
 https://github.com/nekobato/Polidium/releases/latest
 
 open Polidium and
@@ -23,12 +25,12 @@ open Polidium and
 Clone this Repository
 cd Polidium
 npm install
-npm run build
+npm run dev
 npm start
 ```
 
 ## Issue
 
-nekobatoが使用できる状態をreleaseとしているので、動作異常などissueをお待ちしています
+動作異常などissueお待ちしています
 
 https://github.com/nekobato/Polidium/issues
