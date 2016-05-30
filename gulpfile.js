@@ -5,10 +5,11 @@ packager = require('electron-packager');
 appPackage = require('./app/package.json');
 
 const buildOption = {
-  dir: './app',
-  name: appPackage.name,
-  platform: 'darwin', // linux, win32, darwin, all
   arch: 'x64', // ia32, x64, all
+  dir: './app',
+  platform: 'darwin', // linux, win32, darwin, all
+  // below is optional
+  name: 'Polidium',
   version: process.env.ELECTRON || '1.2.0',
   'app-bundle-id': `${appPackage.author}.${appPackage.name}`,
   'app-version': appPackage.version,
@@ -16,7 +17,8 @@ const buildOption = {
   prune: true,
   overwrite: true,
   icon: './Polidium',
-  out: './release'
+  out: './release',
+  ignore: /\*\.map/
 }
 
 gulp.task('release', () => {

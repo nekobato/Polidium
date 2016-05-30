@@ -5,6 +5,5 @@ build
 npm-debug.log
 *.map
 app/font
-app/img
 app/js
 release/

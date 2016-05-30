@@ -42,9 +42,9 @@
   },
   "dependencies": {
     "electron-packager": "7.0.2",
-    "electron-prebuilt": "^1.2.0",
+    "electron-prebuilt": "1.2.0",
     "material-design-icons": "2.2.3",
-    "materialize-css": "^0.97.6",
-    "vue": "^1.0.24"
+    "materialize-css": "0.97.6",
+    "vue": "1.0.24"
   }
 }
