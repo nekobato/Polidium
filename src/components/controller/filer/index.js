@@ -71,8 +71,7 @@ export default {
       this.updateDepth()
     },
     updateDepth: function() {
-      window.localStorage.setItem('depth', JSON.stringify(this.$data.depth))
-      console.log(window.localStorage.depth)
+      localStorage.setItem('depth', JSON.stringify(this.$data.depth))
     },
     addFilesAll: function() {
       this.$dispatch('all', 'files:get', this.$data.filelist)
@@ -80,12 +79,13 @@ export default {
   },
   created: function() {
     // Resurrect
-    console.log(window.localStorage.depth)
-    let depth = JSON.parse(window.localStorage.depth) || [{ path: '/Users', name: '/' }]
-    console.log(depth)
-    const currentDir = depth.pop()
-    console.log(depth)
-    this.$data.depth = depth
-    this.getDir(currentDir)
+    if (localStorage.depth) {
+      let depth = JSON.parse(localStorage.depth) || [{ path: '/Users', name: '/' }]
+      const currentDir = depth.pop()
+      this.$data.depth = depth
+      this.getDir(currentDir)
+    } else {
+      this.getDir({ path: '/Users', name: '/' })
+    }
   }
 }
