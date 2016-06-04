@@ -8,11 +8,11 @@
 
 ![](https://gyazo.com/ddd43adbb1524d00fc327d23aba3225b.png)
 
-### Play Movie File
+### Movie File View
 
 - ファイルを選択して動画ファイルを再生
 
-### View Web
+### Web View
 
 - URLを指定してWebを再生
 
@@ -48,6 +48,7 @@ npm start
 - [ ] 表示モニタを選択できる
 - [ ] HTMLプレイヤーの透明度を調節できる
 - [ ] Gyazoのように囲った部分で動画表示できる
+- [ ] Movie File Viewの進捗をFilerから管理できる
 
 ## Issue
 
