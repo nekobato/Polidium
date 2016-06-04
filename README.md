@@ -29,6 +29,12 @@ npm run dev
 npm start
 ```
 
+## Tasks
+
+[ ] 表示モニタを選択できる
+[ ] HTMLプレイヤーの透明度を調節できる
+[ ] Gyazoのように囲った部分で動画表示できる
+
 ## Issue
 
 動作異常などissueお待ちしています
