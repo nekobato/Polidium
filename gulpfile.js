@@ -10,7 +10,7 @@ const buildOption = {
   platform: 'darwin', // linux, win32, darwin, all
   // below is optional
   name: 'polidium',
-  version: process.env.ELECTRON || '1.2.0',
+  version: '1.2.6',
   'app-bundle-id': `${appPackage.author}.${appPackage.name}`,
   'app-version': appPackage.version,
   'build-version': appPackage.version,
