@@ -45,6 +45,7 @@
     "electron-prebuilt": "^1.2.6",
     "material-design-icons": "2.2.3",
     "materialize-css": "0.97.6",
-    "vue": "^1.0.26"
+    "vue": "^1.0.26",
+    "xss": "^0.2.13"
   }
 }
