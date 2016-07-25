@@ -46,7 +46,7 @@ npm start
 ## Tasks
 
 - [ ] 表示モニタを選択できる
-- [ ] HTMLプレイヤーの透明度を調節できる
+- [x] HTMLプレイヤーの透明度を調節できる
 - [ ] Gyazoのように囲った部分で動画表示できる
 - [ ] Movie File Viewの進捗をFilerから管理できる
 - [ ] Movie File の自動ファイル送り
