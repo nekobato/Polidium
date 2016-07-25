@@ -29,7 +29,7 @@ https://github.com/nekobato/Polidium/releases/latest
 
 open Polidium and
 
-![](https://gyazo.com/78f5627278aa867311bbda248655a4d1,gif)
+![](https://i.gyazo.com/78f5627278aa867311bbda248655a4d1.gif)
 
 ## Development
 
