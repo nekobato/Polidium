@@ -34,10 +34,12 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        exclude: /node_modules/,
-        loader: "babel",
+        include: [path.resolve(__dirname, 'src')],
+        loader: 'babel',
         query: {
-          presets: ['es2015']
+          cacheDirectory: true,
+          presets: ['es2015', 'stage-2'],
+          plugins: 'add-module-exports'
         }
       },
       {

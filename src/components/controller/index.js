@@ -1,7 +1,7 @@
 import Vue from 'vue';
 
 import navbar from './navbar';
-import filer from './filer';
+import playlist from './playlist';
 import web from './web';
 import settings from './settings';
 
@@ -12,12 +12,12 @@ export default {
   data: function() {
     return {
       show: true,
-      currentView: 'filer'
+      currentView: 'playlist'
     }
   },
   components: {
     navbar: navbar,
-    filer: filer,
+    playlist: playlist,
     web: web,
     settings: settings
   },

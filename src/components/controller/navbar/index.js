@@ -7,7 +7,7 @@ export default {
   data: function() {
     return {
       tabs: [
-        { id: 'filer', name: 'FILE', available: true },
+        { id: 'playlist', name: 'PLAYLIST', available: true },
         { id: 'web', name: 'WEB', available: false },
         { id: 'settings', name: 'SETTINGS', available: false }
       ]
