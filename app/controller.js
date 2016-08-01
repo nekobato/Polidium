@@ -2,8 +2,9 @@
 
 const electron = require('electron')
 const BrowserWindow = electron.BrowserWindow
-
 const WINDOW_WIDTH = 400
+
+const DEBUG = process.env.DEBUG ? true : false
 
 module.exports = class {
 
@@ -14,23 +15,27 @@ module.exports = class {
       height: 560,
       show: false,
       resizable: false,
-      frame: false,
-      transparent: true,
+      frame: DEBUG ? true : false,
+      transparent: false,
       skipTaskbar: true,
-      hasShadow: false
+      hasShadow: true
     })
 
     this.win.setVisibleOnAllWorkspaces(true)
 
     this.win.on('blur', () => {
-      this.win.hide()
+      if (!DEBUG) {
+        this.win.hide()
+      }
     })
 
     this.win.loadURL('file://' + __dirname + '/controller.html')
   }
 
   showWindow(x) {
-    this.win.setPosition(x - WINDOW_WIDTH/2, 0)
+    if (!DEBUG) {
+      this.win.setPosition(x - WINDOW_WIDTH/2, 0)
+    }
     this.win.show()
     this.win.focus()
   }
@@ -38,7 +43,7 @@ module.exports = class {
   toggle(x) {
     if (this.win.isVisible()) {
       this.win.hide()
-    }else {
+    } else {
       this.showWindow(x)
     }
   }

@@ -2,6 +2,8 @@ const electron = require('electron')
 const {BrowserWindow} = electron
 const {ipcMain} = electron
 
+const DEBUG = process.env.DEBUG ? true : false
+
 module.exports = class {
 
   constructor() {
@@ -17,8 +19,8 @@ module.exports = class {
       show: false,
       resizable: false,
       frame: false,
-      transparent: true,
-      alwaysOnTop: true,
+      transparent: DEBUG ? false : true,
+      alwaysOnTop: DEBUG ? false : true,
       'skip-taskbar': true
     })
 

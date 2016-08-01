@@ -45,6 +45,10 @@ module.exports = {
         loaders: ['json']
       },
       {
+        test: /\.vue$/,
+        loaders: ['vue']
+      },
+      {
         test: /\.jade$/,
         loader: "jade"
       },

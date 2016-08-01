@@ -1,13 +1,25 @@
+<template lang="jade">
+div.filer-wrapper
+  play-queue
+div.toolpalette.blue-grey
+  span.add-button.blue-grey
+    i.material-icons add
+</template>
+
+<script>
 const electron = require('electron')
 const ipcRenderer = electron.ipcRenderer
 const remote      = electron.remote
 const fs = remote.require('fs')
 const path = remote.require('path')
-import style from './style.styl'
+
+import PlayQueue from './PlayQueue.vue'
 
 export default {
-  template: require('./template.jade')(),
-  data: function() {
+  components: {
+    'play-queue': PlayQueue
+  },
+  data () {
     return {
       depth: [],
       filelist: [],
@@ -16,19 +28,9 @@ export default {
       }
     }
   },
-  filters: {
-    file2IconName: function(file) {
-      if (/\.(mp4|mpe?g)$/.test(file.name)) {
-        return "video_library"
-      } if (file.type === "directory") {
-        return "folder"
-      }
-    }
-  },
   events: {
     'filer-set-dir': "setDir",
-    'getDir': "getDir",
-    'filer-add-depth': "addDepth",
+    'getDir': "getDir"
   },
   methods: {
     selectItem: function(file) {
@@ -37,11 +39,6 @@ export default {
       } else if (file.type === 'file') {
         ipcRenderer.send('controller:ipc-bridge', 'filer:select-file', JSON.stringify(file))
       }
-    },
-    onSelectDepth: function(file, depth) {
-      this.$data.depth.length = depth
-      this.$emit('getDir', file)
-      this.updateDepth()
     },
     getDir: function(file) {
       this.$data.reaction.loadingDir = true
@@ -59,22 +56,14 @@ export default {
         }
 
         this.$emit('filer-set-dir', finder)
-        this.addDepth(file)
         this.$data.reaction.loadingDir = false
       }
     },
     setDir: function(files) {
       this.$set('filelist', files)
     },
-    addDepth: function(file) {
-      this.$data.depth.push(file)
-      this.updateDepth()
-    },
-    updateDepth: function() {
-      localStorage.setItem('depth', JSON.stringify(this.$data.depth))
-    },
-    addFilesAll: function() {
-      this.$dispatch('all', 'files:get', this.$data.filelist)
+    onDragOver () {
+
     }
   },
   created: function() {
@@ -82,10 +71,48 @@ export default {
     if (localStorage.depth) {
       let depth = JSON.parse(localStorage.depth) || [{ path: '/Users', name: '/' }]
       const currentDir = depth.pop()
-      this.$data.depth = depth
       this.getDir(currentDir)
     } else {
       this.getDir({ path: '/Users', name: '/' })
     }
   }
 }
+</script>
+
+<style lang="stylus" scoped>
+@require '~stylesheets/variable'
+
+.filer-wrapper
+  position: absolute
+  top: 48px
+  bottom: 0
+  width: 100%
+  overflow-x: hidden
+  overflow-y: scroll
+  border-bottom-left-radius: 4px
+  border-bottom-right-radius: 4px
+.toolpalette
+  position: absolute
+  left: 0
+  bottom: 0
+  width: 100%
+  height: 12px
+.add-button
+  position: absolute
+  bottom: 12px
+  left: 0
+  right: 0
+  border-radius: 48px 48px 0 0
+  width: 64px
+  height: 32px
+  margin: auto
+  text-align: center
+  cursor: pointer
+  color: #e0e0e0
+  line-height: 48px
+  &:hover
+    color: #fafafa
+  .material-icons
+    margin-top: 8px
+
+</style>

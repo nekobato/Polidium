@@ -9,6 +9,10 @@ const {ipcMain} = electron
 
 const DEBUG = process.env.DEBUG ? true : false
 
+if (DEBUG) {
+  require('electron-debug')({showDevTools: true})
+}
+
 const PlayerWindow = require('./player')
 const ControllerWindow = require('./controller')
 
