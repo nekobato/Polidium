@@ -1,11 +1,11 @@
 <template lang="jade">
 div.grey.lighten-1.controller
-  div.btn-floating
+  div.btn-floating.control-button
     i.material-icons skip_previous
-  div.btn-floating.btn-large
+  div.btn-floating.control-button.play-button
     i.material-icons play_arrow
     //- i.material-icons pause
-  div.btn-floating
+  div.btn-floating.control-button
     i.material-icons skip_next
   div.seekbar
     div.seektime
@@ -29,6 +29,16 @@ export default {
 @require '~stylesheets/variable'
 
 .controller
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%
-  height: 60px
+  height: 100%
+.control-button
+  margin: 4px
+.play-button
+  width: 48px
+  height: 48px
+  & > .material-icons
+    line-height: 48px
 </style>

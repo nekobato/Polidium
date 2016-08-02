@@ -74,7 +74,7 @@ export default {
   top: 48px
   left: 0
   width: 100%
-  height: 60px
+  height: 70px
 .playlist-wrapper
   position: absolute
   top: 48px
