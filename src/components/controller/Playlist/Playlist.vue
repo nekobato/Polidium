@@ -1,5 +1,7 @@
 <template lang="jade">
-div.playlist-wrapper
+div.controller-wrapper
+  play-controller
+div.playlist-wrapper(:class="{ 'on-playing': true }")
   play-queue
 div.toolpalette.blue-grey
   span.add-button.blue-grey
@@ -14,9 +16,11 @@ const fs = remote.require('fs')
 const path = remote.require('path')
 
 import PlayQueue from './PlayQueue.vue'
+import PlayController from './PlayController.vue'
 
 export default {
   components: {
+    PlayController,
     PlayQueue
   },
   data () {
@@ -27,10 +31,6 @@ export default {
         loadingDir: false
       }
     }
-  },
-  events: {
-    'filer-set-dir': "setDir",
-    'getDir': "getDir"
   },
   methods: {
     selectItem: function(file) {
@@ -61,19 +61,6 @@ export default {
     },
     setDir: function(files) {
       this.$set('filelist', files)
-    },
-    onDragOver () {
-
-    }
-  },
-  created: function() {
-    // Resurrect
-    if (localStorage.depth) {
-      let depth = JSON.parse(localStorage.depth) || [{ path: '/Users', name: '/' }]
-      const currentDir = depth.pop()
-      this.getDir(currentDir)
-    } else {
-      this.getDir({ path: '/Users', name: '/' })
     }
   }
 }
@@ -82,6 +69,12 @@ export default {
 <style lang="stylus" scoped>
 @require '~stylesheets/variable'
 
+.controller-wrapper
+  position: absolute
+  top: 48px
+  left: 0
+  width: 100%
+  height: 60px
 .playlist-wrapper
   position: absolute
   top: 48px
@@ -91,6 +84,8 @@ export default {
   overflow-y: scroll
   border-bottom-left-radius: 4px
   border-bottom-right-radius: 4px
+  &.on-playing
+    top: 108px
 .toolpalette
   position: absolute
   left: 0

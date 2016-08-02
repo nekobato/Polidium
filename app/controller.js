@@ -12,7 +12,7 @@ module.exports = class {
 
     this.win = new BrowserWindow({
       width      : WINDOW_WIDTH,
-      height     : 560,
+      height     : 480,
       show       : false,
       resizable  : DEBUG ? true : false,
       frame      : DEBUG ? true : false,

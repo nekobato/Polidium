@@ -11,6 +11,7 @@ export default {
   template: require('./template.jade')(),
   data: function() {
     return {
+      style: style,
       show: true,
       currentView: 'playlist'
     }
