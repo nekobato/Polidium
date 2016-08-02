@@ -71,7 +71,7 @@ export default {
 
 .controller-wrapper
   position: absolute
-  top: 48px
+  top: 56px
   left: 0
   width: 100%
   height: 70px
@@ -85,7 +85,7 @@ export default {
   border-bottom-left-radius: 4px
   border-bottom-right-radius: 4px
   &.on-playing
-    top: 108px
+    top: 56px + 70px
 .toolpalette
   position: absolute
   left: 0
