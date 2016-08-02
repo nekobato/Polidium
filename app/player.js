@@ -12,15 +12,15 @@ module.exports = class {
     var size = electronScreen.getPrimaryDisplay().workAreaSize
 
     this.win = new BrowserWindow({
-      x: 0,
-      y: 0,
-      width: size.width,
-      height: size.height - 24, // Macの上のトレイ分短く
-      show: false,
-      resizable: false,
-      frame: false,
-      transparent: DEBUG ? false : true,
-      alwaysOnTop: DEBUG ? false : true,
+      x             : 0,
+      y             : 0,
+      width         : DEBUG ? 800 : size.width,
+      height        : DEBUG ? 600 : size.height - 24, // Macの上のトレイ分短く
+      show          : false,
+      resizable     : false,
+      frame         : DEBUG ? true : false,
+      transparent   : DEBUG ? false : true,
+      alwaysOnTop   : DEBUG ? false : true,
       'skip-taskbar': true
     })
 

@@ -1,14 +1,14 @@
 <template lang="jade">
-ul.collection
+ul.collection(v-sortable)
   li.collection-item.queue(
     v-for='file in filelist'
-    @dragover="onDragOver($index)"
-    @dragleave="onDragLeave($index)"
-    @ondrop.prevent="onDrop")
+    @dragover.prevent="onDragOver($index)"
+    @dragleave.prevent="onDragLeave($index)"
+    @drop.prevent="onDrop($event, $index)")
     span.truncate {{file.name}}
     span.badge
       i.material-icons.tiny(v-text='file | file2IconName')
-    div.droparea(v-show="file.isDropOver")
+    div.droparea(:class="{ dragging: file.isDragOver }")
 </template>
 
 <script>
@@ -17,7 +17,11 @@ export default {
   data () {
     return {
       filelist: [
-        { name: 'list1.mp4', path: '/Users/nekobato/Moives/list1.mp4', isDropOver: false }
+        { name: 'list1.mp4', path: '/Users/nekobato/Moives/list1.mp4', isDragOver: false },
+        { name: 'list2.mp4', path: '/Users/nekobato/Moives/list1.mp4', isDragOver: false },
+        { name: 'list3.mp4', path: '/Users/nekobato/Moives/list1.mp4', isDragOver: false },
+        { name: 'list4.mp4', path: '/Users/nekobato/Moives/list1.mp4', isDragOver: false },
+        { name: 'list5.mp4', path: '/Users/nekobato/Moives/list1.mp4', isDragOver: false }
       ]
     }
   },
@@ -32,15 +36,16 @@ export default {
   },
   methods: {
     onDragOver (index) {
-      console.log(index, 'is dropover')
-      this.$data.isDropOver = true
+      this.$data.filelist[index].isDragOver = true
     },
     onDragLeave (index) {
-      // this.$data.isDropOver = false
+      this.$data.filelist[index].isDragOver = false
     },
-    onDrop (e) {
-      const file = e.dataTransfer.files[0];
+    onDrop (e, index) {
+      this.$data.filelist[index].isDragOver = false
+      const file = e.dataTransfer.files[0]
       // name, path
+      return false
     }
   }
 }
@@ -58,7 +63,7 @@ export default {
   left: 0
   width: 100%
   height: 8px
-  &.dropping {
+  &.dragging {
     top: -8px
     height: 16px
     background: #29b6f6

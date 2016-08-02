@@ -16,10 +16,10 @@ export default {
     }
   },
   components: {
-    navbar: navbar,
-    playlist: playlist,
-    web: web,
-    settings: settings
+    navbar,
+    playlist,
+    web,
+    settings
   },
   events: {
     'navTab:selected': function(tab) {

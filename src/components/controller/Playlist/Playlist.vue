@@ -1,5 +1,5 @@
 <template lang="jade">
-div.filer-wrapper
+div.playlist-wrapper
   play-queue
 div.toolpalette.blue-grey
   span.add-button.blue-grey
@@ -17,7 +17,7 @@ import PlayQueue from './PlayQueue.vue'
 
 export default {
   components: {
-    'play-queue': PlayQueue
+    PlayQueue
   },
   data () {
     return {
@@ -82,7 +82,7 @@ export default {
 <style lang="stylus" scoped>
 @require '~stylesheets/variable'
 
-.filer-wrapper
+.playlist-wrapper
   position: absolute
   top: 48px
   bottom: 0

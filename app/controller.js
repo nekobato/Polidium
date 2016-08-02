@@ -11,14 +11,14 @@ module.exports = class {
   constructor(options) {
 
     this.win = new BrowserWindow({
-      width: WINDOW_WIDTH,
-      height: 560,
-      show: false,
-      resizable: false,
-      frame: DEBUG ? true : false,
+      width      : WINDOW_WIDTH,
+      height     : 560,
+      show       : false,
+      resizable  : DEBUG ? true : false,
+      frame      : DEBUG ? true : false,
       transparent: false,
       skipTaskbar: true,
-      hasShadow: true
+      hasShadow  : true
     })
 
     this.win.setVisibleOnAllWorkspaces(true)

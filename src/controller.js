@@ -1,10 +1,19 @@
 const renderer = require('electron').ipcRenderer
 import Vue from 'vue';
+import Sortable from 'vue-sortable'
 
 import materializeCss from 'materialize-css/dist/css/materialize.min.css';
 import materialIcons from 'material-design-icons/iconfont/material-icons.css';
 
 import controller from './components/controller';
+
+// document全体へのDropを無視
+document.ondragover = document.ondrop = function(e) {
+  e.preventDefault()
+  return false
+}
+
+Vue.use(Sortable)
 
 new Vue({
   el: 'body',
