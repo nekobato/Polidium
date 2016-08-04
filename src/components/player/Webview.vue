@@ -1,9 +1,13 @@
-import template from './template.jade';
+<template lang="jade">
+webview.webview(nodeintegration
+  v-bind="{ src: src }"
+  v-bind:style="{ opacity: config.opacity / 100 }")
+</template>
 
+<script>
 import config from 'models/config';
 
 export default {
-  template: template(),
   data: function() {
     return {
       src: "",
@@ -17,3 +21,7 @@ export default {
     }
   }
 }
+</script>
+
+<style lang="stylus">
+</style>

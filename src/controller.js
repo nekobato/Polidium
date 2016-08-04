@@ -5,7 +5,7 @@ import Sortable from 'vue-sortable'
 import materializeCss from 'materialize-css/dist/css/materialize.min.css';
 import materialIcons from 'material-design-icons/iconfont/material-icons.css';
 
-import controller from './components/controller';
+import Controller from './components/controller/Controller.vue';
 
 // document全体へのDropを無視
 document.ondragover = document.ondrop = function(e) {
@@ -23,7 +23,7 @@ new Vue({
     }
   },
   components: {
-    controller: controller
+    Controller
   },
   created: function() {
     renderer.on('controller:toggle', () => {

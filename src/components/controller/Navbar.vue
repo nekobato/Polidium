@@ -1,9 +1,15 @@
+<template lang="jade">
+nav.navbar.blue-grey
+  div.nav-wrapper
+    ul
+      li(v-for="tab in tabs" v-on:click="selectTab(tab)")
+        a.blue-text.text-lighten-4 {{tab.name}}
+</template>
+
+<script>
 const ipcRenderer = require('electron').ipcRenderer;
 
-import style from './style.styl';
-
 export default {
-  template: require('./template.jade')(),
   data: function() {
     return {
       tabs: [
@@ -20,3 +26,7 @@ export default {
     }
   }
 }
+</script>
+
+<style lang="stylus">
+</style>

@@ -3,15 +3,15 @@ import Vue from 'vue';
 
 import style from './components/player/style.styl';
 
-import videoPlayer from './components/player/video-player';
-import webView from './components/player/webview';
+import VideoPlayer from './components/player/VideoPlayer.vue';
+import WebView from './components/player/Webview.vue';
 import config from './models/config';
 
 new Vue({
   el: 'body',
   components: {
-    'video-player': videoPlayer,
-    'webview': webView
+    VideoPlayer,
+    Webview
   },
   data: {
     viewMode: 'video-player',
