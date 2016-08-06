@@ -1,5 +1,5 @@
 <template lang="jade">
-div(:class="style.controller" v-show="show")
+div.controller(v-show="show")
   navbar
   component(:is="currentView")
 </template>
@@ -15,7 +15,6 @@ import Settings from './Settings.vue'
 export default {
   data: function() {
     return {
-      style: style,
       show: true,
       currentView: 'playlist'
     }
@@ -38,7 +37,7 @@ export default {
 }
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 @require "~stylesheets/variable"
 
 body, html
