@@ -32,7 +32,7 @@ app.on('ready', function() {
     controller.toggle(bounds.x)
   })
 
-  player.show()
+  // player.show()
 
   ipcMain.on('controller:close-application', function(event) {
     app.quit()

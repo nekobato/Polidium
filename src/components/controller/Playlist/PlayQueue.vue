@@ -5,9 +5,9 @@ ul.collection(v-sortable)
     @dragover.prevent="onDragOver($index)"
     @dragleave.prevent="onDragLeave($index)"
     @drop.prevent="onDrop($event, $index)")
-    span.truncate {{file.name}}
-    span.badge
-      i.material-icons.tiny(v-text='file | file2IconName')
+    span.file-name {{file.name}}
+    span.badge.file-type
+      i.badge.material-icons.tiny(v-text='file | file2IconName')
     div.droparea(:class="{ dragging: file.isDragOver }")
 </template>
 
@@ -54,20 +54,19 @@ export default {
 <style lang="stylus" scoped>
 @require '~stylesheets/variable'
 
-.queue {
+.queue
   position: relative
-}
-.droparea {
+.droparea
   position: absolute
   top: -4px
   left: 0
   width: 100%
   height: 8px
-  &.dragging {
+  &.dragging
     top: -8px
     height: 16px
     background: #29b6f6
-  }
-}
+.file-type
+  top: 12px
 
 </style>
