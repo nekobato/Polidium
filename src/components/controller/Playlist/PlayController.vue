@@ -2,7 +2,7 @@
 div.grey.lighten-1.controller
   div.btn-floating.control-button
     i.material-icons skip_previous
-  div.btn-floating.control-button.play-button
+  div.btn-floating.control-button.play-button(@click="play")
     i.material-icons play_arrow
     //- i.material-icons pause
   div.btn-floating.control-button
@@ -15,13 +15,18 @@ div.grey.lighten-1.controller
 const electron = require('electron')
 const ipcRenderer = electron.ipcRenderer
 const remote      = electron.remote
+import { PLAY_QUEUE } from 'types'
 
 export default {
   data () {
     return {
     }
   },
-  methods: {}
+  methods: {
+    play() {
+      this.$dispatch(PLAY_QUEUE)
+    }
+  }
 }
 </script>
 

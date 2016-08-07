@@ -8,20 +8,23 @@ ul.collection(v-sortable)
     span.file-name {{file.name}}
     span.badge.file-type
       i.badge.material-icons.tiny(v-text='file | file2IconName')
-    div.droparea(:class="{ dragging: file.isDragOver }")
+    div.droparea(:class="{ dragging: file.status.isDragOver }")
 </template>
 
 <script>
+import { PLAY_QUEUE } from 'types'
 
 export default {
   data () {
     return {
       filelist: [
-        { name: 'list1.mp4', path: '/Users/nekobato/Moives/list1.mp4', isDragOver: false },
-        { name: 'list2.mp4', path: '/Users/nekobato/Moives/list1.mp4', isDragOver: false },
-        { name: 'list3.mp4', path: '/Users/nekobato/Moives/list1.mp4', isDragOver: false },
-        { name: 'list4.mp4', path: '/Users/nekobato/Moives/list1.mp4', isDragOver: false },
-        { name: 'list5.mp4', path: '/Users/nekobato/Moives/list1.mp4', isDragOver: false }
+        {
+          name: 'list1.mp4',
+          path: '/Users/nekobato/Moives/list1.mp4',
+          status: {
+            isDragOver: false
+          }
+        },
       ]
     }
   },
@@ -34,6 +37,11 @@ export default {
       }
     }
   },
+  events: {
+    PLAY_QUEUE(index) {
+      console.log('hoge')
+    }
+  },
   methods: {
     onDragOver (index) {
       this.$data.filelist[index].isDragOver = true
@@ -44,7 +52,17 @@ export default {
     onDrop (e, index) {
       this.$data.filelist[index].isDragOver = false
       const file = e.dataTransfer.files[0]
-      // name, path
+      // file type validation XXX fixme
+      if (file.type !== 'video/mp4') return
+
+      this.$data.filelist.splice(index, 0, {
+        name: file.name,
+        path: file.path,
+        status: {
+          isDragOver: false,
+          isPlaying: false
+        }
+      })
       return false
     }
   }
