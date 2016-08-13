@@ -2,13 +2,14 @@
 div.grey.lighten-1.controller
   div.btn-floating.control-button
     i.material-icons skip_previous
-  div.btn-floating.control-button.play-button(@click="play")
+  div.btn-floating.teal.darken-1.control-button(@click="play")
     i.material-icons play_arrow
     //- i.material-icons pause
   div.btn-floating.control-button
     i.material-icons skip_next
-  div.seekbar.black
-    div.seektime.red.darken-1
+  div.seek-bar.black
+    div.seek-time.red.darken-1
+    div.seek-handle.red.lighten-1
 </template>
 
 <script>
@@ -34,27 +35,30 @@ export default {
 @require '~stylesheets/variable'
 
 .controller
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex
+  align-items: center
+  justify-content: center
   width: 100%
   height: 100%
 .control-button
+  position: relative
+  top: -8px
   margin: 4px
-.play-button
-  width: 48px
-  height: 48px
-  & > .material-icons
-    line-height: 48px
-.seekbar
+.seek-bar
   position: absolute
-  bottom: 0
-  left: 0
-  right: 0
-  width: 100%
+  bottom: 6px
+  left: 6px
+  right: 6px
+  width: auto
   height: 10px
   text-align: left
-.seektime
+.seek-time
   width: 10px
   height: 10px
+.seek-handle
+  position: absolute
+  top: -5px
+  left: 10px
+  width: 10px
+  height: 20px
 </style>

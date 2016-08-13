@@ -5,14 +5,11 @@ video.video-player(autoplay
 </template>
 
 <script>
-import config from 'models/config';
-
 export default {
   data: function() {
     return {
       src: null,
       controls: false,
-      config: config
     }
   },
   events: {

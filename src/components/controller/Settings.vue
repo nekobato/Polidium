@@ -24,12 +24,9 @@ div.white.settings.container
 <script>
 const ipcRenderer = require('electron').ipcRenderer
 
-import configModel from 'models/config'
-
 export default {
   data: function() {
     return {
-      config: configModel,
       clickThrough: true
     }
   },

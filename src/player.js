@@ -5,7 +5,6 @@ import style from './components/player/style.styl';
 
 import VideoPlayer from './components/player/VideoPlayer.vue';
 import WebView from './components/player/Webview.vue';
-import config from './models/config';
 
 new Vue({
   el: 'body',

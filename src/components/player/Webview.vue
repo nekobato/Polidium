@@ -5,14 +5,11 @@ webview.webview(nodeintegration
 </template>
 
 <script>
-import config from 'models/config';
-
 export default {
   data: function() {
     return {
       src: "",
-      controls: false,
-      config: config
+      controls: false
     }
   },
   events: {
