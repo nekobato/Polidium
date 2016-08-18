@@ -1,7 +1,7 @@
 <template lang="jade">
 div.controller-wrapper
   play-controller
-div.playlist-wrapper(:class="{ 'on-playing': true }")
+div.playlist-wrapper.white(:class="{ 'on-playing': true }")
   play-queue
 div.toolpalette.blue-grey
   span.add-button.blue-grey
@@ -73,17 +73,17 @@ export default {
   position: absolute
   top: 56px
   left: 0
+  padding: 0 0 6px
   width: 100%
   height: 70px
 .playlist-wrapper
   position: absolute
   top: 48px
-  bottom: 0
+  bottom: 12px
   width: 100%
   overflow-x: hidden
   overflow-y: scroll
-  border-bottom-left-radius: 4px
-  border-bottom-right-radius: 4px
+  border-radius: 5px
   &.on-playing
     top: 56px + 70px
 .toolpalette

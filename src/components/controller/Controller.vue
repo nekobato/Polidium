@@ -1,5 +1,5 @@
 <template lang="jade">
-div.controller(v-show="show")
+div.controller.blue-grey(v-show="show")
   navbar
   component(:is="currentView")
 </template>
@@ -51,7 +51,6 @@ body, html
   bottom: 0
   margin: auto
   width: 100%
-  background-color: #ffffff
   border-radius: 5px
   border: 3px solid #607d8b
 </style>

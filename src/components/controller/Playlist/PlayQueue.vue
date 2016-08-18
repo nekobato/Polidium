@@ -12,20 +12,24 @@ ul.collection(v-sortable)
 </template>
 
 <script>
-import { PLAY_QUEUE } from 'types'
+import store from 'store'
 
 export default {
-  data () {
-    return {
-      filelist: [
-        {
-          name: 'list1.mp4',
-          path: '/Users/nekobato/Moives/list1.mp4',
+  vuex: {
+    actions: {
+      addQueue(file) {
+        // file type validation XXX fixme
+        if (file.type !== 'video/mp4') return
+
+        this.$data.filelist.splice(index, 0, {
+          name: file.name,
+          path: file.path,
           status: {
-            isDragOver: false
+            isDragOver: false,
+            isPlaying: false
           }
-        },
-      ]
+        })
+      }
     }
   },
   filters: {
@@ -37,11 +41,7 @@ export default {
       }
     }
   },
-  events: {
-    PLAY_QUEUE(index) {
-      console.log('hoge')
-    }
-  },
+
   methods: {
     onDragOver (index) {
       this.$data.filelist[index].isDragOver = true
@@ -50,19 +50,8 @@ export default {
       this.$data.filelist[index].isDragOver = false
     },
     onDrop (e, index) {
+      this.addQueue(file = e.dataTransfer.files[0])
       this.$data.filelist[index].isDragOver = false
-      const file = e.dataTransfer.files[0]
-      // file type validation XXX fixme
-      if (file.type !== 'video/mp4') return
-
-      this.$data.filelist.splice(index, 0, {
-        name: file.name,
-        path: file.path,
-        status: {
-          isDragOver: false,
-          isPlaying: false
-        }
-      })
       return false
     }
   }

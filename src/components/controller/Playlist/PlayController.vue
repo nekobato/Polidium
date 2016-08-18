@@ -1,14 +1,14 @@
 <template lang="jade">
-div.grey.lighten-1.controller
+div.blue-grey.lighten-1.controller
   div.btn-floating.control-button
     i.material-icons skip_previous
-  div.btn-floating.teal.darken-1.control-button(@click="play")
+  div.btn-floating.teal.lighten-2.control-button(@click="play")
     i.material-icons play_arrow
     //- i.material-icons pause
   div.btn-floating.control-button
     i.material-icons skip_next
   div.seek-bar.black
-    div.seek-time.red.darken-1
+    div.seek-time
     div.seek-handle.red.lighten-1
 </template>
 
@@ -16,7 +16,6 @@ div.grey.lighten-1.controller
 const electron = require('electron')
 const ipcRenderer = electron.ipcRenderer
 const remote      = electron.remote
-import { PLAY_QUEUE } from 'types'
 
 export default {
   data () {
@@ -25,7 +24,6 @@ export default {
   },
   methods: {
     play() {
-      this.$dispatch(PLAY_QUEUE)
     }
   }
 }
@@ -40,25 +38,30 @@ export default {
   justify-content: center
   width: 100%
   height: 100%
+  border-radius: 5px
 .control-button
   position: relative
   top: -8px
   margin: 4px
 .seek-bar
   position: absolute
-  bottom: 6px
-  left: 6px
-  right: 6px
+  bottom: 12px
+  left: 8px
+  right: 8px
   width: auto
-  height: 10px
+  height: 8px
   text-align: left
+  border-radius: 5px
 .seek-time
-  width: 10px
+  width: 100%
   height: 10px
+  border-radius: 5px
 .seek-handle
   position: absolute
-  top: -5px
+  top: -4px
   left: 10px
-  width: 10px
-  height: 20px
+  width: 16px
+  height: 16px
+  border-radius: 8px
+  border: 1px solid #e57373
 </style>

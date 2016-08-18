@@ -17,11 +17,11 @@ module.exports = class {
       resizable  : DEBUG ? true : false,
       frame      : DEBUG ? true : false,
       transparent: false,
-      skipTaskbar: true,
+      skipTaskbar: DEBUG ? false : true,
       hasShadow  : true
     })
 
-    this.win.setVisibleOnAllWorkspaces(true)
+    this.win.setVisibleOnAllWorkspaces(DEBUG ? false : true)
 
     this.win.on('blur', () => {
       if (!DEBUG) {

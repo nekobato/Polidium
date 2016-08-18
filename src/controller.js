@@ -1,5 +1,6 @@
 const renderer = require('electron').ipcRenderer
 import Vue from 'vue';
+import Store from 'store'
 import Sortable from 'vue-sortable'
 
 import materializeCss from 'materialize-css/dist/css/materialize.min.css';
@@ -17,6 +18,7 @@ Vue.use(Sortable)
 
 new Vue({
   el: 'body',
+  store: Store,
   events: {
     'all': function(event_name, data) {
       this.$broadcast(event_name, data);
