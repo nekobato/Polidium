@@ -1,5 +1,5 @@
 <template lang="jade">
-div.white.settings.container
+div.white.settings.white
   div.row
     h5 Opacity {{config.opacity}}
     div.input-field.center
@@ -49,6 +49,8 @@ export default {
 
 <style lang="stylus">
 .settings
+  padding: 5px
+  border-radius: 5px
   .row
     margin: 10px
   .input-field

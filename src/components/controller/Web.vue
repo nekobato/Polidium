@@ -1,10 +1,12 @@
 <template lang="jade">
-div.web-wrapper
+div.web-wrapper.white
+  div.encoded-url
+    span.grey-text {{encodedURL}}
   form(@submit.prevent='onSubmitURL')
     div.input-field
       input#url_input(type='text' placeholder='URL' v-model='url' @keydown.86="onTryPasteClipboard")
-  div.row.center
-    span {{encodedURL}}
+
+
 </template>
 
 <script>
@@ -53,8 +55,14 @@ export default {
 
 <style lang="stylus">
 .web-wrapper
-  padding: 10px 0
+  padding: 6px 0
+  height: 74px
+  border-radius: 5px
   .input-field
     margin-left: 1rem
     margin-right: 1rem
+.encoded-url
+  position: absolute
+  margin: auto
+  left: 1rem
 </style>

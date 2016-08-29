@@ -75,17 +75,17 @@ export default {
   left: 0
   padding: 0 0 6px
   width: 100%
-  height: 70px
+  height: 80px
 .playlist-wrapper
   position: absolute
-  top: 48px
-  bottom: 12px
+  top: 58px
+  bottom: 16px
   width: 100%
   overflow-x: hidden
   overflow-y: scroll
   border-radius: 5px
   &.on-playing
-    top: 56px + 70px
+    top: 56px + 80px
 .toolpalette
   position: absolute
   left: 0

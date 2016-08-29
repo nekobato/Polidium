@@ -1,5 +1,5 @@
 <template lang="jade">
-div.blue-grey.lighten-1.controller
+div.blue-grey.lighten-5.controller
   div.btn-floating.control-button
     i.material-icons skip_previous
   div.btn-floating.teal.lighten-2.control-button(@click="play")
@@ -9,7 +9,7 @@ div.blue-grey.lighten-1.controller
     i.material-icons skip_next
   div.seek-bar.black
     div.seek-time
-    div.seek-handle.red.lighten-1
+    div.seek-handle.blue-grey.lighten-1
 </template>
 
 <script>
@@ -41,11 +41,11 @@ export default {
   border-radius: 5px
 .control-button
   position: relative
-  top: -8px
+  top: -12px
   margin: 4px
 .seek-bar
   position: absolute
-  bottom: 12px
+  bottom: 18px
   left: 8px
   right: 8px
   width: auto
@@ -63,5 +63,5 @@ export default {
   width: 16px
   height: 16px
   border-radius: 8px
-  border: 1px solid #e57373
+  border: 1px solid #78909c
 </style>
