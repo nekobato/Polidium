@@ -13,10 +13,13 @@ module.exports = {
     publicPath: "/"
   },
   resolve: {
-    extensions: ['', '.js'],
+    extensions: ['', '.js', '.json', '.vue'],
     root: [
       path.resolve('./src/')
-    ]
+    ],
+    alias: {
+      vue: 'vue/dist/vue.js'
+    }
   },
   target: "node",
   node: {
@@ -43,6 +46,10 @@ module.exports = {
       {
         test: /\.json$/,
         loaders: ['json']
+      },
+      {
+        test: /\.vue$/,
+        loaders: ['vue']
       },
       {
         test: /\.jade$/,

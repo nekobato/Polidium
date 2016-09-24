@@ -1,11 +1,17 @@
+<template lang="jade">
+div.web
+  form(@submit.prevent='onSubmitURL')
+    div.input-field
+      input#url_input(type='text' placeholder='URL' v-model='url' @keydown.86="onTryPasteClipboard")
+  div.row.center
+    span {{encodedURL}}
+</template>
+<script>
 const ipcRenderer = require('electron').ipcRenderer
 const clipboard = require('electron').clipboard
 const xss = require('xss')
 
-import style from './style.styl'
-
 export default {
-  template: require('./template.jade')(),
   data: function() {
     return {
       url: ''
@@ -42,3 +48,8 @@ export default {
   ready: function() {
   }
 }
+</script>
+<style lang="stylus" scoped>
+@require "~stylesheets/variable";
+
+</style>

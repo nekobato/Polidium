@@ -1,14 +1,16 @@
-import template from './template.jade';
-
-import config from 'models/config';
+<template lang="jade">
+video.video-player(autoplay
+  v-bind='{ controls: controls, src: src }'
+  v-bind:style="{ opacity: config.opacity / 100 }")
+</template>
+<script>
+const ipcRenderer = require('electron').ipcRenderer
 
 export default {
-  template: template(),
   data: function() {
     return {
       src: null,
-      controls: false,
-      config: config
+      controls: false
     }
   },
   events: {
@@ -21,3 +23,4 @@ export default {
     }
   }
 }
+</script>
