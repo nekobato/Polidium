@@ -5,12 +5,10 @@ div.player
 <script>
 const ipcRenderer = require('electron').ipcRenderer
 
-import Vue from 'vue'
-
 import VideoPlayer from './VideoPlayer.vue'
 import WebPlayer from './WebPlayer.vue'
 
-new Vue({
+export default {
   el: '#player',
   components: {
     VideoPlayer,
@@ -18,8 +16,7 @@ new Vue({
   },
   data: {
     viewMode: 'video-player',
-    clickThrough: true,
-    config: config
+    clickThrough: true
   },
   events: {
     'filer:select-file': function(fileStr) {
@@ -49,5 +46,5 @@ new Vue({
       this.$broadcast('main:toggle-player', flag)
     })
   }
-})
+}
 </script>

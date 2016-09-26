@@ -45,6 +45,11 @@ app.on('ready', function() {
     player.win.setVisibleOnAllWorkspaces(toggleTo)
     player.win.webContents.send('main:toggle-player', toggleTo)
   })
+
+  ipcMain.on('PLAY_FILE', function(event, data) {
+    console.log('play file', data)
+    player.win.webContents.send('PLAY_FILE', data)
+  })
 })
 
 app.on('login', function(event, webContents, request, authInfo, callback) {

@@ -1,3 +1,5 @@
+const ipcRenderer = require('electron').ipcRenderer
+
 import {
   PLAY_QUEUE,
   ADD_QUEUE,
@@ -9,17 +11,24 @@ import {
 } from '../mutation-types'
 
 const state = {
-  queues: [0,2,3]
+  queues: []
 }
 
 const mutations = {
 
+  [PLAY_QUEUE] (state, queue) {
+    ipcRenderer.send('PLAY_FILE', JSON.stringify({
+      name: queue.name,
+      path: queue.path
+    }))
+  },
   [ADD_QUEUE] (state, file) {
     if (isMovieFile(file)) {
       state.queues.push(file)
     }
   },
   [ADD_QUEUES] (state, files) {
+    console.log(files)
     for (let file of files) {
       if (isMovieFile(file)) {
         state.queues.push(file)

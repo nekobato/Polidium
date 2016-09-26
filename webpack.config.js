@@ -16,10 +16,7 @@ module.exports = {
     extensions: ['', '.js', '.json', '.vue'],
     root: [
       path.resolve('./src/')
-    ],
-    alias: {
-      vue: 'vue/dist/vue.js'
-    }
+    ]
   },
   target: "node",
   node: {

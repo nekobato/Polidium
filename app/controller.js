@@ -1,7 +1,7 @@
 "use strict"
 
 const electron = require('electron')
-const BrowserWindow = electron.BrowserWindow
+const { BrowserWindow } = electron
 
 const DEBUG = process.env.DEBUG ? true : false
 

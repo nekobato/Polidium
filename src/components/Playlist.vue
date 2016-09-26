@@ -1,23 +1,70 @@
 <template lang="jade">
-ul.collection
-  li.collection-item(v-for="queue in queues", track-by="$index") file name
+div.playlist(
+  @dragover.prevent.stop="onDragover"
+  @drop.prevent.stop="onDrop")
+  ul.collection
+    li.collection-item(v-for="queue in queues", track-by="$index",
+      @click.prevent='play($index)')
+      i.material-icons.grey-text.playlist-deleter(
+        @click.prevent='removeQueue($index)') close
+      span.truncate {{ queue.name }}
+
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import * as types from '../vuex/mutation-types'
 
 export default {
-  computed: {
-    ...mapGetters({
-      queues: 'queues'
-    })
+  vuex: {
+    getters: {
+      queues: state => state.playlist.queues
+    }
   },
+  computed: {
+
+  },
+  methods: {
+    onDragover (e) {
+    },
+    onDrop (e) {
+      this.$store.dispatch(types.ADD_QUEUES, e.dataTransfer.files)
+      return false
+    },
+    play (index) {
+      this.$store.dispatch(types.PLAY_QUEUE, this.queues[index])
+    },
+    removeQueue (index) {
+      this.$store.dispatch(types.REMOVE_QUEUE, index)
+    }
+  }
 }
 </script>
-<style lang="stylus">
-@require "~stylesheets/variable";
-
+<style lang="stylus" scoped>
+@require "~stylesheets/variable"
 
 .collection {
   width: 100%
+}
+
+.playlist-deleter {
+  right: 5px
+  display: none
+  position: absolute
+}
+
+.collection-item {
+  position: relative
+  cursor: pointer
+  &:hover {
+    .playlist-deleter {
+      display: inline-block
+    }
+  }
+}
+
+.playlist {
+  margin: 0
+  width: 100%
+  height: 100%
+  overflow-y: scroll
 }
 </style>

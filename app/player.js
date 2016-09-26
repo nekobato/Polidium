@@ -2,6 +2,8 @@ const electron = require('electron')
 const {BrowserWindow} = electron
 const {ipcMain} = electron
 
+const DEBUG = process.env.DEBUG ? true : false
+
 module.exports = class {
 
   constructor() {
@@ -10,21 +12,21 @@ module.exports = class {
     var size = electronScreen.getPrimaryDisplay().workAreaSize
 
     this.win = new BrowserWindow({
-      x: 0,
-      y: 0,
-      width: size.width,
-      height: size.height - 24, // Macの上のトレイ分短く
-      show: false,
-      resizable: false,
-      frame: false,
-      transparent: true,
-      alwaysOnTop: true,
+      x             : 0,
+      y             : 0,
+      width         : DEBUG ? 400 : size.width,
+      height        : DEBUG ? 300 : size.height - 24, // Macの上のトレイ分短く
+      show          : false,
+      resizable     : DEBUG ? true : false,
+      frame         : DEBUG ? true : false,
+      transparent   : DEBUG ? false : true,
+      alwaysOnTop   : DEBUG ? false : true,
       'skip-taskbar': true
     })
 
     this.win.center()
-    this.win.setIgnoreMouseEvents(true)
-    this.win.setVisibleOnAllWorkspaces(true)
+    this.win.setIgnoreMouseEvents(DEBUG ? false : true)
+    this.win.setVisibleOnAllWorkspaces(DEBUG ? false : true)
 
     this.win.loadURL(`file://${__dirname}/player.html`)
 

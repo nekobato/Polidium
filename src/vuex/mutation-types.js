@@ -1,17 +1,8 @@
-import _ from 'lodash'
+export const ADD_QUEUE = 'ADD_QUEUE'
+export const ADD_QUEUES = 'ADD_QUEUES'
+export const REMOVE_QUEUE = 'REMOVE_QUEUE'
+export const REMOVE_QUEUES = 'REMOVE_QUEUES'
 
-const types = _.reduce([
-
-  'ADD_QUEUE',
-  'REMOVE_QUEUE',
-  'REMOVE_QUEUES',
-
-  'PLAY_QUEUE',
-  'PLAY_NEXT',
-  'PLAY_PREV'
-
-], function (obj, value) {
-  return _.assign(obj, value)
-}, {})
-
-export default types
+export const PLAY_QUEUE = 'PLAY_QUEUE'
+export const PLAY_NEXT = 'PLAY_NEXT'
+export const PLAY_PREV = 'PLAY_PREV'
