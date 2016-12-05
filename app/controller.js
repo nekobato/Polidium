@@ -15,7 +15,7 @@ module.exports = class {
       width      : WINDOW_WIDTH,
       height     : 560,
       show       : DEBUG ? true : false,
-      resizable  : DEBUG? true : false,
+      resizable  : DEBUG ? true : false,
       frame      : DEBUG ? true : false,
       transparent: DEBUG ? false : true,
       skipTaskbar: true,
