@@ -1,5 +1,10 @@
 <template lang="jade">
 div.controller
+  div.tabs-container.blue-grey
+    button.btn file
+    button.btn Web
+    button.btn-floating
+      i.material-icons settings
   component(:is="currentView")
 </template>
 <script>
@@ -21,13 +26,13 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-@require "~stylesheets/variable"
 
-.controller {
-  display: flex
+.controller
   margin: auto
   width: 100%
   height: 100%
   border-radius: 5px
-}
+
+.tabs-container
+  height: 36px
 </style>

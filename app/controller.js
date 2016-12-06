@@ -5,7 +5,7 @@ const { BrowserWindow } = electron
 
 const DEBUG = process.env.DEBUG ? true : false
 
-const WINDOW_WIDTH = 400
+const WINDOW_WIDTH = 320
 
 module.exports = class {
 
@@ -13,7 +13,7 @@ module.exports = class {
 
     this.win = new BrowserWindow({
       width      : WINDOW_WIDTH,
-      height     : 560,
+      height     : 480,
       show       : DEBUG ? true : false,
       resizable  : DEBUG ? true : false,
       frame      : DEBUG ? true : false,

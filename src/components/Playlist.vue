@@ -1,7 +1,12 @@
 <template lang="jade">
-div.playlist(
-  @dragover.prevent.stop="onDragover"
-  @drop.prevent.stop="onDrop")
+div.playlist
+  div.play-controller
+    button.btn-floating
+      i.material-icons skip_previous
+    button.btn-floating
+      i.material-icons play_arrow
+    button.btn-floating
+      i.material-icons skip_next
   ul.collection
     li.collection-item(v-for="queue in queues", track-by="$index",
       @click.prevent='play($index)')
@@ -39,7 +44,9 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-@require "~stylesheets/variable"
+
+.play-controller
+  text-align: center
 
 .collection {
   width: 100%
