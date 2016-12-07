@@ -1,50 +1,54 @@
 <template lang="jade">
-div.player
-  component(:is="viewMode")
+div.player(:style="{ left: x, top: y, width: width, height: height, opacity: opacity }")
+  component(:is="player.viewMode")
 </template>
 <script>
-const ipcRenderer = require('electron').ipcRenderer
+const { ipcRenderer } = require('electron')
 
-import VideoPlayer from './VideoPlayer.vue'
-import WebPlayer from './WebPlayer.vue'
+import Video from './Video.vue'
+import Web from './Web.vue'
 
 export default {
   el: '#player',
   components: {
-    VideoPlayer,
-    WebPlayer
+    Video,
+    Web
   },
-  data: {
-    viewMode: 'video-player',
-    clickThrough: true
-  },
-  events: {
-    'filer:select-file': function(fileStr) {
-      let file = JSON.parse(fileStr)
-      this.viewMode = 'video-player'
-      this.$nextTick(function() {
-        this.$broadcast('player:receive-file', file)
-      })
+  computed: {
+    player () {
+      return this.$store.state.player
     },
-    'url:submit-url': function(url) {
-      this.viewMode = 'web-player'
-      this.$nextTick(function() {
-        this.$broadcast('player:receive-url', url)
-      })
+    x () {
+      return player.x ? player.x + 'px'
     },
-    'settings:change-opacity': function(opacity) {
-      this.config.opacity = opacity
+    y () {
+      return player.y ? player.y + 'px'
+    },
+    width () {
+      return player.width ? player.width + 'px' : '100%'
+    },
+    height () {
+      return player.height ? player.height + 'px' : '100%'
+    },
+    opacity () {
+      return player.opacity ? player.opacity
     }
   },
-  ready: function() {
-    ipcRenderer.on('main:ipc-bridge', (event, channel, data) => {
-      this.$emit(channel, data)
-    })
-
-    ipcRenderer.on('main:toggle-player', (event, flag) => {
-      this.clickThrough = flag ? true : false
-      this.$broadcast('main:toggle-player', flag)
+  created () {
+    ipcRenderer.on('BRIDGE', (event, channel, data) => {
+      this.$store.dispatch(channel, data)
     })
   }
 }
 </script>
+<style lang="stylus" scoped>
+body,
+html,
+.player
+  margin: 0
+  width: 100%
+  height: 100%
+
+.player
+  position: absolute
+</style>

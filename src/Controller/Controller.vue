@@ -26,11 +26,14 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-
-.controller
-  margin: auto
+body,
+html,
+.player
+  margin: 0
   width: 100%
   height: 100%
+
+.controller
   border-radius: 5px
 
 .tabs-container
