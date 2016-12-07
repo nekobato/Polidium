@@ -33,32 +33,24 @@ module.exports = {
         loader: 'url?name=../font/[name].[ext]&limit=100000'
       },
       {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: "babel",
-        query: {
-          presets: ['es2015']
-        }
-      },
-      {
         test: /\.json$/,
-        loaders: ['json']
+        loaders: 'json'
       },
       {
         test: /\.vue$/,
-        loaders: ['vue']
+        loaders: 'vue'
       },
       {
         test: /\.jade$/,
-        loader: "jade"
+        loader: 'jade'
       },
       {
         test: /\.styl$/,
-        loader: "style!css!stylus"
+        loader: 'style!css!stylus'
       },
       {
         test: /\.css$/,
-        loader: "style!css"
+        loader: 'style!css'
       },
     ]
   },
