@@ -1,10 +1,9 @@
 <template lang="jade">
-webview.webview(nodeintegration v-bind="{ src: web.src }")
+webview.web-player(nodeintegration v-bind="{ src: web.src }")
 </template>
 <script>
-const { ipcRenderer } = require('electron')
-
-export default {
+module.exports = {
+  name: 'web',
   computed: {
     web () {
       return this.$store.state.web
@@ -12,3 +11,8 @@ export default {
   }
 }
 </script>
+<style lang="stylus" scoped>
+.web-player
+  width: 100%
+  height: 100%
+</style>

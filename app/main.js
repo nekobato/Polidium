@@ -1,11 +1,9 @@
 "use strict"
 
 const electron = require('electron')
-const {app} = electron
-const {Tray} = electron
-const {nativeImage} = electron
-const {globalShortcut} = electron
-const {ipcMain} = electron
+const { app, Tray, nativeImage, globalShortcut, ipcMain } = require('electron')
+const Vue = require('vue')
+const Vuex = require('vuex')
 
 const DEBUG = process.env.DEBUG ? true : false
 
@@ -14,17 +12,15 @@ if (DEBUG) require('electron-debug')({ showDevTools: true })
 const PlayerWindow = require('./player')
 const ControllerWindow = require('./controller')
 
-let tray, trayIcon, player, controller
-
-app.dock.hide()
+if (!DEBUG) app.dock.hide()
 
 app.on('ready', function() {
 
-  player = new PlayerWindow()
-  controller = new ControllerWindow()
+  var player = new PlayerWindow()
+  var controller = new ControllerWindow()
 
-  trayIcon = nativeImage.createFromPath(__dirname + '/img/tray_icon.png')
-  tray = new Tray(trayIcon)
+  var trayIcon = nativeImage.createFromPath(__dirname + '/img/tray_icon.png')
+  var tray = new Tray(trayIcon)
 
   tray.on('click', function(event, bounds) {
     controller.toggle(bounds.x)
@@ -32,31 +28,50 @@ app.on('ready', function() {
 
   player.show()
 
-  ipcMain.on('controller:close-application', function(event) {
+  ipcMain.on('EXIT', function(event) {
     app.quit()
   })
 
-  ipcMain.on('controller:ipc-bridge', function(event, channel, data) {
-    player.win.webContents.send('main:ipc-bridge', channel, data)
+  ipcMain.on('CHANGE_THROUGTH', (event, toggle) => {
+    player.win.setIgnoreMouseEvents(toggle)
+    player.win.setAlwaysOnTop(toggle)
+    player.win.setVisibleOnAllWorkspaces(toggle)
+    player.win.webContents.send('CHANGE_THROUGTH', toggle)
   })
 
-  ipcMain.on('controller:toggle-player', (event) => {
-    var toggleTo = player.win.isAlwaysOnTop() ? false : true
-    player.win.setIgnoreMouseEvents(toggleTo)
-    player.win.setAlwaysOnTop(toggleTo)
-    player.win.setVisibleOnAllWorkspaces(toggleTo)
-    player.win.webContents.send('main:toggle-player', toggleTo)
+  Vue.use(Vuex)
+
+  const store = new Vuex.Store({
+    state: {
+      mode: 'FilePlayer',
+      settings: {
+        display: 1,
+        x: 0,
+        y: 0,
+        width: '100%',
+        height: '100%',
+        mode: 'file',
+        opacity: 0.1,
+        through: true
+      }
+    },
+    middlewares: [{
+      onMutation (mutation, state) {
+        // player.win.webContents.send('CONNECT_COMMIT', type, mutation)
+        // controller.win.webContents.send('CONNECT_COMMIT', type, mutation)
+      }
+    }]
   })
 
-  ipcMain.on('PLAY_FILE', function(event, data) {
-    console.log('play file', data)
-    player.win.webContents.send('PLAY_FILE', data)
+  ipcMain.on('CONNECT_STATE', (event) => {
+    event.returnValue = store.state
   })
-})
 
-app.on('login', function(event, webContents, request, authInfo, callback) {
-  event.preventDefault()
-  callback('', '')
+  ipcMain.on('CONNECT_COMMIT', (event, type, payload) => {
+    store.commit(type, payload)
+    player.win.webContents.send('CONNECT_COMMIT', type, payload)
+    controller.win.webContents.send('CONNECT_COMMIT', type, payload)
+  })
 })
 
 app.on('will-quit', function() {

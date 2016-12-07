@@ -1,49 +1,59 @@
 <template lang="jade">
 div.player(:style="{ left: x, top: y, width: width, height: height, opacity: opacity }")
-  component(:is="player.viewMode")
+  component(:is="player.mode")
 </template>
+
 <script>
 const { ipcRenderer } = require('electron')
 
-import Video from './Video.vue'
-import Web from './Web.vue'
+const store = require('./store')
+const FilePlayer = require('./File.vue')
+const WebPlayer = require('./Web.vue')
 
-export default {
-  el: '#player',
+module.exports = {
   components: {
-    Video,
-    Web
+    FilePlayer,
+    WebPlayer
   },
+  store,
   computed: {
     player () {
       return this.$store.state.player
     },
     x () {
-      return player.x ? player.x + 'px'
+      return this.player.settings.x + 'px'
     },
     y () {
-      return player.y ? player.y + 'px'
+      return this.player.settings.y + 'px'
     },
     width () {
-      return player.width ? player.width + 'px' : '100%'
+      return this.player.settings.width ? this.player.settings.width + 'px' : '100%'
     },
     height () {
-      return player.height ? player.height + 'px' : '100%'
+      return this.player.settings.height ? this.player.settings.height + 'px' : '100%'
     },
     opacity () {
-      return player.opacity ? player.opacity
+      return this.player.settings.opacity
     }
   },
   created () {
-    ipcRenderer.on('BRIDGE', (event, channel, data) => {
-      this.$store.dispatch(channel, data)
+    ipcRenderer.on('EMIT', (event, channel, data) => {
+      this.$store.commit(channel, JSON.parse(data))
     })
+    console.log(this.player)
   }
 }
 </script>
-<style lang="stylus" scoped>
-body,
+
+<style lang="stylus">
 html,
+body
+  margin: 0
+  width: 100%
+  height: 100%
+</style>
+
+<style lang="stylus" scoped>
 .player
   margin: 0
   width: 100%

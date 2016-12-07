@@ -1,41 +1,78 @@
 <template lang="jade">
-div.controller
-  div.tabs-container.blue-grey
-    button.btn file
-    button.btn Web
-    button.btn-floating
+div.controller(
+  @dragover.prevent="onDragOver",
+  @dragleave.prevent="onDragLeave",
+  @dragend.prevent="onDragEnd",
+  @drop.prevent="onDrop")
+  div.blue-grey.tabs
+    button.waves-effect.waves-teal.btn-flat(@click="switchView('file')") file
+    button.waves-effect.waves-teal.btn-flat(@click="switchView('web')") Web
+    button.waves-effect.waves-teal.btn-flat.settings(@click="switchView('settings')")
       i.material-icons settings
   component(:is="currentView")
 </template>
 <script>
-import store from '../vuex/store'
+const types = require('root/mutation-types')
+const FileController = require('./File.vue')
+const WebController = require('./Web.vue')
+const Tools = require('./Tools.vue')
 
-import Playlist from './Playlist'
-import Web from './Web'
-import Tools from './Tools'
-
-export default {
-  el: '#controller',
-  data: {
-    currentView: 'Playlist'
+module.exports = {
+  data () {
+    return {
+      currentView: 'file'
+    }
   },
   components: {
-    Playlist
+    FileController,
+    WebController,
+    Web
   },
-  store
+  methods: {
+    onDragOver () {
+      console.log('drag over')
+      return false
+    },
+    onDragLeave () {
+      console.log('drag leaver')
+      return false
+    },
+    onDragEnd () {
+      console.log('drag end')
+      return false
+    },
+    onDrop (e) {
+      this.$store.commit(types.DROP_FILE, e.dataTransfer.files)
+      return false
+    }
+  }
 }
 </script>
-<style lang="stylus" scoped>
+<style lang="stylus">
 body,
-html,
-.player
+html
   margin: 0
   width: 100%
   height: 100%
-
+</style>
+<style lang="stylus" scoped>
 .controller
+  display: flex
+  flex-direction: column
+  margin: 0
+  width: 100%
+  height: 100%
   border-radius: 5px
 
-.tabs-container
+.tabs
+  display: flex
   height: 36px
+  .btn-flat
+    color: #fff
+  .settings
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 0 1rem
+
 </style>

@@ -1,6 +1,7 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import * as types from '../mutation-types'
+const { ipcRenderer } = require('electron')
+const Vue = require('vue')
+const Vuex = require('vuex')
+const types = require('../mutation-types')
 
 Vue.use(Vuex)
 
@@ -8,17 +9,9 @@ const DEBUG = process.env.NODE_ENV !== 'production'
 
 Vue.config.debug = DEBUG ? true : false
 
-export default new Vuex.Store({
-  states: {
-    player: {
-      x: 0,
-      y: 0,
-      width: '100%',
-      height: '100%',
-      mode: 'video',
-      opacity: 0.05,
-      through: true
-    },
+module.exports = new Vuex.Store({
+  state: {
+    player: ipcRenderer.sendSync(types.CONNECT_STATE),
     video: {
       src: '',
       controls: false
@@ -41,7 +34,8 @@ export default new Vuex.Store({
     [types.CHANGE_OPACITY] (state, newOpacity) {
       state.player.opacity = newOpacity
     },
-    [types.PLAY_QUEUE] (state, filePath) {
+    [types.PLAY_FILE] (state, filePath) {
+      console.log(filePath)
       state.video.src = filePath
     },
     [types.OPEN_URL] (state, url) {

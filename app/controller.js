@@ -1,7 +1,7 @@
 "use strict"
 
 const electron = require('electron')
-const { BrowserWindow } = electron
+const BrowserWindow = electron.BrowserWindow
 
 const DEBUG = process.env.DEBUG ? true : false
 
@@ -9,11 +9,11 @@ const WINDOW_WIDTH = 320
 
 module.exports = class {
 
-  constructor(options) {
+  constructor () {
 
     this.win = new BrowserWindow({
       width      : WINDOW_WIDTH,
-      height     : 480,
+      height     : 400,
       show       : DEBUG ? true : false,
       resizable  : DEBUG ? true : false,
       frame      : DEBUG ? true : false,
@@ -31,16 +31,16 @@ module.exports = class {
     this.win.loadURL('file://' + __dirname + '/controller.html')
   }
 
-  showWindow(x) {
+  showWindow (x) {
     this.win.setPosition(x - WINDOW_WIDTH/2, 0)
     this.win.show()
     this.win.focus()
   }
 
-  toggle(x) {
+  toggle (x) {
     if (this.win.isVisible()) {
       this.win.hide()
-    }else {
+    } else {
       this.showWindow(x)
     }
   }

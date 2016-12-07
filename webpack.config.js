@@ -1,65 +1,46 @@
-var WebpackNotifierPlugin = require('webpack-notifier');
-var webpack = require('webpack');
-var path = require('path');
+const path = require('path')
+const webpack = require('webpack')
 
 module.exports = {
   entry: {
-    "controller": "./src/controller",
-    "player": "./src/player"
+    "controller": "./src/controller/index.js",
+    "player": "./src/player/index.js"
   },
   output: {
     path: "./app/js",
-    filename: "[name].js",
-    publicPath: "/"
+    publicPath: 'app',
+    filename: '[name].js'
   },
-  resolve: {
-    extensions: ['', '.js', '.json', '.vue'],
-    root: [
-      path.resolve('./src/')
-    ]
-  },
-  target: "node",
-  node: {
-    __dirname: false,
-  },
+  target: "electron-renderer",
   module: {
+    preLoaders: [],
     loaders: [
       {
-        test: /.(gif|jpg|png)(\?[a-z0-9=\.]+)?$/,
-        loader: 'url?name=../img/[name].[ext]&limit=100000'
-      },
-      {
-        test: /.(woff2?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/,
-        loader: 'url?name=../font/[name].[ext]&limit=100000'
-      },
-      {
-        test: /\.json$/,
-        loaders: 'json'
-      },
-      {
         test: /\.vue$/,
-        loaders: 'vue'
+        loader: 'vue-loader'
       },
       {
-        test: /\.jade$/,
-        loader: 'jade'
-      },
-      {
-        test: /\.styl$/,
-        loader: 'style!css!stylus'
+        test: /\.(png|jpe?g|gif|svg|woff2?|eot|ttf|otf)(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          name: path.join('../assets', '[name].[ext]?[hash]')
+        }
       },
       {
         test: /\.css$/,
-        loader: 'style!css'
+        loader: 'style-loader!css-loader'
       },
     ]
   },
-  plugins: [
-    new webpack.ExternalsPlugin('commonjs', ['electron', 'screen', 'remote']),
-    new WebpackNotifierPlugin({title: 'Webpack'}),
-  ],
-  devtool: "#source-map",
+  resolve: {
+    alias: {
+      'vue$': 'vue/dist/vue.common.js',
+      'root': __dirname + '/src'
+    }
+  },
   devServer: {
-    contentBase: "./"
-  }
+    historyApiFallback: true,
+    noInfo: true
+  },
+  devtool: '#eval-source-map'
 }

@@ -1,18 +1,17 @@
 <template lang="jade">
 div.web
-  form(@submit.prevent='onSubmitURL')
+  form(@submit.prevent='submitURL')
     div.input-field
-      input#url_input(type='text' placeholder='URL' v-model='url' @keydown.86="onTryPasteClipboard")
+      input#url_input(type='text' placeholder='URL' v-model='url' @keydown.86="tryPasteClipboard")
   div.row.center
     span {{encodedURL}}
 </template>
 <script>
-const ipcRenderer = require('electron').ipcRenderer
-const clipboard = require('electron').clipboard
-const xss = require('xss')
+const { ipcRenderer, clipboard } = require('electron')
 
-export default {
-  data: function() {
+module.exports = {
+  name: 'web',
+  data () {
     return {
       url: ''
     }
@@ -20,7 +19,6 @@ export default {
   computed: {
     encodedURL: function() {
       let encodedURL = this.$data.url
-      console.log(encodedURL)
       if ( !encodedURL.match(/https?\:\/\//) ) encodedURL = 'http://' + encodedURL
       encodedURL = xss(encodedURL)
       return encodedURL
@@ -31,21 +29,17 @@ export default {
       if (! this.encodedURL.match(/^https?(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)$/) ) {
         return false
       }
-      ipcRenderer.send('controller:ipc-bridge', 'url:submit-url', this.encodedURL)
+      ipcRenderer.send('controller:ipc-EMIT', 'url:submit-url', this.encodedURL)
     }
   },
   methods: {
-    onSubmitURL: function() {
+    submitURL: function() {
       this.$emit('URL_SUBMITTED')
     },
-    onTryPasteClipboard: function(e) { // for only Mac
+    tryPasteClipboard: function(e) { // for Mac
       if (e.metaKey !== true) return
-      e.preventDefault()
-
       this.url = clipboard.readText()
     }
-  },
-  ready: function() {
   }
 }
 </script>
