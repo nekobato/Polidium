@@ -47,6 +47,5 @@ export default {
 
 </script>
 <style lang="stylus">
-@require "~stylesheets/variable";
 
 </style>

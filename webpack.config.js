@@ -4,8 +4,8 @@ var path = require('path');
 
 module.exports = {
   entry: {
-    "controller": "./src/controller.js",
-    "player": "./src/player.js"
+    "controller": "./src/controller",
+    "player": "./src/player"
   },
   output: {
     path: "./app/js",

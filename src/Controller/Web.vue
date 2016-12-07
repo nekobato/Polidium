@@ -50,6 +50,5 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-@require "~stylesheets/variable";
 
 </style>
