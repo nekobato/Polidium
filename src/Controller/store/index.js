@@ -11,7 +11,7 @@ Vue.config.debug = DEBUG ? true : false
 
 module.exports = new Vuex.Store({
   state: {
-    player: ipcRenderer.sendSync(types.CONNECT_STATE),
+    // player: ipcRenderer.sendSync(types.CONNECT_STATE),
     file: {
       queues: []
     }

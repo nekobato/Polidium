@@ -1,6 +1,8 @@
 <template lang="jade">
 div.playlist
-  ul.collection
+  div.empty-queue(v-show="queueIsEmpty")
+    span.grey-text Drop Movie files?
+  ul.collection(v-show="!queueIsEmpty")
     li.collection-item(v-for="(queue, index) in queues",
       @click.prevent='playOrWait(index)')
       i.material-icons.grey-text.playlist-deleter(
@@ -11,10 +13,13 @@ div.playlist
 const types = require('../mutation-types')
 
 module.exports = {
-  name: 'file',
+  name: 'FileController',
   computed: {
     queues () {
       return this.$store.state.file.queues
+    },
+    queueIsEmpty () {
+      return this.queues.length > 0 ? false : true
     }
   },
   methods: {
@@ -51,6 +56,15 @@ module.exports = {
   margin: 0
   width: 100%
   height: 100%
-  background: #ffffff
+  background: #fff
   overflow-y: scroll
+.empty-queue
+  display: flex
+  align-items: center
+  justify-content: center
+  margin: 20px auto 0
+  border: 2px dotted #ccc
+  border-radius: 5px
+  width: 280px
+  height: 310px
 </style>

@@ -10,7 +10,7 @@ div.web
 const { ipcRenderer, clipboard } = require('electron')
 
 module.exports = {
-  name: 'web',
+  name: 'WebController',
   data () {
     return {
       url: ''

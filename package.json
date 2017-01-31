@@ -6,7 +6,7 @@
   "scripts": {
     "start": "DEBUG=true electron ./app",
     "test": "npm run test:unit && npm run test:e2e",
-    "dev": "NODE_ENV=development webpack --watch --watch-poll",
+    "dev": "NODE_ENV=development webpack --watch --watch-poll & npm start",
     "build": "NODE_ENV=production webpack --progress --hide-modules",
     "release": "gulp release",
     "test:unit": "karma start test/unit/karma.conf.js",

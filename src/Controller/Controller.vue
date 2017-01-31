@@ -20,13 +20,12 @@ const Tools = require('./Tools.vue')
 module.exports = {
   data () {
     return {
-      currentView: 'file'
+      currentView: 'FileController'
     }
   },
   components: {
     FileController,
-    WebController,
-    Web
+    WebController
   },
   methods: {
     onDragOver () {
@@ -63,7 +62,6 @@ html
   width: 100%
   height: 100%
   border-radius: 5px
-
 .tabs
   display: flex
   height: 36px
