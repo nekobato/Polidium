@@ -5,9 +5,9 @@ div.controller(
   @dragend.prevent="onDragEnd",
   @drop.prevent="onDrop")
   div.blue-grey.tabs
-    button.waves-effect.waves-teal.btn-flat(@click="switchView('file')") file
-    button.waves-effect.waves-teal.btn-flat(@click="switchView('web')") Web
-    button.waves-effect.waves-teal.btn-flat.settings(@click="switchView('settings')")
+    button.waves-effect.waves-teal.btn-flat(@click="switchView('FileController')") file
+    button.waves-effect.waves-teal.btn-flat(@click="switchView('WebController')") Web
+    button.waves-effect.waves-teal.btn-flat.settings(@click="switchView('Settings')")
       i.material-icons settings
   component(:is="currentView")
 </template>
@@ -15,7 +15,7 @@ div.controller(
 const types = require('root/mutation-types')
 const FileController = require('./File.vue')
 const WebController = require('./Web.vue')
-const Tools = require('./Tools.vue')
+const Settings = require('./Tools.vue')
 
 module.exports = {
   data () {
@@ -28,16 +28,16 @@ module.exports = {
     WebController
   },
   methods: {
+    switchView (viewName) {
+      this.currentView = viewName
+    },
     onDragOver () {
-      console.log('drag over')
       return false
     },
     onDragLeave () {
-      console.log('drag leaver')
       return false
     },
     onDragEnd () {
-      console.log('drag end')
       return false
     },
     onDrop (e) {

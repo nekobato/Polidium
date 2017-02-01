@@ -1,7 +1,7 @@
 <template lang="jade">
 div.playlist
   div.empty-queue(v-show="queueIsEmpty")
-    span.grey-text Drop Movie files?
+    span.grey-text Drop Movie files? Here
   ul.collection(v-show="!queueIsEmpty")
     li.collection-item(v-for="(queue, index) in queues",
       @click.prevent='playOrWait(index)')

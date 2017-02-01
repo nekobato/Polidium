@@ -8,6 +8,7 @@ div.web
 </template>
 <script>
 const { ipcRenderer, clipboard } = require('electron')
+const xss = require('xss')
 
 module.exports = {
   name: 'WebController',

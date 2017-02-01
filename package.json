@@ -81,5 +81,8 @@
     "webpack-dev-server": "^1.16.2",
     "webpack-merge": "^1.0.2",
     "xss": "^0.3.2"
+  },
+  "dependencies": {
+    "xss": "^0.3.3"
   }
 }
