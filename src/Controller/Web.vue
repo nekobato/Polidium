@@ -2,9 +2,18 @@
 div.web
   form(@submit.prevent='submitURL')
     div.input-field
-      input#url_input(type='text' placeholder='URL' v-model='url' @keydown.86="tryPasteClipboard")
-  div.row.center
-    span {{encodedURL}}
+      input#url_input(type='text' placeholder="URL" v-model='url' @keydown.86="tryPasteClipboard")
+      label(for="url_input") {{encodedURL}}
+  div.row.click-through
+    div.col.s6.no-padding
+      span.grey-text Player ClickThrough is
+    div.col.s6.no-padding
+      div.switch
+        label
+          span Off
+          input(type="checkbox")
+          span.lever
+          span On
 </template>
 <script>
 const { ipcRenderer, clipboard } = require('electron')
@@ -45,5 +54,13 @@ module.exports = {
 }
 </script>
 <style lang="stylus" scoped>
-
+.web
+  padding: 20px
+.input-field
+  label
+    top: -0.8rem
+.click-through
+  padding-top: 20px
+.switch
+  text-align: center
 </style>

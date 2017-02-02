@@ -64,6 +64,7 @@ html
   border-radius: 5px
 .tabs
   display: flex
+  flex-shrink: 0
   height: 36px
   .btn-flat
     color: #fff
