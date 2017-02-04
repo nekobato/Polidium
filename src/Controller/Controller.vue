@@ -1,13 +1,19 @@
 <template lang="jade">
-div.controller(
+div.my-controller(
   @dragover.prevent="onDragOver",
   @dragleave.prevent="onDragLeave",
   @dragend.prevent="onDragEnd",
   @drop.prevent="onDrop")
-  div.blue-grey.tabs
-    button.waves-effect.waves-teal.btn-flat(@click="switchView('FileController')") file
-    button.waves-effect.waves-teal.btn-flat(@click="switchView('WebController')") Web
-    button.waves-effect.waves-teal.btn-flat.settings(@click="switchView('Settings')")
+  div.blue-grey.my-tabs
+    button.waves-effect.waves-teal.btn-flat.my-tab(
+      @click="switchView('FileController')",
+      :class="{ 'my-on': currentView === 'FileController' }") file
+    button.waves-effect.waves-teal.btn-flat.my-tab(
+      @click="switchView('WebController')",
+      :class="{ 'my-on': currentView === 'WebController' }") Web
+    button.waves-effect.waves-teal.btn-flat.my-tab.my-settings(
+      @click="switchView('Settings')",
+      :class="{ 'my-on': currentView === 'Settings' }")
       i.material-icons settings
   component(:is="currentView")
 </template>
@@ -55,23 +61,25 @@ html
   height: 100%
 </style>
 <style lang="stylus" scoped>
-.controller
+.my-controller
   display: flex
   flex-direction: column
   margin: 0
   width: 100%
   height: 100%
   border-radius: 5px
-.tabs
+.my-tabs
   display: flex
   flex-shrink: 0
   height: 36px
-  .btn-flat
-    color: #fff
-  .settings
-    position: absolute;
-    right: 0;
-    top: 0;
-    padding: 0 1rem
+.my-tab
+  color: #fff
+  &.my-on
+    background-color: rgba(0, 0, 0, 0.2)
+.my-settings
+  position: absolute
+  right: 0
+  top: 0
+  padding: 0 1rem
 
 </style>
