@@ -14,6 +14,11 @@ module.exports = new Vuex.Store({
     // player: ipcRenderer.sendSync(types.CONNECT_STATE),
     file: {
       queues: []
+    },
+    settings: {
+      opacity: 0.05,
+      clickThrough: true,
+      displays: [1,2,3]
     }
   },
   mutations: {

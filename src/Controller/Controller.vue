@@ -31,7 +31,8 @@ module.exports = {
   },
   components: {
     FileController,
-    WebController
+    WebController,
+    Settings
   },
   methods: {
     switchView (viewName) {
