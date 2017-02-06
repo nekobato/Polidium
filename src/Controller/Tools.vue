@@ -9,11 +9,11 @@ div.white.settings
       div.min-max.grey-text
         span.min 0
         span.max 100
-  div.row.displays
+  div.displays
     div.btn(v-for="(display, index) in settings.displays", @click="selectDisplay(index)")
       i.material-icons.left desktop_windows
       span {{ index + 1 }}
-  div.row.resize
+  div.row.center.resize
     div.btn(@click="resizePlayer")
       i.material-icons.left transform
       span resize player
@@ -78,6 +78,7 @@ module.exports = {
 .displays
   display: flex
   justify-content: space-between
+  margin-bottom: 20px
   .btn
     padding: 0 1rem
 .exit

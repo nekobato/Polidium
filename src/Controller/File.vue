@@ -8,6 +8,11 @@ div.playlist
       i.material-icons.grey-text.playlist-deleter(
         @click.prevent='remove(index)') close
       span.truncate {{ queue.name }}
+  div.blue-grey.darken-2.center.video-controller
+    btn.btn.play-stop-btn
+      i.material-icons.white-text play_arrow
+    div.seekbar-container
+      input.seekbar(type="range", id="seekbar", min="0", max="100")
 </template>
 <script>
 const types = require('../mutation-types')
@@ -66,5 +71,26 @@ module.exports = {
   border: 2px dotted #ccc
   border-radius: 5px
   width: 280px
-  height: 300px
+  height: 280px
+.video-controller
+  position: absolute
+  display: flex
+  bottom: 0
+  width: 100%
+  height: 24px
+  .play-stop-btn
+    display: inline-block
+    padding: 0 1rem
+    height: 24px
+    line-height: 24px
+    vertical-align: top
+  .seekbar-container
+    flex-grow: 1
+    display: inline-block
+    padding: 0 10px
+    line-height: 18px;
+  .seekbar
+    border: 0
+    border-radius: 2px
+    margin: 0
 </style>
