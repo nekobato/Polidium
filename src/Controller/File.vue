@@ -24,7 +24,7 @@ module.exports = {
   },
   methods: {
     playOrWait (index) {
-      this.$store.commit(types.PLAY_FILE, index)
+      this.$store.dispatch(types.PLAY_FILE, index)
     },
     remove (index) {
       this.$store.commit(types.REMOVE_QUEUE, index)

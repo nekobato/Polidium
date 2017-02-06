@@ -34,17 +34,12 @@ module.exports = {
       return encodedURL
     }
   },
-  events: {
-    'URL_SUBMITTED': function() {
+  methods: {
+    submitURL: function() {
       if (! this.encodedURL.match(/^https?(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)$/) ) {
         return false
       }
-      ipcRenderer.send('controller:ipc-EMIT', 'url:submit-url', this.encodedURL)
-    }
-  },
-  methods: {
-    submitURL: function() {
-      this.$emit('URL_SUBMITTED')
+      this.$store.dispatch('URL_SUBMITTED', this.encodedURL)
     },
     tryPasteClipboard: function(e) { // for Mac
       if (e.metaKey !== true) return

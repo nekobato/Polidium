@@ -13,13 +13,16 @@ div.white.settings
     div.btn(v-for="(display, index) in settings.displays", @click="selectDisplay(index)")
       i.material-icons.left desktop_windows
       span {{ index + 1 }}
+  div.row.resize
+    div.btn(@click="resizePlayer")
+      i.material-icons.left transform
+      span resize player
   div.center.exit
     div.btn.red(@click="closeApplication")
       i.material-icons.left close
       span quit Polidium
 </template>
 <script>
-const { ipcRenderer } = require('electron')
 const types = require('../mutation-types')
 
 module.exports = {
@@ -27,7 +30,6 @@ module.exports = {
   data () {
     return {
       opacity: 0.05
-      // settings: ipcRenderer.sendSync(types.SETTINGS_CONNECT)
     }
   },
   computed: {
@@ -37,27 +39,22 @@ module.exports = {
   },
   methods: {
     onChangeOpacityRange () {
-      // ipcRenderer.send('EMIT', types.CHANGE_OPACITY, this.settings.opacity)
-      this.$store.commit(types.CHANGE_OPACITY, this.$data.opacity)
+      this.$store.dispatch(types.CHANGE_OPACITY, this.$data.opacity)
     },
     toggleClickThrough () {
-      ipcRenderer.send('EMIT', types.CHANGE_THROUGTH)
-      this.settings.clickThrough = this.settings.clickThrough ? false : true
+      this.$store.dispatch(types.CHANGE_THROUGTH)
     },
     closeApplication () {
-      ipcRenderer.send(types.EXIT)
+      this.$store.dispatch(types.EXIT)
     },
     selectDisplay (display) {
-      ipcRenderer.send('EMIT', types.SELECT_DISPLAY, display)
+      this.$store.dispatch(types.SELECT_DISPLAY, display)
+    },
+    resizePlayer () {
+      this.$store.dispatch(types.RESIZE_PLAYER_MODE)
     }
-  },
-  created () {
-    // ipcRenderer.on('INIT_SETTINGS', (settings) => {
-    //   this.settings = settings
-    // })
   }
 }
-
 </script>
 <style lang="stylus">
 .settings
