@@ -9,12 +9,13 @@ div.playlist
         @click.prevent='remove(index)') close
       span.truncate {{ queue.name }}
   div.blue-grey.darken-2.center.video-controller
-    btn.btn.play-stop-btn
+    button.btn.play-stop-btn
       i.material-icons.white-text play_arrow
     div.seekbar-container
       input.seekbar(type="range", id="seekbar", min="0", max="100")
 </template>
 <script>
+const mapGetters = require('vuex').mapGetters
 const types = require('../mutation-types')
 
 module.exports = {

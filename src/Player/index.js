@@ -1,5 +1,6 @@
 const Vue = require('vue')
 const store = require('./store')
+const type = require('../mutation-types')
 const Player = require('./Player.vue')
 
 const ipcRenderer = require('electron').ipcRenderer
@@ -9,9 +10,8 @@ new Vue({
   store,
   render: h => h(Player),
   created () {
-    ipcRenderer.on('CONNECT_COMMIT', (event, type, data) => {
-      console.log(type, data)
-      this.$store.commit(type, JSON.parse(data))
+    ipcRenderer.on(types.COMMIT, (event, typeName, payload) => {
+      this.$store.commit(typeName, JSON.parse(payload))
     })
   }
 })

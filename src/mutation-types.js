@@ -1,3 +1,5 @@
+exports.COMMIT = 'COMMIT'
+
 exports.DROP_FILE = 'DROP_FILE'
 
 exports.PLAY_FILE = 'PLAY_FILE'

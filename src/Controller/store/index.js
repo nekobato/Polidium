@@ -1,6 +1,7 @@
 const Vue = require('vue')
 const Vuex = require('vuex')
 const types = require('root/mutation-types')
+const fileModule = require('./modules/file')
 const ipcRenderer = require('electron').ipcRenderer
 
 Vue.use(Vuex)
@@ -11,6 +12,9 @@ Vue.config.debug = DEBUG ? true : false
 
 module.exports = new Vuex.Store({
   state: {
+    modules: {
+      file: fileModule
+    },
     // player: ipcRenderer.sendSync(types.CONNECT_STATE),
     file: {
       queues: []

@@ -5,9 +5,15 @@ const Controller = require('./Controller.vue')
 const materializeCss = require('materialize-css/dist/css/materialize.min.css')
 const materialIcons = require('material-design-icons/iconfont/material-icons.css')
 
+const ipcRenderer = require('electron').ipcRenderer
 
 new Vue({
   el: '#controller',
   store,
-  render: h => h(Controller)
+  render: h => h(Controller),
+  created () {
+    ipcRenderer.on('COMMIT', (event, typeName, payload) => {
+      this.$store.commit(typeName, JSON.parse(payload))
+    })
+  }
 })
