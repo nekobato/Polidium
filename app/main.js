@@ -53,6 +53,7 @@ module.exports =
 
 	const PlayerWindow = __webpack_require__(2)
 	const ControllerWindow = __webpack_require__(3)
+	__webpack_require__(4)
 
 	if (!DEBUG) app.dock.hide()
 
@@ -79,32 +80,6 @@ module.exports =
 	    player.win.setAlwaysOnTop(toggle)
 	    player.win.setVisibleOnAllWorkspaces(toggle)
 	    player.win.webContents.send('CHANGE_THROUGTH', toggle)
-	  })
-
-	  __webpack_require__(4)
-
-	  Vue.use(Vuex)
-
-	  const store = new Vuex.Store({
-	    state: {
-	      mode: 'FilePlayer',
-	      settings: {
-	        display: 1,
-	        x: 0,
-	        y: 0,
-	        width: '100%',
-	        height: '100%',
-	        mode: 'file',
-	        opacity: 0.1,
-	        through: true
-	      }
-	    },
-	    middlewares: [{
-	      onMutation (mutation, state) {
-	        // player.win.webContents.send('CONNECT_COMMIT', type, mutation)
-	        // controller.win.webContents.send('CONNECT_COMMIT', type, mutation)
-	      }
-	    }]
 	  })
 	})
 
@@ -230,11 +205,10 @@ module.exports =
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	const { ipcMain } = __webpack_require__(1)
+	const { BrowserWindow, ipcMain } = __webpack_require__(1)
 	const Vue = __webpack_require__(5)
 	const Vuex = __webpack_require__(6)
 	const types = __webpack_require__(7)
-	const fileModule = __webpack_require__(8)
 
 	Vue.use(Vuex)
 
@@ -242,12 +216,10 @@ module.exports =
 
 	Vue.config.debug = DEBUG ? true : false
 
-	module.exports = new Vuex.Store({
+	const clients = []
+
+	const store = new Vuex.Store({
 	  state: {
-	    modules: {
-	      file: fileModule
-	    },
-	    // player: ipcRenderer.sendSync(types.CONNECT_STATE),
 	    file: {
 	      queues: []
 	    },
@@ -265,21 +237,24 @@ module.exports =
 	    }
 	  },
 	  mutations: {
-	    [types.DROP_FILE] (state, files) {
-	      for (file of files) {
-	        if (file.type === 'video/mp4') {
-	          state.file.queues.push(file)
-	        }
-	      }
+	    [types.DROP_FILE] (state, file) {
+	      state.file.queues.push(file)
 	    },
 	    [types.PLAY_FILE] (state, index) {
 	      // ipcRenderer.send('CONNECT_COMMIT', types.PLAY_FILE, JSON.stringify(state.file.queues[index].path))
 	    }
 	  },
+	  middlewares: [{
+	    onMutation (mutation, state) {
+	      Object.keys(clients).forEach((id) => {
+	        clients[id].send('vuex-apply-mutation', mutation)
+	      })
+	    }
+	  }],
 	  strict: DEBUG
 	})
 
-	ipcMain.on('CONNECT_STATE', (event) => {
+	ipcMain.on(types.CONNECT_STATE, (event) => {
 	  let winId = BrowserWindow.fromWebContents(event.sender).id
 	  console.log('[background] vuex-connect', winId)
 
@@ -287,10 +262,9 @@ module.exports =
 	  event.returnValue = store.state
 	})
 
-	ipcMain.on('CONENCT_COMMIT', (event, type, payload) => {
-	  // store.commit(type, payload)
-	  player.win.webContents.send('COMMIT', type, payload)
-	  controller.win.webContents.send('COMMIT', type, payload)
+	ipcMain.on(types.CONNECT_COMMIT, (event, type, payload) => {
+	  console.log(type, payload)
+	  store.commit(type, JSON.parse(payload))
 	})
 
 
@@ -310,7 +284,8 @@ module.exports =
 /* 7 */
 /***/ function(module, exports) {
 
-	exports.COMMIT = 'COMMIT'
+	exports.CONNECT_STATE = 'CONNECT_STATE'
+	exports.CONNECT_COMMIT = 'CONNECT_COMMIT'
 
 	exports.DROP_FILE = 'DROP_FILE'
 
@@ -318,9 +293,6 @@ module.exports =
 	exports.WAIT_FILE = 'WAIT_FILE'
 	exports.REMOVE_QUEUE = 'REMOVE_QUEUE'
 	exports.REMOVE_QUEUES = 'REMOVE_QUEUES'
-
-	exports.CONNECT_STATE = 'CONNECT_STATE'
-	exports.CONNECT_COMMIT = 'CONNECT_COMMIT'
 
 	exports.CHANGE_LAYOUT = 'CHANGE_LAYOUT'
 	exports.CHANGE_MODE = 'CHANGE_MODE'
@@ -331,23 +303,6 @@ module.exports =
 	exports.OPEN_URL = 'OPEN_URL'
 
 	exports.EXIT = 'EXIT'
-
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	const types = __webpack_require__(7)
-	const ipcRenderer = __webpack_require__(1).ipcRenderer
-
-	module.exports = {
-	  mutations: {  },
-	  actions: {
-	    [types.PLAY_FILE] (index) {
-	      ipcRenderer.send(types.COMMIT, types.PLAY_FILE, { index: index })
-	    }
-	  }
-	}
 
 
 /***/ }

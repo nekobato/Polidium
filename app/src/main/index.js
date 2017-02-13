@@ -6,6 +6,7 @@ const DEBUG = process.env.DEBUG ? true : false
 
 const PlayerWindow = require('./player')
 const ControllerWindow = require('./controller')
+require('./store')
 
 if (!DEBUG) app.dock.hide()
 
@@ -32,32 +33,6 @@ app.on('ready', () => {
     player.win.setAlwaysOnTop(toggle)
     player.win.setVisibleOnAllWorkspaces(toggle)
     player.win.webContents.send('CHANGE_THROUGTH', toggle)
-  })
-
-  require('./store')
-
-  Vue.use(Vuex)
-
-  const store = new Vuex.Store({
-    state: {
-      mode: 'FilePlayer',
-      settings: {
-        display: 1,
-        x: 0,
-        y: 0,
-        width: '100%',
-        height: '100%',
-        mode: 'file',
-        opacity: 0.1,
-        through: true
-      }
-    },
-    middlewares: [{
-      onMutation (mutation, state) {
-        // player.win.webContents.send('CONNECT_COMMIT', type, mutation)
-        // controller.win.webContents.send('CONNECT_COMMIT', type, mutation)
-      }
-    }]
   })
 })
 

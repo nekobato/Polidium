@@ -1,8 +1,7 @@
-const { ipcMain } = require('electron')
+const { BrowserWindow, ipcMain } = require('electron')
 const Vue = require('vue')
 const Vuex = require('vuex')
 const types = require('root/mutation-types')
-const fileModule = require('./modules/file')
 
 Vue.use(Vuex)
 
@@ -10,12 +9,10 @@ const DEBUG = process.env.NODE_ENV !== 'production'
 
 Vue.config.debug = DEBUG ? true : false
 
-module.exports = new Vuex.Store({
+const clients = []
+
+const store = new Vuex.Store({
   state: {
-    modules: {
-      file: fileModule
-    },
-    // player: ipcRenderer.sendSync(types.CONNECT_STATE),
     file: {
       queues: []
     },
@@ -33,21 +30,24 @@ module.exports = new Vuex.Store({
     }
   },
   mutations: {
-    [types.DROP_FILE] (state, files) {
-      for (file of files) {
-        if (file.type === 'video/mp4') {
-          state.file.queues.push(file)
-        }
-      }
+    [types.DROP_FILE] (state, file) {
+      state.file.queues.push(file)
     },
     [types.PLAY_FILE] (state, index) {
       // ipcRenderer.send('CONNECT_COMMIT', types.PLAY_FILE, JSON.stringify(state.file.queues[index].path))
     }
   },
+  middlewares: [{
+    onMutation (mutation, state) {
+      Object.keys(clients).forEach((id) => {
+        clients[id].send('vuex-apply-mutation', mutation)
+      })
+    }
+  }],
   strict: DEBUG
 })
 
-ipcMain.on('CONNECT_STATE', (event) => {
+ipcMain.on(types.CONNECT_STATE, (event) => {
   let winId = BrowserWindow.fromWebContents(event.sender).id
   console.log('[background] vuex-connect', winId)
 
@@ -55,8 +55,7 @@ ipcMain.on('CONNECT_STATE', (event) => {
   event.returnValue = store.state
 })
 
-ipcMain.on('CONENCT_COMMIT', (event, type, payload) => {
-  // store.commit(type, payload)
-  player.win.webContents.send('COMMIT', type, payload)
-  controller.win.webContents.send('COMMIT', type, payload)
+ipcMain.on(types.CONNECT_COMMIT, (event, type, payload) => {
+  console.log(type, payload)
+  store.commit(type, JSON.parse(payload))
 })

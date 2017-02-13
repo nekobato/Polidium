@@ -4,7 +4,7 @@ div.playlist
     span.grey-text Drop Movie files? Here
   ul.collection(v-show="!queueIsEmpty")
     li.collection-item(v-for="(queue, index) in queues",
-      @click.prevent='playOrWait(index)')
+      @click.prevent='play(index)')
       i.material-icons.grey-text.playlist-deleter(
         @click.prevent='remove(index)') close
       span.truncate {{ queue.name }}
@@ -38,6 +38,11 @@ module.exports = {
     remove (index) {
       ipc.commit(types.REMOVE_QUEUE, { index: index })
     }
+  },
+  created () {
+    setInterval(() => {
+      this.queues
+    }, 1000)
   }
 }
 </script>

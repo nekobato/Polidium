@@ -49,9 +49,13 @@ module.exports = {
       return false
     },
     onDrop (e) {
+      var files = e.dataTransfer.files
       for (file of files) {
         if (file.type === 'video/mp4') {
-          ipc.commit(types.DROP_FILE, file)
+          ipc.commit(types.DROP_FILE, {
+            name: file.name,
+            path: file.path
+          })
         }
       }
       return false
