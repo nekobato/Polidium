@@ -63,11 +63,11 @@ app.on('ready', function() {
     }]
   })
 
-  ipcMain.on('STATE', (event) => {
+  ipcMain.on('CONENCT_STATE', (event) => {
     event.returnValue = store.state
   })
 
-  ipcMain.on('COMMIT', (event, type, payload) => {
+  ipcMain.on('CONNECT_COMMIT', (event, type, payload) => {
     // store.commit(type, payload)
     player.win.webContents.send('COMMIT', type, payload)
     controller.win.webContents.send('COMMIT', type, payload)

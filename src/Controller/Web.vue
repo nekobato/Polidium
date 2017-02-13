@@ -16,7 +16,8 @@ div.web
           span On
 </template>
 <script>
-const { ipcRenderer, clipboard } = require('electron')
+const ipc = require('root/ipc')
+const { clipboard } = require('electron')
 const xss = require('xss')
 
 module.exports = {
@@ -39,7 +40,7 @@ module.exports = {
       if (! this.encodedURL.match(/^https?(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)$/) ) {
         return false
       }
-      this.$store.dispatch('URL_SUBMITTED', this.encodedURL)
+      ipc.commit('URL_SUBMITTED', this.encodedURL)
     },
     tryPasteClipboard: function(e) { // for Mac
       if (e.metaKey !== true) return

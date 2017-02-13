@@ -18,6 +18,7 @@ div.my-controller(
   component(:is="currentView")
 </template>
 <script>
+const ipc = require('root/ipc')
 const types = require('root/mutation-types')
 const FileController = require('./File.vue')
 const WebController = require('./Web.vue')
@@ -48,7 +49,11 @@ module.exports = {
       return false
     },
     onDrop (e) {
-      this.$store.commit(types.DROP_FILE, e.dataTransfer.files)
+      for (file of files) {
+        if (file.type === 'video/mp4') {
+          ipc.commit(types.DROP_FILE, file)
+        }
+      }
       return false
     }
   }

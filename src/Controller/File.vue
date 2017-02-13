@@ -15,7 +15,7 @@ div.playlist
       input.seekbar(type="range", id="seekbar", min="0", max="100")
 </template>
 <script>
-const mapGetters = require('vuex').mapGetters
+const ipc = require('root/ipc')
 const types = require('../mutation-types')
 
 module.exports = {
@@ -29,11 +29,14 @@ module.exports = {
     }
   },
   methods: {
-    playOrWait (index) {
-      this.$store.dispatch(types.PLAY_FILE, index)
+    play (index) {
+      ipc.commit(types.PLAY_FILE, { index: index })
+    },
+    wait () {
+      ipc.commit(types.WAIT_FILE)
     },
     remove (index) {
-      this.$store.commit(types.REMOVE_QUEUE, index)
+      ipc.commit(types.REMOVE_QUEUE, { index: index })
     }
   }
 }

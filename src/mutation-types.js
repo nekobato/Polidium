@@ -3,6 +3,7 @@ exports.COMMIT = 'COMMIT'
 exports.DROP_FILE = 'DROP_FILE'
 
 exports.PLAY_FILE = 'PLAY_FILE'
+exports.WAIT_FILE = 'WAIT_FILE'
 exports.REMOVE_QUEUE = 'REMOVE_QUEUE'
 exports.REMOVE_QUEUES = 'REMOVE_QUEUES'
 

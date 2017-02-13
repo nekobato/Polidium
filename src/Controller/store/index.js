@@ -24,18 +24,6 @@ module.exports = new Vuex.Store({
       clickThrough: true,
       displays: [1,2,3]
     }
-  },
-  mutations: {
-    [types.DROP_FILE] (state, files) {
-      for (file of files) {
-        if (file.type === 'video/mp4') {
-          state.file.queues.push(file)
-        }
-      }
-    },
-    [types.PLAY_FILE] (state, index) {
-      ipcRenderer.send('CONNECT_COMMIT', types.PLAY_FILE, JSON.stringify(state.file.queues[index].path))
-    }
-  },
+  }
   strict: DEBUG
 })

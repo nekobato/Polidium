@@ -23,6 +23,7 @@ div.white.settings
       span quit Polidium
 </template>
 <script>
+const ipc = require('root/ipc')
 const types = require('../mutation-types')
 
 module.exports = {
@@ -39,19 +40,19 @@ module.exports = {
   },
   methods: {
     onChangeOpacityRange () {
-      this.$store.dispatch(types.CHANGE_OPACITY, this.$data.opacity)
+      ipc.commit(types.CHANGE_OPACITY, this.$data.opacity)
     },
     toggleClickThrough () {
-      this.$store.dispatch(types.CHANGE_THROUGTH)
+      ipc.commit(types.CHANGE_THROUGTH)
     },
     closeApplication () {
-      this.$store.dispatch(types.EXIT)
+      ipc.commit(types.EXIT)
     },
     selectDisplay (display) {
-      this.$store.dispatch(types.SELECT_DISPLAY, display)
+      ipc.commit(types.SELECT_DISPLAY, display)
     },
     resizePlayer () {
-      this.$store.dispatch(types.RESIZE_PLAYER_MODE)
+      ipc.commit(types.RESIZE_PLAYER_MODE)
     }
   }
 }

@@ -5,7 +5,7 @@ const Controller = require('./Controller.vue')
 const materializeCss = require('materialize-css/dist/css/materialize.min.css')
 const materialIcons = require('material-design-icons/iconfont/material-icons.css')
 
-const ipcRenderer = require('electron').ipcRenderer
+const { ipcRenderer } = require('electron')
 
 new Vue({
   el: '#controller',
