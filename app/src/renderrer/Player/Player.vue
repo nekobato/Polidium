@@ -6,7 +6,6 @@ div.player(:style="{ left: x, top: y, width: width, height: height, opacity: opa
 <script>
 const { ipcRenderer } = require('electron')
 
-const store = require('./store')
 const FilePlayer = require('./File.vue')
 const WebPlayer = require('./Web.vue')
 
@@ -15,7 +14,6 @@ module.exports = {
     FilePlayer,
     WebPlayer
   },
-  store,
   computed: {
     player () {
       return this.$store.state.player

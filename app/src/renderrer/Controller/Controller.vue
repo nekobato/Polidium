@@ -18,7 +18,7 @@ div.my-controller(
   component(:is="currentView")
 </template>
 <script>
-const ipc = require('root/ipc')
+const ipc = require('renderrer/ipc')
 const types = require('root/mutation-types')
 const FileController = require('./File.vue')
 const WebController = require('./Web.vue')

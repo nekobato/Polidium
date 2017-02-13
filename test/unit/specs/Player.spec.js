@@ -1,5 +1,5 @@
 const Vue = require('vue')
-const Player = require('root/Player/Player.vue')
+const Player = require('renderrer/Player/Player.vue')
 
 describe('Player.vue', () => {
   it('should render correct contents', () => {

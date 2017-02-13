@@ -15,8 +15,8 @@ div.playlist
       input.seekbar(type="range", id="seekbar", min="0", max="100")
 </template>
 <script>
-const ipc = require('root/ipc')
-const types = require('../mutation-types')
+const ipc = require('renderrer/ipc')
+const types = require('root/mutation-types')
 
 module.exports = {
   name: 'FileController',

@@ -1,5 +1,5 @@
 const Vue = require('vue')
-const Controller = require('root/Controller/Controller.vue')
+const Controller = require('renderrer/Controller/Controller.vue')
 
 describe('Controller.vue', () => {
   it('should render correct contents', () => {

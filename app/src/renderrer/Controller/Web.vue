@@ -16,7 +16,7 @@ div.web
           span On
 </template>
 <script>
-const ipc = require('root/ipc')
+const ipc = require('renderrer/ipc')
 const { clipboard } = require('electron')
 const xss = require('xss')
 

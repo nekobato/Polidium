@@ -1,9 +1,9 @@
 const Vue = require('vue')
 const store = require('./store')
-const type = require('../mutation-types')
+const type = require('root/mutation-types')
 const Player = require('./Player.vue')
 
-const ipcRenderer = require('electron').ipcRenderer
+const { ipcRenderer } = require('electron')
 
 new Vue({
   el: '#player',

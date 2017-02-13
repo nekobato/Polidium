@@ -3,8 +3,8 @@ const webpack = require('webpack')
 
 module.exports = {
   entry: {
-    "controller": "./src/controller/index.js",
-    "player": "./src/player/index.js"
+    "controller": "./app/src/renderrer/controller",
+    "player": "./app/src/renderrer/player"
   },
   output: {
     path: "./app/js",
@@ -32,10 +32,16 @@ module.exports = {
       },
     ]
   },
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': '"production"'
+    })
+  ],
   resolve: {
     alias: {
       'vue$': 'vue/dist/vue.common.js',
-      'root': __dirname + '/src'
+      'renderrer': path.join(__dirname, 'app/src/renderrer'),
+      'root': path.join(__dirname, 'app/src')
     }
   },
   devServer: {
