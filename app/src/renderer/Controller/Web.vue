@@ -16,7 +16,7 @@ div.web
           span On
 </template>
 <script>
-const ipc = require('renderrer/ipc')
+const ipc = require('renderer/ipc')
 const { clipboard } = require('electron')
 const xss = require('xss')
 
@@ -28,7 +28,7 @@ module.exports = {
     }
   },
   computed: {
-    encodedURL: function() {
+    encodedURL () {
       let encodedURL = this.$data.url
       if ( !encodedURL.match(/https?\:\/\//) ) encodedURL = 'http://' + encodedURL
       encodedURL = xss(encodedURL)
@@ -36,13 +36,13 @@ module.exports = {
     }
   },
   methods: {
-    submitURL: function() {
+    submitURL () {
       if (! this.encodedURL.match(/^https?(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)$/) ) {
         return false
       }
       ipc.commit('URL_SUBMITTED', this.encodedURL)
     },
-    tryPasteClipboard: function(e) { // for Mac
+    tryPasteClipboard (e) { // for Mac
       if (e.metaKey !== true) return
       this.url = clipboard.readText()
     }

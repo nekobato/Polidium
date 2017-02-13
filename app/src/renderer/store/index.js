@@ -9,14 +9,18 @@ const DEBUG = process.env.NODE_ENV !== 'production'
 
 Vue.config.debug = DEBUG ? true : false
 
-module.exports = new Vuex.Store({
+const store = new Vuex.Store({
   modules: {
-    'fileController': require('./modules/file-controller'),
-    'webController': require('./modules/web-controller'),
-    'videoPlayer': require('./modules/video-player'),
-    'webPlayer': require('./modules/web-player'),
+    'video': require('./modules/video'),
+    'web': require('./modules/web'),
     'settings': require('./modules/settings')
   },
-  state: ipcRenderer.sendSync(types.CONNECT_STATE),
   strict: DEBUG
 })
+
+ipcRenderer.on(types.CONNECT_COMMIT, (event, typeName, payload) => {
+  console.log(typeName, payload)
+  store.commit(typeName, JSON.parse(payload))
+})
+
+module.exports = store

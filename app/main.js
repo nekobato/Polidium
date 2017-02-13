@@ -50,10 +50,9 @@ module.exports =
 	const { app, Tray, nativeImage, globalShortcut, ipcMain } = __webpack_require__(1)
 
 	const DEBUG = process.env.DEBUG ? true : false
-
-	const PlayerWindow = __webpack_require__(2)
-	const ControllerWindow = __webpack_require__(3)
-	__webpack_require__(4)
+	const types = __webpack_require__(2)
+	const PlayerWindow = __webpack_require__(3)
+	const ControllerWindow = __webpack_require__(4)
 
 	if (!DEBUG) app.dock.hide()
 
@@ -81,6 +80,17 @@ module.exports =
 	    player.win.setVisibleOnAllWorkspaces(toggle)
 	    player.win.webContents.send('CHANGE_THROUGTH', toggle)
 	  })
+
+	  ipcMain.on(types.CONNECT_STATE, (event) => {
+	    console.log('[background] vuex-connect', winId)
+	    event.returnValue = store.state
+	  })
+
+	  ipcMain.on(types.CONNECT_COMMIT, (event, typeName, payload) => {
+	    console.log(typeName, payload)
+	    player.win.webContents.send(types.CONNECT_COMMIT, typeName, payload)
+	    controller.win.webContents.send(types.CONNECT_COMMIT, typeName, payload)
+	  })
 	})
 
 	app.on('will-quit', () => {
@@ -102,6 +112,31 @@ module.exports =
 
 /***/ },
 /* 2 */
+/***/ function(module, exports) {
+
+	exports.CONNECT_STATE = 'CONNECT_STATE'
+	exports.CONNECT_COMMIT = 'CONNECT_COMMIT'
+
+	exports.DROP_FILE = 'DROP_FILE'
+
+	exports.PLAY_FILE = 'PLAY_FILE'
+	exports.WAIT_FILE = 'WAIT_FILE'
+	exports.REMOVE_QUEUE = 'REMOVE_QUEUE'
+	exports.REMOVE_QUEUES = 'REMOVE_QUEUES'
+
+	exports.CHANGE_LAYOUT = 'CHANGE_LAYOUT'
+	exports.CHANGE_MODE = 'CHANGE_MODE'
+	exports.CHANGE_OPACITY = 'CHANGE_OPACITY'
+	exports.CHANGE_THROUGTH = 'CHANGE_THROUGTH'
+	exports.RESIZE_PLAYER_MODE = 'RESIZE_PLAYER_MODE'
+
+	exports.OPEN_URL = 'OPEN_URL'
+
+	exports.EXIT = 'EXIT'
+
+
+/***/ },
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict"
@@ -149,7 +184,7 @@ module.exports =
 
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict"
@@ -199,110 +234,6 @@ module.exports =
 	    }
 	  }
 	}
-
-
-/***/ },
-/* 4 */
-/***/ function(module, exports, __webpack_require__) {
-
-	const { BrowserWindow, ipcMain } = __webpack_require__(1)
-	const Vue = __webpack_require__(5)
-	const Vuex = __webpack_require__(6)
-	const types = __webpack_require__(7)
-
-	Vue.use(Vuex)
-
-	const DEBUG = ("production") !== 'production'
-
-	Vue.config.debug = DEBUG ? true : false
-
-	const clients = []
-
-	const store = new Vuex.Store({
-	  state: {
-	    file: {
-	      queues: []
-	    },
-	    settings: {
-	      opacity: 0.05,
-	      clickThrough: true,
-	      displays: [1,2,3]
-	    },
-	    video: {
-	      src: '',
-	      controls: false
-	    },
-	    web: {
-	      src: ''
-	    }
-	  },
-	  mutations: {
-	    [types.DROP_FILE] (state, file) {
-	      state.file.queues.push(file)
-	    },
-	    [types.PLAY_FILE] (state, index) {
-	      // ipcRenderer.send('CONNECT_COMMIT', types.PLAY_FILE, JSON.stringify(state.file.queues[index].path))
-	    }
-	  },
-	  middlewares: [{
-	    onMutation (mutation, state) {
-	      Object.keys(clients).forEach((id) => {
-	        clients[id].send('vuex-apply-mutation', mutation)
-	      })
-	    }
-	  }],
-	  strict: DEBUG
-	})
-
-	ipcMain.on(types.CONNECT_STATE, (event) => {
-	  let winId = BrowserWindow.fromWebContents(event.sender).id
-	  console.log('[background] vuex-connect', winId)
-
-	  clients[winId] = event.sender
-	  event.returnValue = store.state
-	})
-
-	ipcMain.on(types.CONNECT_COMMIT, (event, type, payload) => {
-	  console.log(type, payload)
-	  store.commit(type, JSON.parse(payload))
-	})
-
-
-/***/ },
-/* 5 */
-/***/ function(module, exports) {
-
-	module.exports = require("vue");
-
-/***/ },
-/* 6 */
-/***/ function(module, exports) {
-
-	module.exports = require("vuex");
-
-/***/ },
-/* 7 */
-/***/ function(module, exports) {
-
-	exports.CONNECT_STATE = 'CONNECT_STATE'
-	exports.CONNECT_COMMIT = 'CONNECT_COMMIT'
-
-	exports.DROP_FILE = 'DROP_FILE'
-
-	exports.PLAY_FILE = 'PLAY_FILE'
-	exports.WAIT_FILE = 'WAIT_FILE'
-	exports.REMOVE_QUEUE = 'REMOVE_QUEUE'
-	exports.REMOVE_QUEUES = 'REMOVE_QUEUES'
-
-	exports.CHANGE_LAYOUT = 'CHANGE_LAYOUT'
-	exports.CHANGE_MODE = 'CHANGE_MODE'
-	exports.CHANGE_OPACITY = 'CHANGE_OPACITY'
-	exports.CHANGE_THROUGTH = 'CHANGE_THROUGTH'
-	exports.RESIZE_PLAYER_MODE = 'RESIZE_PLAYER_MODE'
-
-	exports.OPEN_URL = 'OPEN_URL'
-
-	exports.EXIT = 'EXIT'
 
 
 /***/ }

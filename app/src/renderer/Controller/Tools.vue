@@ -23,7 +23,7 @@ div.white.settings
       span quit Polidium
 </template>
 <script>
-const ipc = require('renderrer/ipc')
+const ipc = require('renderer/ipc')
 const types = require('root/mutation-types')
 
 module.exports = {

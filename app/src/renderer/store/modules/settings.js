@@ -1,6 +1,18 @@
 const types = require('root/mutation-types')
 
 module.exports = {
+  state: {
+    displays: [1, 2, 3],
+    player: {
+      x: 0,
+      y: 0,
+      width: '100%',
+      height: '100%',
+      mode: 'video-player',
+      opacity: 0.05,
+      clickThrough: true
+    }
+  },
   mutations: {
     [types.CHANGE_LAYOUT] (state, layout) {
       state.player.x = layout.x
@@ -15,11 +27,5 @@ module.exports = {
     [types.CHANGE_OPACITY] (state, newOpacity) {
       state.player.opacity = newOpacity
     },
-    [types.PLAY_FILE] (state, filePath) {
-      state.video.src = filePath
-    },
-    [types.OPEN_URL] (state, url) {
-      state.web.src = url
-    }
   }
 }

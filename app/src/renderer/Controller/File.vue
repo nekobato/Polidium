@@ -15,14 +15,14 @@ div.playlist
       input.seekbar(type="range", id="seekbar", min="0", max="100")
 </template>
 <script>
-const ipc = require('renderrer/ipc')
+const ipc = require('renderer/ipc')
 const types = require('root/mutation-types')
 
 module.exports = {
   name: 'FileController',
   computed: {
     queues () {
-      return this.$store.state.file.queues
+      return this.$store.state.video.queues
     },
     queueIsEmpty () {
       return this.queues.length > 0 ? false : true
@@ -40,9 +40,7 @@ module.exports = {
     }
   },
   created () {
-    setInterval(() => {
-      this.queues
-    }, 1000)
+    console.log(this.$store)
   }
 }
 </script>

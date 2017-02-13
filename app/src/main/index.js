@@ -3,10 +3,9 @@
 const { app, Tray, nativeImage, globalShortcut, ipcMain } = require('electron')
 
 const DEBUG = process.env.DEBUG ? true : false
-
+const types = require('root/mutation-types')
 const PlayerWindow = require('./player')
 const ControllerWindow = require('./controller')
-require('./store')
 
 if (!DEBUG) app.dock.hide()
 
@@ -33,6 +32,17 @@ app.on('ready', () => {
     player.win.setAlwaysOnTop(toggle)
     player.win.setVisibleOnAllWorkspaces(toggle)
     player.win.webContents.send('CHANGE_THROUGTH', toggle)
+  })
+
+  ipcMain.on(types.CONNECT_STATE, (event) => {
+    console.log('[background] vuex-connect', winId)
+    event.returnValue = store.state
+  })
+
+  ipcMain.on(types.CONNECT_COMMIT, (event, typeName, payload) => {
+    console.log(typeName, payload)
+    player.win.webContents.send(types.CONNECT_COMMIT, typeName, payload)
+    controller.win.webContents.send(types.CONNECT_COMMIT, typeName, payload)
   })
 })
 

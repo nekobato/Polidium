@@ -3,7 +3,7 @@ webview.web-player(nodeintegration v-bind="{ src: web.src }")
 </template>
 <script>
 module.exports = {
-  name: 'web',
+  name: 'web-player',
   computed: {
     web () {
       return this.$store.state.web

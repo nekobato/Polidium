@@ -3,8 +3,8 @@ const webpack = require('webpack')
 
 module.exports = {
   entry: {
-    "controller": "./app/src/renderrer/controller",
-    "player": "./app/src/renderrer/player"
+    "controller": "./app/src/renderer/controller",
+    "player": "./app/src/renderer/player"
   },
   output: {
     path: "./app/js",
@@ -40,7 +40,7 @@ module.exports = {
   resolve: {
     alias: {
       'vue$': 'vue/dist/vue.common.js',
-      'renderrer': path.join(__dirname, 'app/src/renderrer'),
+      'renderer': path.join(__dirname, 'app/src/renderer'),
       'root': path.join(__dirname, 'app/src')
     }
   },
