@@ -30,7 +30,7 @@ module.exports = {
   name: 'settings',
   data () {
     return {
-      opacity: 0.05
+      opacity: 5
     }
   },
   computed: {
@@ -40,7 +40,7 @@ module.exports = {
   },
   methods: {
     onChangeOpacityRange () {
-      ipc.commit(types.CHANGE_OPACITY, this.$data.opacity)
+      ipc.commit(types.CHANGE_OPACITY, this.$data.opacity / 100)
     },
     toggleClickThrough () {
       ipc.commit(types.CHANGE_THROUGTH)

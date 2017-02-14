@@ -70,17 +70,6 @@ module.exports =
 
 	  player.show()
 
-	  ipcMain.on('EXIT', (event) => {
-	    app.quit()
-	  })
-
-	  ipcMain.on('CHANGE_THROUGTH', (event, toggle) => {
-	    player.win.setIgnoreMouseEvents(toggle)
-	    player.win.setAlwaysOnTop(toggle)
-	    player.win.setVisibleOnAllWorkspaces(toggle)
-	    player.win.webContents.send('CHANGE_THROUGTH', toggle)
-	  })
-
 	  ipcMain.on(types.CONNECT_STATE, (event) => {
 	    console.log('[background] vuex-connect', winId)
 	    event.returnValue = store.state
@@ -90,6 +79,13 @@ module.exports =
 	    console.log(typeName, payload)
 	    player.win.webContents.send(types.CONNECT_COMMIT, typeName, payload)
 	    controller.win.webContents.send(types.CONNECT_COMMIT, typeName, payload)
+
+	    if (typeName === types.EXIT) app.quit()
+
+	    if (typeName === types.CHANGE_THROUGTH) {
+	      player.win.setIgnoreMouseEvents(payload.toggle)
+	      player.win.setAlwaysOnTop(payload.toggle)
+	    }
 	  })
 	})
 
