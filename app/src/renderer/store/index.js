@@ -19,7 +19,6 @@ const store = new Vuex.Store({
 })
 
 ipcRenderer.on(types.CONNECT_COMMIT, (event, typeName, payload) => {
-  console.log(typeName, payload)
   store.commit(typeName, JSON.parse(payload))
 })
 

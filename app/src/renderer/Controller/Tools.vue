@@ -5,7 +5,7 @@ div.white.settings
       input#opacity_range.range.validate(type="range"
         v-model="opacity"
         @change="onChangeOpacityRange")
-      label(for="opacity_range").label Opacity is {{ settings.opacity * 100 }}
+      label(for="opacity_range").label Opacity is {{ settings.player.opacity * 100 }}
       div.min-max.grey-text
         span.min 0
         span.max 100
