@@ -1,9 +1,10 @@
 node_modules
 .DS_Store
 cache
-build
+dist
 npm-debug.log
 *.map
 app/font
 app/js
 release/
+app/main.js
