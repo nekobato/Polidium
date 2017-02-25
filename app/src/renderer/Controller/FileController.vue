@@ -58,9 +58,6 @@ module.exports = {
     remove (index) {
       ipc.commit(types.REMOVE_QUEUE, { index: index })
     }
-  },
-  created () {
-    console.log(this.video.isPlaying)
   }
 }
 </script>

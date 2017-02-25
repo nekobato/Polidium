@@ -11,7 +11,7 @@ div.web
       div.switch
         label
           span Off
-          input(type="checkbox")
+          input(type="checkbox", v-model="clickThrough")
           span.lever
           span On
 </template>
@@ -19,6 +19,7 @@ div.web
 const ipc = require('renderer/ipc')
 const { clipboard } = require('electron')
 const xss = require('xss')
+const types = require('root/mutation-types')
 
 module.exports = {
   name: 'WebController',
@@ -33,7 +34,16 @@ module.exports = {
       if ( !encodedURL.match(/https?\:\/\//) ) encodedURL = 'http://' + encodedURL
       encodedURL = xss(encodedURL)
       return encodedURL
-    }
+    },
+    clickThrough: {
+      get () {
+        return this.$store.state.settings.player.clickThrough
+      },
+      set (value) {
+        console.log(value)
+        ipc.commit(types.SET_CLICKTHROUGH, { clickThrough: value })
+      }
+    },
   },
   methods: {
     submitURL () {

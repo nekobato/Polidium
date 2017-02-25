@@ -27,6 +27,9 @@ module.exports = {
     [types.CHANGE_OPACITY] (state, newOpacity) {
       state.player.opacity = newOpacity
     },
+    [types.SET_CLICKTHROUGH] (state, payload) {
+      state.player.clickThrough = payload.flag
+    },
     [types.RELOAD] (state) {
       window.location.reload()
     },

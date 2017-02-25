@@ -35,9 +35,10 @@ app.on('ready', () => {
 
     if (typeName === types.QUIT) app.quit()
 
-    if (typeName === types.CHANGE_THROUGTH) {
-      player.win.setIgnoreMouseEvents(payload.toggle)
-      player.win.setAlwaysOnTop(payload.toggle)
+    if (typeName === types.SET_CLICKTHROUGH) {
+      const parsedPayload = JSON.parse(payload)
+      player.win.setIgnoreMouseEvents(parsedPayload.clickThrough)
+      player.win.setAlwaysOnTop(parsedPayload.clickThrough)
     }
   })
 })
