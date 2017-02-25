@@ -5,7 +5,7 @@ div.white.settings
       input#opacity_range.range.validate(type="range"
         v-model="opacity"
         @change="onChangeOpacityRange")
-      label(for="opacity_range").label Opacity is {{ settings.player.opacity * 100 }}
+      label(for="opacity_range").label Opacity is {{ opacityFloor }}
       div.min-max.grey-text
         span.min 0
         span.max 100
@@ -39,6 +39,9 @@ module.exports = {
   computed: {
     settings () {
       return this.$store.state.settings
+    },
+    opacityFloor () {
+      return Math.floor(this.settings.player.opacity * 100)
     }
   },
   methods: {
