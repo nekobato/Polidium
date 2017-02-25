@@ -22,7 +22,6 @@ module.exports = {
       state.video.switch = true
     },
     [types.PAUSE_FILE] (state) {
-      console.log("pause")
       state.video.switch = false
     },
     [types.RESUME_FILE] (state) {
@@ -44,6 +43,11 @@ module.exports = {
     [types.VIDEO_PAUSED] (state) {
       state.video.isPlaying = false
       state.video.switch = false
+    },
+    [types.VIDEO_ENDED] (state) {
+      if (state.queues[state.playPointer + 1]) {
+        state.playPointer += 1
+      }
     }
   }
 }

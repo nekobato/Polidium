@@ -5,7 +5,8 @@ video.video(autoplay,
   @canplay="onVideoCanplay",
   @timeupdate="onVideoTimeupdate",
   @play="onVideoPlay",
-  @pause="onVideoPause")
+  @pause="onVideoPause",
+  @ended="onVideoEnded")
 </template>
 <script>
 const ipc = require('renderer/ipc')
@@ -55,6 +56,9 @@ module.exports = {
     },
     onVideoPause () {
       ipc.commit(types.VIDEO_PAUSED)
+    },
+    onVideoEnded () {
+      ipc.commit(types.VIDEO_ENDED)
     }
   },
   created () {
