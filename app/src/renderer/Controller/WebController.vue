@@ -50,7 +50,7 @@ module.exports = {
       if (! this.encodedURL.match(/^https?(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)$/) ) {
         return false
       }
-      ipc.commit('URL_SUBMITTED', this.encodedURL)
+      ipc.commit('OPEN_URL', { src: this.encodedURL })
     },
     tryPasteClipboard (e) { // for Mac
       if (e.metaKey !== true) return

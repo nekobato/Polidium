@@ -2,11 +2,11 @@ const types = require('root/mutation-types')
 
 module.exports = {
   state: {
-    href: ''
+    src: ''
   },
   mutations: {
     [types.OPEN_URL] (state, payload) {
-      state.href = payload.href
+      state.src = payload.src
     }
   }
 }

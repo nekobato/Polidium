@@ -1,6 +1,5 @@
 <template lang="jade">
-video.video(autoplay,
-  ref="video",
+video.video(ref="video",
   v-bind="{ controls: controls, src: videoSource }",
   @canplay="onVideoCanplay",
   @timeupdate="onVideoTimeupdate",
@@ -19,7 +18,6 @@ module.exports = {
       this.$refs['video'].currentTime = this.video.duration / 100 * value
     },
     ['video.switch'] (value) {
-      console.log(value)
       if (value === true) {
         this.$refs['video'].play()
       } else {

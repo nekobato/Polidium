@@ -15,13 +15,13 @@ module.exports = class {
     this.win = new BrowserWindow({
       x          : 0,
       y          : 0,
-      width      : size.width,
-      height     : size.height - 24, // Macの上のトレイ分短く
+      width      : DEBUG ? 400 : size.width,
+      height     : DEBUG ? 300 : size.height - 24, // Macの上のトレイ分短く
       center     : true,
       show       : false,
       resizable  : false,
-      frame      : false,
-      transparent: true,
+      frame      : DEBUG ? true : false,
+      transparent: DEBUG ? false : true,
       skipTaskbar: true,
       alwaysOnTop: true
     })

@@ -26,8 +26,7 @@ module.exports = {
       state.player.height = layout.height
     },
     [types.CHANGE_MODE] (state, mode) {
-      // mode = video | web
-      state.player.mode = mode
+      state.player.mode = mode // mode = video | web
     },
     [types.CHANGE_OPACITY] (state, newOpacity) {
       state.player.opacity = newOpacity
@@ -37,6 +36,12 @@ module.exports = {
     },
     [types.RELOAD] (state) {
       window.location.reload()
+    },
+    [types.OPEN_URL] (state, payload) {
+      state.player.mode = 'web-player'
+    },
+    [types.PLAY_FILE] (state, payload) {
+      state.player.mode = 'video-player'
     }
   }
 }
