@@ -86,6 +86,7 @@ module.exports =
 	      const parsedPayload = JSON.parse(payload)
 	      player.win.setIgnoreMouseEvents(parsedPayload.clickThrough)
 	      player.win.setAlwaysOnTop(parsedPayload.clickThrough)
+	      player.win.setVisibleOnAllWorkspaces(parsedPayload.clickThrough)
 	    }
 	  })
 	})
@@ -161,19 +162,19 @@ module.exports =
 	    this.win = new BrowserWindow({
 	      x          : 0,
 	      y          : 0,
-	      width      : DEBUG ? 400 : size.width,
-	      height     : DEBUG ? 300 : size.height - 24, // Macの上のトレイ分短く
+	      width      : size.width,
+	      height     : size.height - 24, // Macの上のトレイ分短く
 	      center     : true,
 	      show       : false,
-	      resizable  : DEBUG ? true : false,
-	      frame      : DEBUG ? true : false,
-	      transparent: DEBUG ? false : true,
+	      resizable  : false,
+	      frame      : false,
+	      transparent: true,
 	      skipTaskbar: true,
-	      alwaysOnTop: DEBUG ? false : true
+	      alwaysOnTop: true
 	    })
 
-	    this.win.setIgnoreMouseEvents(DEBUG ? false : true)
-	    this.win.setVisibleOnAllWorkspaces(DEBUG ? false : true)
+	    this.win.setIgnoreMouseEvents(true)
+	    this.win.setVisibleOnAllWorkspaces(true)
 
 	    this.win.loadURL('file://' + __dirname + '/player.html')
 

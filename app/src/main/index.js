@@ -39,6 +39,7 @@ app.on('ready', () => {
       const parsedPayload = JSON.parse(payload)
       player.win.setIgnoreMouseEvents(parsedPayload.clickThrough)
       player.win.setAlwaysOnTop(parsedPayload.clickThrough)
+      player.win.setVisibleOnAllWorkspaces(parsedPayload.clickThrough)
     }
   })
 })
