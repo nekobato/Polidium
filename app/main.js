@@ -82,9 +82,10 @@ module.exports =
 
 	    if (typeName === types.QUIT) app.quit()
 
-	    if (typeName === types.CHANGE_THROUGTH) {
-	      player.win.setIgnoreMouseEvents(payload.toggle)
-	      player.win.setAlwaysOnTop(payload.toggle)
+	    if (typeName === types.SET_CLICKTHROUGH) {
+	      const parsedPayload = JSON.parse(payload)
+	      player.win.setIgnoreMouseEvents(parsedPayload.clickThrough)
+	      player.win.setAlwaysOnTop(parsedPayload.clickThrough)
 	    }
 	  })
 	})
@@ -129,7 +130,7 @@ module.exports =
 	exports.CHANGE_LAYOUT = 'CHANGE_LAYOUT'
 	exports.CHANGE_MODE = 'CHANGE_MODE'
 	exports.CHANGE_OPACITY = 'CHANGE_OPACITY'
-	exports.CHANGE_THROUGTH = 'CHANGE_THROUGTH'
+	exports.SET_CLICKTHROUGH = 'SET_CLICKTHROUGH'
 	exports.RESIZE_PLAYER_MODE = 'RESIZE_PLAYER_MODE'
 
 	exports.OPEN_URL = 'OPEN_URL'
