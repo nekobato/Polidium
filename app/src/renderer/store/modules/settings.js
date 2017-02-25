@@ -40,7 +40,7 @@ module.exports = {
     [types.OPEN_URL] (state, payload) {
       state.player.mode = 'web-player'
     },
-    [types.PLAY_FILE] (state, payload) {
+    [types.VIDEO_SELECT] (state, payload) {
       state.player.mode = 'video-player'
     }
   }

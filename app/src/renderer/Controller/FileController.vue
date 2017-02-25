@@ -47,7 +47,7 @@ module.exports = {
   },
   methods: {
     play (index) {
-      ipc.commit(types.PLAY_FILE, { index: index })
+      ipc.commit(types.VIDEO_SELECT, { index: index })
     },
     resume () {
       ipc.commit(types.RESUME_FILE)

@@ -17,15 +17,14 @@ module.exports = {
     [types.DROP_FILE] (state, payload) {
       state.queues.push(payload.file)
     },
-    [types.PLAY_FILE] (state, payload) {
-      state.playPointer = payload.index
-      state.video.switch = true
-    },
     [types.PAUSE_FILE] (state) {
       state.video.switch = false
     },
     [types.RESUME_FILE] (state) {
       state.video.switch = true
+    },
+    [types.VIDEO_SELECT] (state, payload) {
+      state.playPointer = payload.index
     },
     [types.VIDEO_CANPLAY] (state, payload) {
       state.video.duration = payload.duration

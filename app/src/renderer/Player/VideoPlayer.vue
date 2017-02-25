@@ -5,7 +5,8 @@ video.video(ref="video",
   @timeupdate="onVideoTimeupdate",
   @play="onVideoPlay",
   @pause="onVideoPause",
-  @ended="onVideoEnded")
+  @ended="onVideoEnded",
+  @loadstart="onVideoLoadStart")
 </template>
 <script>
 const ipc = require('renderer/ipc')
@@ -57,6 +58,10 @@ module.exports = {
     },
     onVideoEnded () {
       ipc.commit(types.VIDEO_ENDED)
+    },
+    onVideoLoadStart () {
+      console.log('load start')
+      ipc.commit(types.VIDEO_PAUSED)
     }
   },
   created () {
