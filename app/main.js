@@ -80,7 +80,7 @@ module.exports =
 	    player.win.webContents.send(types.CONNECT_COMMIT, typeName, payload)
 	    controller.win.webContents.send(types.CONNECT_COMMIT, typeName, payload)
 
-	    if (typeName === types.EXIT) app.quit()
+	    if (typeName === types.QUIT) app.quit()
 
 	    if (typeName === types.CHANGE_THROUGTH) {
 	      player.win.setIgnoreMouseEvents(payload.toggle)
@@ -134,7 +134,8 @@ module.exports =
 
 	exports.OPEN_URL = 'OPEN_URL'
 
-	exports.EXIT = 'EXIT'
+	exports.RELOAD = 'RELOAD'
+	exports.QUIT = 'QUIT'
 
 
 /***/ },

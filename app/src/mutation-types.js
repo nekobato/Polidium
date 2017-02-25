@@ -22,4 +22,5 @@ exports.RESIZE_PLAYER_MODE = 'RESIZE_PLAYER_MODE'
 
 exports.OPEN_URL = 'OPEN_URL'
 
-exports.EXIT = 'EXIT'
+exports.RELOAD = 'RELOAD'
+exports.QUIT = 'QUIT'

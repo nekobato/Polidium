@@ -27,5 +27,8 @@ module.exports = {
     [types.CHANGE_OPACITY] (state, newOpacity) {
       state.player.opacity = newOpacity
     },
+    [types.RELOAD] (state) {
+      window.location.reload()
+    },
   }
 }

@@ -5,13 +5,12 @@ div.player(:style="playerStyle")
 
 <script>
 const { ipcRenderer } = require('electron')
-
-const FilePlayer = require('./File.vue')
-const WebPlayer = require('./Web.vue')
+const VideoPlayer = require('./VideoPlayer.vue')
+const WebPlayer = require('./WebPlayer.vue')
 
 module.exports = {
   components: {
-    'video-player': FilePlayer,
+    'video-player': VideoPlayer,
     'web-player': WebPlayer
   },
   computed: {

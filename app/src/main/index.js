@@ -33,7 +33,7 @@ app.on('ready', () => {
     player.win.webContents.send(types.CONNECT_COMMIT, typeName, payload)
     controller.win.webContents.send(types.CONNECT_COMMIT, typeName, payload)
 
-    if (typeName === types.EXIT) app.quit()
+    if (typeName === types.QUIT) app.quit()
 
     if (typeName === types.CHANGE_THROUGTH) {
       player.win.setIgnoreMouseEvents(payload.toggle)

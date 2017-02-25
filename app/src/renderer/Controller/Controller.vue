@@ -20,9 +20,9 @@ div.my-controller(
 <script>
 const ipc = require('renderer/ipc')
 const types = require('root/mutation-types')
-const FileController = require('./File.vue')
-const WebController = require('./Web.vue')
-const Settings = require('./Tools.vue')
+const FileController = require('./FileController.vue')
+const WebController = require('./WebController.vue')
+const Settings = require('./Settings.vue')
 
 module.exports = {
   data () {

@@ -17,10 +17,13 @@ div.white.settings
     div.btn(@click="resizePlayer")
       i.material-icons.left transform
       span resize player
-  div.center.exit
-    div.btn.red(@click="closeApplication")
+  div.center.disruptive
+    div.btn.blue(@click="reload")
+      i.material-icons.left refresh
+      span reload
+    div.btn.red(@click="quit")
       i.material-icons.left close
-      span quit Polidium
+      span quit
 </template>
 <script>
 const ipc = require('renderer/ipc')
@@ -45,8 +48,11 @@ module.exports = {
     toggleClickThrough () {
       ipc.commit(types.CHANGE_THROUGTH)
     },
-    closeApplication () {
-      ipc.commit(types.EXIT)
+    quit () {
+      ipc.commit(types.QUIT)
+    },
+    reload () {
+      ipc.commit(types.RELOAD)
     },
     selectDisplay (display) {
       ipc.commit(types.SELECT_DISPLAY, display)
@@ -82,10 +88,15 @@ module.exports = {
   margin-bottom: 20px
   .btn
     padding: 0 1rem
-.exit
+.disruptive
   position: absolute
+  display: flex
   margin: auto
   bottom: 20px
   left: 0
   right: 0
+  .btn
+    margin: auto
+    padding: 0 10px
+    width: 120px
 </style>
