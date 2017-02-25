@@ -6,7 +6,7 @@
   "scripts": {
     "start": "DEBUG=true electron ./app",
     "test": "npm run test:unit && npm run test:e2e",
-    "dev": "NODE_ENV=development webpack --watch --watch-poll & npm start",
+    "dev": "NODE_ENV=development npm run watch & npm start",
     "watch": "npm run watch:renderer & npm run watch:main",
     "watch:renderer": "webpack --watch --watch-poll --config ./webpack.renderer.config.js",
     "watch:main": "webpack --watch --watch-poll --config ./webpack.main.config.js",
