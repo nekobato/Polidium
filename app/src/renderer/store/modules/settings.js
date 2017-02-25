@@ -1,8 +1,9 @@
+const { ipcRenderer } = require('electron')
 const types = require('root/mutation-types')
 
-module.exports = {
-  state: {
-    displays: [1, 2, 3],
+function getSettings () {
+  return window.localStorage.settings ? window.localStorage.settings : {
+    displays: [],
     player: {
       x: 0,
       y: 0,
@@ -12,7 +13,11 @@ module.exports = {
       opacity: 0.05,
       clickThrough: true
     }
-  },
+  }
+}
+
+module.exports = {
+  state: getSettings(),
   mutations: {
     [types.CHANGE_LAYOUT] (state, layout) {
       state.player.x = layout.x
@@ -32,6 +37,6 @@ module.exports = {
     },
     [types.RELOAD] (state) {
       window.location.reload()
-    },
+    }
   }
 }
