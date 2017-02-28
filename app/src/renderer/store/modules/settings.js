@@ -40,7 +40,7 @@ module.exports = {
       saveSettings()
     },
     [types.SET_CLICKTHROUGH] (state, payload) {
-      state.player.clickThrough = payload.flag
+      state.player.clickThrough = payload.clickThrough
       saveSettings()
     },
     [types.RELOAD] (state) {
