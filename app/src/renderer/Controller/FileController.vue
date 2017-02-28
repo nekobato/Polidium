@@ -2,7 +2,7 @@
 div.playlist
   div.empty-queue(v-show="queueIsEmpty")
     span.grey-text Drop Movie files? Here
-  ul.collection(v-show="!queueIsEmpty")
+  ul.collection(ref="queue-list", v-show="!queueIsEmpty")
     li.collection-item(v-for="(queue, index) in queues",
       @click.prevent='play(index)')
       i.material-icons.grey-text.playlist-deleter(
@@ -19,6 +19,7 @@ div.playlist
 <script>
 const ipc = require('renderer/ipc')
 const types = require('root/mutation-types')
+const Sortable = require('sortablejs')
 
 module.exports = {
   name: 'FileController',
@@ -58,6 +59,16 @@ module.exports = {
     remove (index) {
       ipc.commit(types.REMOVE_QUEUE, { index: index })
     }
+  },
+  mounted () {
+    Sortable.create(this.$refs['queue-list'], {
+      onUpdate: function (e) {
+        ipc.commit(types.SORT_QUEUE, {
+          oldIndex: e.oldIndex,
+          newIndex: e.newIndex
+        })
+      }
+    })
   }
 }
 </script>

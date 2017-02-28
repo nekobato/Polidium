@@ -41,6 +41,12 @@ module.exports = {
       state.queues.splice(payload.index, 1)
       saveQueues()
     },
+    [types.SORT_QUEUE] (state, payload) {
+      const newRow = state.queues.splice(payload.newIndex, 1, null)[0]
+      state.queues.splice(payload.newIndex, 1, state.queues[payload.oldIndex])
+      state.queues.splice(payload.oldIndex, 1, newRow)
+      saveQueues()
+    },
     [types.VIDEO_CANPLAY] (state, payload) {
       state.video.duration = payload.duration
     },
