@@ -40,7 +40,6 @@ module.exports = {
         return this.$store.state.settings.player.clickThrough
       },
       set (value) {
-        console.log(value)
         ipc.commit(types.SET_CLICKTHROUGH, { clickThrough: value })
       }
     },

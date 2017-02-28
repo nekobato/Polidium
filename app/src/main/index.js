@@ -24,7 +24,6 @@ app.on('ready', () => {
   player.show()
 
   ipcMain.on(types.CONNECT_STATE, (event) => {
-    console.log('[background] vuex-connect', winId)
     event.returnValue = store.state
   })
 

@@ -60,7 +60,6 @@ module.exports = {
       ipc.commit(types.VIDEO_ENDED)
     },
     onVideoLoadStart () {
-      console.log('load start')
       ipc.commit(types.VIDEO_PAUSED)
     }
   },

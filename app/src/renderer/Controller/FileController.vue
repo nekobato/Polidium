@@ -4,8 +4,9 @@ div.playlist
     span.grey-text Drop Movie files? Here
   ul.collection(ref="queue-list", v-show="!queueIsEmpty")
     li.collection-item(v-for="(queue, index) in queues",
+      :class="{ selected: index === playPointer }",
       @click.prevent='play(index)')
-      i.material-icons.grey-text.playlist-deleter(
+      i.material-icons.playlist-deleter(
         @click.prevent='remove(index)') close
       span.truncate {{ queue.name }}
   div.blue-grey.darken-2.center.video-controller
@@ -26,6 +27,9 @@ module.exports = {
   computed: {
     queues () {
       return this.$store.state.video.queues
+    },
+    playPointer () {
+      return this.$store.state.video.playPointer
     },
     queueIsEmpty () {
       return this.queues.length > 0 ? false : true
@@ -91,6 +95,12 @@ module.exports = {
   &:hover
     .playlist-deleter
       display: inline-block
+      color: #9e9e9e
+  &.selected
+    background: #22b4e2
+    color: #fff
+    .playlist-deleter
+      color: #fff
 
 .playlist
   margin: 0
