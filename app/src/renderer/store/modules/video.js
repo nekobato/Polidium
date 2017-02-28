@@ -1,21 +1,32 @@
 const types = require('root/mutation-types')
 
+function getQeueusFromLocalStrage () {
+  return localStorage.queues ? JSON.parse(localStorage.queues) : []
+}
+
+const saveQueues = function () {
+  localStorage.setItem('queues', JSON.stringify(state.queues))
+}
+
+const state = {
+  queues: getQeueusFromLocalStrage(),
+  playPointer: 0,
+  controls: false,
+  video: {
+    duration: 0,
+    currentTime: 0,
+    seekPercentage: 0,
+    isPlaying: false,
+    switch: false // switch play/pause control by controller
+  }
+}
+
 module.exports = {
-  state: {
-    queues: [],
-    playPointer: 0,
-    controls: false,
-    video: {
-      duration: 0,
-      currentTime: 0,
-      seekPercentage: 0,
-      isPlaying: false,
-      switch: false // switch play/pause control by controller
-    }
-  },
+  state: state,
   mutations: {
     [types.DROP_FILE] (state, payload) {
       state.queues.push(payload.file)
+      saveQueues()
     },
     [types.PAUSE_FILE] (state) {
       state.video.switch = false
@@ -28,6 +39,7 @@ module.exports = {
     },
     [types.REMOVE_QUEUE] (state, payload) {
       state.queues.splice(payload.index, 1)
+      saveQueues()
     },
     [types.VIDEO_CANPLAY] (state, payload) {
       state.video.duration = payload.duration

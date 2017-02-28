@@ -1,22 +1,26 @@
 const { ipcRenderer } = require('electron')
 const types = require('root/mutation-types')
 
-const state = window.localStorage.settings ? JSON.parse(window.localStorage.settings) : {
-  displays: [],
-  player: {
-    x: 0,
-    y: 0,
-    width: '100%',
-    height: '100%',
-    mode: 'video-player',
-    opacity: 0.05,
-    clickThrough: true
+function getSettingsFromLocalStrage () {
+  return localStorage.settings ? JSON.parse(localStorage.settings) : {
+    displays: [],
+    player: {
+      x: 0,
+      y: 0,
+      width: '100%',
+      height: '100%',
+      mode: 'video-player',
+      opacity: 0.05,
+      clickThrough: true
+    }
   }
 }
 
 const saveSettings = function () {
   localStorage.setItem('settings', JSON.stringify(state))
 }
+
+const state = getSettingsFromLocalStrage()
 
 module.exports = {
   state: state,
