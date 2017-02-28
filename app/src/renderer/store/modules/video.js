@@ -26,6 +26,9 @@ module.exports = {
     [types.VIDEO_SELECT] (state, payload) {
       state.playPointer = payload.index
     },
+    [types.REMOVE_QUEUE] (state, payload) {
+      state.queues.splice(payload.index, 1)
+    },
     [types.VIDEO_CANPLAY] (state, payload) {
       state.video.duration = payload.duration
     },
