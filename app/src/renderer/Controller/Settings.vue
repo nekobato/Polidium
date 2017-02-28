@@ -3,8 +3,7 @@ div.white.settings
   div.row
     div.input-field.center.opacity
       input#opacity_range.range.validate(type="range"
-        v-model="opacity"
-        @change="onChangeOpacityRange")
+        v-model="opacity")
       label(for="opacity_range").label Opacity is {{ opacityFloor }}
       div.min-max.grey-text
         span.min 0
@@ -31,23 +30,23 @@ const types = require('root/mutation-types')
 
 module.exports = {
   name: 'settings',
-  data () {
-    return {
-      opacity: 5
-    }
-  },
   computed: {
     settings () {
       return this.$store.state.settings
+    },
+    opacity: {
+      get () {
+        return this.settings.player.opacity * 100
+      },
+      set (value) {
+        ipc.commit(types.CHANGE_OPACITY, value / 100)
+      }
     },
     opacityFloor () {
       return Math.floor(this.settings.player.opacity * 100)
     }
   },
   methods: {
-    onChangeOpacityRange () {
-      ipc.commit(types.CHANGE_OPACITY, this.$data.opacity / 100)
-    },
     toggleClickThrough () {
       ipc.commit(types.CHANGE_THROUGTH)
     },
