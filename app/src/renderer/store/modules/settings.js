@@ -14,7 +14,6 @@ function getSettingsFromLocalStrage () {
       clickThrough: true
     }
   }
-  console.log(ipcRenderer.sendSync(types.CONNECT_SCREEN))
   settings.displays = ipcRenderer.sendSync(types.CONNECT_SCREEN)
   return settings
 }
@@ -47,6 +46,11 @@ module.exports = {
       saveSettings()
     },
     [types.RELOAD] (state) {
+      window.location.reload()
+    },
+    [types.RESET] (state) {
+      localStorage.removeItem('queues')
+      localStorage.removeItem('settings')
       window.location.reload()
     },
     [types.OPEN_URL] (state, payload) {

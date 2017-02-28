@@ -16,10 +16,14 @@ div.white.settings
     div.btn(@click="resizePlayer")
       i.material-icons.left transform
       span resize player
-  div.center.disruptive
+  div.row.center.disruptive
     div.btn.blue(@click="reload")
       i.material-icons.left refresh
       span reload
+    div.btn.blue(@click="reset")
+      i.material-icons.left settings_applications
+      span reset settings
+  div.row.center.disruptive
     div.btn.red(@click="quit")
       i.material-icons.left close
       span quit
@@ -56,6 +60,9 @@ module.exports = {
     reload () {
       ipc.commit(types.RELOAD)
     },
+    reset () {
+      ipc.commit(types.RESET)
+    },
     selectDisplay (display) {
       ipc.commit(types.SELECT_DISPLAY, { display: display })
     },
@@ -91,12 +98,7 @@ module.exports = {
   .btn
     padding: 0 1rem
 .disruptive
-  position: absolute
   display: flex
-  margin: auto
-  bottom: 20px
-  left: 0
-  right: 0
   .btn
     margin: auto
     padding: 0 10px

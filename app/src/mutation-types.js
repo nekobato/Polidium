@@ -27,4 +27,5 @@ exports.SELECT_DISPLAY = 'SELECT_DISPLAY'
 exports.OPEN_URL = 'OPEN_URL'
 
 exports.RELOAD = 'RELOAD'
+exports.RESET = 'RESET'
 exports.QUIT = 'QUIT'
