@@ -9,8 +9,8 @@ module.exports = class {
 
   constructor () {
 
-    var electronScreen = electron.screen
-    var size = electronScreen.getPrimaryDisplay().workAreaSize
+    var screen = electron.screen
+    var size = screen.getPrimaryDisplay().workAreaSize
 
     this.win = new BrowserWindow({
       x          : 0,

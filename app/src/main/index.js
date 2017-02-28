@@ -1,6 +1,7 @@
 "use strict"
 
-const { app, Tray, nativeImage, globalShortcut, ipcMain } = require('electron')
+const electron = require('electron')
+const { app, Tray, nativeImage, globalShortcut, ipcMain } = electron
 
 const DEBUG = process.env.DEBUG ? true : false
 const types = require('root/mutation-types')
@@ -10,6 +11,8 @@ const ControllerWindow = require('./controller')
 if (!DEBUG) app.dock.hide()
 
 app.on('ready', () => {
+
+  var screen = electron.screen
 
   var player = new PlayerWindow()
   var controller = new ControllerWindow()
@@ -27,6 +30,10 @@ app.on('ready', () => {
     event.returnValue = store.state
   })
 
+  ipcMain.on(types.CONNECT_SCREEN, (event) => {
+    event.returnValue = screen.getAllDisplays()
+  })
+
   ipcMain.on(types.CONNECT_COMMIT, (event, typeName, payload) => {
     console.log(typeName, payload)
     player.win.webContents.send(types.CONNECT_COMMIT, typeName, payload)
@@ -39,6 +46,10 @@ app.on('ready', () => {
       player.win.setIgnoreMouseEvents(parsedPayload.clickThrough)
       player.win.setAlwaysOnTop(parsedPayload.clickThrough)
       player.win.setVisibleOnAllWorkspaces(parsedPayload.clickThrough)
+    }
+
+    if (typeName === types.SELECT_DISPLAY) {
+
     }
   })
 })
