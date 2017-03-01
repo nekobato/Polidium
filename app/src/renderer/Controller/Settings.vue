@@ -8,10 +8,6 @@ div.white.settings
       div.min-max.grey-text
         span.min 0
         span.max 100
-  div.displays
-    div.btn(v-for="(display, index) in settings.displays", @click="selectDisplay(index)")
-      i.material-icons.left desktop_windows
-      span {{ index + 1 }}
   div.row.center.resize
     div.btn(@click="resizePlayer")
       i.material-icons.left transform

@@ -41,8 +41,6 @@ body
 
 <style lang="stylus" scoped>
 .player
-  position: absolute
-  margin: 0
   width: 100%
   height: 100%
   background: transparent

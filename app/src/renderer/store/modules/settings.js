@@ -2,7 +2,7 @@ const { ipcRenderer } = require('electron')
 const types = require('root/mutation-types')
 
 function getSettingsFromLocalStrage () {
-  let settings = localStorage.settings ? JSON.parse(localStorage.settings) : {
+  return settings = localStorage.settings ? JSON.parse(localStorage.settings) : {
     displays: [],
     player: {
       mode: 'video-player',
@@ -11,8 +11,6 @@ function getSettingsFromLocalStrage () {
       resizeMode: false
     }
   }
-  settings.displays = ipcRenderer.sendSync(types.CONNECT_SCREEN)
-  return settings
 }
 
 const saveSettings = function () {

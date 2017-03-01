@@ -30,10 +30,6 @@ app.on('ready', () => {
     event.returnValue = store.state
   })
 
-  ipcMain.on(types.CONNECT_SCREEN, (event) => {
-    event.returnValue = screen.getAllDisplays()
-  })
-
   ipcMain.on(types.CONNECT_COMMIT, (event, typeName, payload) => {
     console.log(typeName, payload)
     player.win.webContents.send(types.CONNECT_COMMIT, typeName, payload)
@@ -48,17 +44,15 @@ app.on('ready', () => {
       player.win.setVisibleOnAllWorkspaces(parsedPayload.clickThrough)
     }
 
-    if (typeName === types.SELECT_DISPLAY) {
-
-    }
-
     if (typeName === types.RESIZE_PLAYER) {
       const parsedPayload = JSON.parse(payload)
+
       if (parsedPayload.mode) {
         player.win.focus()
       } else {
         player.win.blur()
       }
+
       player.win.setIgnoreMouseEvents(!parsedPayload.mode)
       player.win.setAlwaysOnTop(true)
       player.win.setVisibleOnAllWorkspaces(true)
