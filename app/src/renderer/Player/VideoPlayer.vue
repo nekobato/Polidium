@@ -1,6 +1,6 @@
 <template lang="jade">
 video.video(ref="video",
-  v-bind="{ controls: controls, src: videoSource }",
+  v-bind="{ src: videoSource }",
   @canplay="onVideoCanplay",
   @timeupdate="onVideoTimeupdate",
   @play="onVideoPlay",
@@ -32,9 +32,6 @@ module.exports = {
     },
     playPointer () {
       return this.$store.state.video.playPointer
-    },
-    controls () {
-      return this.$store.state.video.controls
     },
     videoSource () {
       return this.queues[this.playPointer] ? this.queues[this.playPointer].path : ''
@@ -73,4 +70,5 @@ module.exports = {
   margin: 0
   width: 100%
   height: 100%
+  background: transparent
 </style>

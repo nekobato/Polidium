@@ -20,8 +20,8 @@ module.exports = class {
       center     : true,
       show       : false,
       resizable  : false,
-      frame      : DEBUG ? true : false,
-      transparent: DEBUG ? false : true,
+      frame      : false,
+      transparent: true,
       skipTaskbar: true,
       alwaysOnTop: true
     })

@@ -15,4 +15,5 @@ module.exports = {
 .web-player
   width: 100%
   height: 100%
+  background: transparent
 </style>

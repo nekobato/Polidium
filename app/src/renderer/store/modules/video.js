@@ -11,7 +11,6 @@ const saveQueues = function () {
 const state = {
   queues: getQeueusFromLocalStrage(),
   playPointer: 0,
-  controls: false,
   video: {
     duration: 0,
     currentTime: 0,

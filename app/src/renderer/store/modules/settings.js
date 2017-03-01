@@ -5,13 +5,10 @@ function getSettingsFromLocalStrage () {
   let settings = localStorage.settings ? JSON.parse(localStorage.settings) : {
     displays: [],
     player: {
-      x: 0,
-      y: 0,
-      width: '100%',
-      height: '100%',
       mode: 'video-player',
       opacity: 0.05,
-      clickThrough: true
+      clickThrough: true,
+      resizeMode: false
     }
   }
   settings.displays = ipcRenderer.sendSync(types.CONNECT_SCREEN)
@@ -60,6 +57,9 @@ module.exports = {
     [types.VIDEO_SELECT] (state, payload) {
       state.player.mode = 'video-player'
       saveSettings()
+    },
+    [types.RESIZE_PLAYER] (state, payload) {
+      state.player.resizeMode = payload.mode
     }
   }
 }

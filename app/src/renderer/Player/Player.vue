@@ -1,17 +1,20 @@
 <template lang="jade">
 div.player(:style="playerStyle")
   component(:is="settings.mode")
+  resize-mode(v-show="settings.resizeMode")
 </template>
 
 <script>
 const { ipcRenderer } = require('electron')
 const VideoPlayer = require('./VideoPlayer.vue')
 const WebPlayer = require('./WebPlayer.vue')
+const ResizeMode = require('./ResizeMode.vue')
 
 module.exports = {
   components: {
     'video-player': VideoPlayer,
-    'web-player': WebPlayer
+    'web-player': WebPlayer,
+    'resize-mode': ResizeMode
   },
   computed: {
     settings () {
@@ -19,10 +22,6 @@ module.exports = {
     },
     playerStyle () {
       return {
-        x: this.settings.x + 'px',
-        y: this.settings.y + 'px',
-        width: this.settings.width ? this.settings.width + 'px' : '100%',
-        height: this.settings.height ? this.settings.height + 'px' : '100%',
         opacity: this.settings.opacity
       }
     }
@@ -37,14 +36,14 @@ body
   width: 100%
   height: 100%
   overflow: hidden
+  background: transparent
 </style>
 
 <style lang="stylus" scoped>
 .player
+  position: absolute
   margin: 0
   width: 100%
   height: 100%
-
-.player
-  position: absolute
+  background: transparent
 </style>

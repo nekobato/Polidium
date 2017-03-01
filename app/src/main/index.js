@@ -51,6 +51,21 @@ app.on('ready', () => {
     if (typeName === types.SELECT_DISPLAY) {
 
     }
+
+    if (typeName === types.RESIZE_PLAYER) {
+      const parsedPayload = JSON.parse(payload)
+      if (parsedPayload.mode) {
+        player.win.focus()
+      } else {
+        player.win.blur()
+      }
+      player.win.setIgnoreMouseEvents(!parsedPayload.mode)
+      player.win.setAlwaysOnTop(true)
+      player.win.setVisibleOnAllWorkspaces(true)
+      player.win.setResizable(parsedPayload.mode)
+      player.win.setMovable(parsedPayload.mode)
+      player.win.setHasShadow(parsedPayload.mode)
+    }
   })
 })
 

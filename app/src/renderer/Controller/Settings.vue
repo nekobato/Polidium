@@ -67,7 +67,7 @@ module.exports = {
       ipc.commit(types.SELECT_DISPLAY, { display: display })
     },
     resizePlayer () {
-      ipc.commit(types.RESIZE_PLAYER_MODE)
+      ipc.commit(types.RESIZE_PLAYER, { mode: true })
     }
   }
 }
