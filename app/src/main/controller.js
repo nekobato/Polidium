@@ -15,9 +15,9 @@ module.exports = class {
       width      : WINDOW_WIDTH,
       height     : 400,
       show       : DEBUG ? true : false,
-      resizable  : DEBUG ? true : false,
-      frame      : DEBUG ? true : false,
-      transparent: DEBUG ? false : true,
+      resizable  : false,
+      frame      : false,
+      transparent: false,
       skipTaskbar: true,
       hasShadow  : true
     })
@@ -32,7 +32,7 @@ module.exports = class {
   }
 
   showWindow (x) {
-    this.win.setPosition(x - WINDOW_WIDTH/2, 0)
+    this.win.setPosition(x - WINDOW_WIDTH/2, 40)
     this.win.show()
     this.win.focus()
   }
