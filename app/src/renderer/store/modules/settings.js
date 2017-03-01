@@ -3,7 +3,6 @@ const types = require('root/mutation-types')
 
 function getSettingsFromLocalStrage () {
   return settings = localStorage.settings ? JSON.parse(localStorage.settings) : {
-    displays: [],
     player: {
       mode: 'video-player',
       opacity: 0.05,
