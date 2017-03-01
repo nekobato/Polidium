@@ -21,13 +21,6 @@ const state = getSettingsFromLocalStrage()
 module.exports = {
   state: state,
   mutations: {
-    [types.CHANGE_LAYOUT] (state, layout) {
-      state.player.x = layout.x
-      state.player.y = layout.y
-      state.player.width = layout.width
-      state.player.height = layout.height
-      saveSettings()
-    },
     [types.CHANGE_MODE] (state, mode) {
       state.player.mode = mode // mode = video | web
     },
