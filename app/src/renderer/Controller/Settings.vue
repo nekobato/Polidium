@@ -47,9 +47,6 @@ module.exports = {
     }
   },
   methods: {
-    toggleClickThrough () {
-      ipc.commit(types.CHANGE_THROUGTH)
-    },
     quit () {
       ipc.commit(types.QUIT)
     },

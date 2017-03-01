@@ -38,7 +38,6 @@ module.exports = {
     },
     [types.SET_CLICKTHROUGH] (state, payload) {
       state.player.clickThrough = payload.clickThrough
-      saveSettings()
     },
     [types.RELOAD] (state) {
       window.location.reload()
@@ -58,6 +57,7 @@ module.exports = {
     },
     [types.RESIZE_PLAYER] (state, payload) {
       state.player.resizeMode = payload.mode
+      state.player.clickThrough = !payload.mode
     }
   }
 }

@@ -22,7 +22,7 @@ module.exports = {
     },
     playerStyle () {
       return {
-        opacity: this.settings.opacity
+        opacity: this.settings.resizeMode ? 1 : this.settings.opacity
       }
     }
   }
