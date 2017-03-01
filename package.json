@@ -13,10 +13,9 @@
     "build": "npm run build:renderer & npm run build:main",
     "build:renderer": "webpack --progress --hide-modules --config ./webpack.renderer.config.js",
     "build:main": "webpack --progress --hide-modules --config ./webpack.main.config.js",
-    "release": "gulp release",
     "test:unit": "karma start test/unit/karma.conf.js",
     "test:e2e": "npm run pack && mocha test/e2e",
-    "pack": "npm run build && build --dir"
+    "pack": "npm run build && build --dir ./app"
   },
   "build": {
     "appId": "net.nekobato.polidium",
