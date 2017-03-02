@@ -9,6 +9,10 @@ div.playlist
       i.material-icons.playlist-deleter(
         @click.prevent='remove(index)') close
       span.truncate {{ queue.name }}
+    li.clear-all
+      div.clear-btn(@click="clear")
+        i.material-icons clear
+        span.clear-text Clear Playlist
   div.blue-grey.darken-2.center.video-controller
     button.btn.pause-btn(v-if="isPlaying", @click="pause")
       i.material-icons.white-text pause
@@ -62,6 +66,9 @@ module.exports = {
     },
     remove (index) {
       ipc.commit(types.REMOVE_QUEUE, { index: index })
+    },
+    clear () {
+      ipc.commit(types.CLEAR_QUEUES)
     }
   },
   mounted () {
@@ -101,6 +108,23 @@ module.exports = {
     color: #fff
     .playlist-deleter
       color: #fff
+
+.clear-all
+  text-align: center
+  padding: 20px 0 30px
+  .clear-btn
+    display: block
+    margin: auto
+    width: 100px
+    color: #999
+    cursor: pointer
+    &:hover
+      color: #666
+  .clear-text,
+  .material-icons
+    display: block
+  .material-icons
+    font-size: 24px
 
 .playlist
   margin: 0

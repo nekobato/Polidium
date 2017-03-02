@@ -40,6 +40,9 @@ module.exports = {
       state.queues.splice(payload.index, 1)
       saveQueues()
     },
+    [types.CLEAR_QUEUES] (state) {
+      state.queues = []
+    },
     [types.SORT_QUEUE] (state, payload) {
       const newRow = state.queues.splice(payload.newIndex, 1, null)[0]
       state.queues.splice(payload.newIndex, 1, state.queues[payload.oldIndex])
