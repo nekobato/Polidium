@@ -10,7 +10,7 @@ const saveQueues = function () {
 
 const state = {
   queues: getQeueusFromLocalStrage(),
-  playPointer: 0,
+  playPointer: null,
   video: {
     duration: 0,
     currentTime: 0,
@@ -48,6 +48,7 @@ module.exports = {
     },
     [types.VIDEO_CANPLAY] (state, payload) {
       state.video.duration = payload.duration
+      state.video.switch = true
     },
     [types.VIDEO_TIMEUPDATE] (state, payload) {
       state.video.currentTime = payload.currentTime

@@ -59,9 +59,6 @@ module.exports = {
     onVideoLoadStart () {
       ipc.commit(types.VIDEO_PAUSED)
     }
-  },
-  created () {
-    // this.$ref.videoElement
   }
 }
 </script>
