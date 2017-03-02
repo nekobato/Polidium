@@ -1,5 +1,6 @@
 {
   "name": "Polidium",
+  "productName": "Polidium",
   "version": "1.0.1",
   "description": "Polid Movie Screen",
   "main": "./app/main.js",
@@ -19,6 +20,7 @@
   },
   "build": {
     "appId": "net.nekobato.polidium",
+    "files": ["!src"],
     "asar": true,
     "linux": {
       "arch": [
@@ -51,7 +53,7 @@
   "bugs": {
     "url": "https://github.com/nekobato/Polidium/issues"
   },
-  "homepage": "https://github.com/nekobato/Polidium#readme",
+  "homepage": "https://github.com/nekobato/Polidium",
   "devDependencies": {
     "chai": "^3.5.0",
     "css-loader": "^0.26.1",
