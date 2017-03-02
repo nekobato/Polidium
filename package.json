@@ -15,7 +15,7 @@
     "build:main": "webpack --progress --hide-modules --config ./webpack.main.config.js",
     "test:unit": "karma start test/unit/karma.conf.js",
     "test:e2e": "npm run pack && mocha test/e2e",
-    "pack": "npm run build && build --dir ./app"
+    "pack": "npm run build && build --dir ./"
   },
   "build": {
     "appId": "net.nekobato.polidium",
@@ -37,7 +37,9 @@
       ]
     },
     "mac": {
-      "category": "public.app-category.video"
+      "category": "public.app-category.video",
+      "icon": "./app/icon.icns",
+      "target": "default"
     }
   },
   "repository": {

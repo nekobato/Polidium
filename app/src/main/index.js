@@ -31,7 +31,7 @@ app.on('ready', () => {
   })
 
   ipcMain.on(types.CONNECT_COMMIT, (event, typeName, payload) => {
-    console.log(typeName, payload)
+    if (DEBUG) console.log(typeName, payload)
     player.win.webContents.send(types.CONNECT_COMMIT, typeName, payload)
     controller.win.webContents.send(types.CONNECT_COMMIT, typeName, payload)
 
