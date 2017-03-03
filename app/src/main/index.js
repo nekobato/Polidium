@@ -2,13 +2,15 @@
 
 const electron = require('electron')
 const { app, Tray, nativeImage, globalShortcut, ipcMain } = electron
-
+const os = require('os')
 const DEBUG = process.env.DEBUG ? true : false
 const types = require('root/mutation-types')
 const PlayerWindow = require('./player')
 const ControllerWindow = require('./controller')
 
-if (!DEBUG) app.dock.hide()
+if (os.type() === 'darwin') {
+  if (!DEBUG) app.dock.hide()
+}
 
 app.on('ready', () => {
 
@@ -41,7 +43,7 @@ app.on('ready', () => {
       const parsedPayload = JSON.parse(payload)
       player.win.setIgnoreMouseEvents(parsedPayload.clickThrough)
       player.win.setAlwaysOnTop(parsedPayload.clickThrough)
-      player.win.setVisibleOnAllWorkspaces(parsedPayload.clickThrough)
+      if (os.type() === 'darwin') player.win.setVisibleOnAllWorkspaces(parsedPayload.clickThrough)
     }
 
     if (typeName === types.RESIZE_PLAYER) {
@@ -55,10 +57,10 @@ app.on('ready', () => {
 
       player.win.setIgnoreMouseEvents(!parsedPayload.mode)
       player.win.setAlwaysOnTop(true)
-      player.win.setVisibleOnAllWorkspaces(true)
+      if (os.type() === 'darwin') player.win.setVisibleOnAllWorkspaces(true)
       player.win.setResizable(parsedPayload.mode)
       player.win.setMovable(parsedPayload.mode)
-      player.win.setHasShadow(parsedPayload.mode)
+      if (os.type() === 'darwin') player.win.setHasShadow(parsedPayload.mode)
     }
   })
 })
