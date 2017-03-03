@@ -56,10 +56,13 @@ module.exports = {
   padding: 20px
 .input-field
   label
-    top: -2rem
+    display: inline-block
+    top: 3.5rem
     word-break: break-all
+    max-height: 4.5rem
+    overflow: hidden
 .click-through
-  padding-top: 20px
+  padding-top: 4rem
 .switch
   text-align: center
 </style>
