@@ -17,7 +17,6 @@ div.web
 </template>
 <script>
 const ipc = require('renderer/ipc')
-const { clipboard } = require('electron')
 const xss = require('xss')
 const types = require('root/mutation-types')
 
@@ -30,10 +29,8 @@ module.exports = {
   },
   computed: {
     encodedURL () {
-      let encodedURL = this.$data.url
-      if ( !encodedURL.match(/https?\:\/\//) ) encodedURL = 'http://' + encodedURL
-      encodedURL = xss(encodedURL)
-      return encodedURL
+      const encodedURL = this.$data.url.match(/^https?\:\/\//g) ? this.$data.url : 'http://' + this.$data.url
+      return xss(encodedURL)
     },
     clickThrough: {
       get () {
@@ -50,10 +47,6 @@ module.exports = {
         return false
       }
       ipc.commit('OPEN_URL', { src: this.encodedURL })
-    },
-    tryPasteClipboard (e) { // for Mac
-      if (e.metaKey !== true) return
-      this.url = clipboard.readText()
     }
   }
 }
@@ -63,7 +56,8 @@ module.exports = {
   padding: 20px
 .input-field
   label
-    top: -0.8rem
+    top: -2rem
+    word-break: break-all
 .click-through
   padding-top: 20px
 .switch
