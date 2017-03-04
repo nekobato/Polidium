@@ -23,14 +23,14 @@ Polidiumは半透明ウィンドウとカーソル操作の透過を備えたメ
 - コントローラーからのファイルの再生・停止・再生位置操作
 - 動画終了時の自動次送り
 
-![](https://github.com/nekobato/Polidium/blob/master/imageSource/screenshot1.jpg?raw=true)
+<img src="https://github.com/nekobato/Polidium/blob/master/imageSource/screenshot1.jpg?raw=true" width="363" height="343" />
 
 ### Webブラウザ
 
 - URL入力からのブラウザ表示
 - ポインター操作透過のON/OFFスイッチ
 
-![](https://github.com/nekobato/Polidium/blob/master/imageSource/screenshot2.jpg?raw=true)
+<img src="https://github.com/nekobato/Polidium/blob/master/imageSource/screenshot1.jpg?raw=true" width="352" height="342" />
 
 
 ### 操作パネル
