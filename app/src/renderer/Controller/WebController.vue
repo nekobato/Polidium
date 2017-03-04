@@ -17,6 +17,7 @@ div.web
 </template>
 <script>
 const ipc = require('renderer/ipc')
+const { clipboard } = require('electron')
 const xss = require('xss')
 const types = require('root/mutation-types')
 
@@ -39,7 +40,7 @@ module.exports = {
       set (value) {
         ipc.commit(types.SET_CLICKTHROUGH, { clickThrough: value })
       }
-    },
+    }
   },
   methods: {
     submitURL () {
@@ -47,6 +48,10 @@ module.exports = {
         return false
       }
       ipc.commit('OPEN_URL', { src: this.encodedURL })
+    },
+    tryPasteClipboard (e) { // for Mac
+      if (e.metaKey !== true) return
+      this.url = clipboard.readText()
     }
   }
 }
