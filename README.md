@@ -41,7 +41,6 @@ Polidiumは半透明ウィンドウとカーソル操作の透過を備えたメ
 
 ## Release Notes
 
-Download latest release
 https://github.com/nekobato/Polidium/releases
 
 ## Development
