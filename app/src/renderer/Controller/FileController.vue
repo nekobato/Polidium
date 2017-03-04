@@ -140,7 +140,7 @@ module.exports = {
   border: 2px dotted #ccc
   border-radius: 5px
   width: 280px
-  height: 280px
+  height: 210px
 .video-controller
   position: absolute
   display: flex
