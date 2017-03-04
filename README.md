@@ -13,6 +13,10 @@ Polidiumは半透明ウィンドウとカーソル操作の透過を備えたメ
 
 ## 機能
 
+### 操作方法
+
+起動するとメニューバーにアイコンが現れます。アイコンをクリックでコントローラーが表示され、そこから操作できます。
+
 ### メディアプレイヤー
 
 - D&D操作による動画プレイリスト
@@ -26,7 +30,7 @@ Polidiumは半透明ウィンドウとカーソル操作の透過を備えたメ
 - URL入力からのブラウザ表示
 - ポインター操作透過のON/OFFスイッチ
 
-![](https://github.com/nekobato/Polidium/blob/master/imageSource/screenshot1.jpg?raw=true)
+![](https://github.com/nekobato/Polidium/blob/master/imageSource/screenshot2.jpg?raw=true)
 
 
 ### 操作パネル
