@@ -51,3 +51,9 @@ cd Polidium
 npm install
 npm run dev
 ```
+
+## License
+
+Licensed under the MIT License, Copyright © 2016 nekobato.
+
+See [LICENSE](./LICENSE) for more information.
