@@ -52,6 +52,7 @@ module.exports = {
       var files = e.dataTransfer.files
       for (file of files) {
         if (file.type === 'video/mp4') {
+          console.log(file)
           ipc.commit(types.DROP_FILE, {
             file: {
               name: file.name,
