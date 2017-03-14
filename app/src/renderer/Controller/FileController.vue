@@ -20,6 +20,8 @@ div.playlist
       i.material-icons.white-text play_arrow
     div.seekbar-container
       input.seekbar(type="range", id="seekbar", min="0", max="100", v-model="currentTime")
+    div.duration
+      span.duration-text {{ videoRemaining }}
 </template>
 <script>
 const ipc = require('renderer/ipc')
@@ -43,6 +45,10 @@ module.exports = {
     },
     isPlaying () {
       return this.video.isPlaying
+    },
+    videoRemaining () {
+      var remainSeconds = Math.floor(this.video.duration - this.video.currentTime)
+      return `${Math.floor(remainSeconds / 60)}:${('0' + (remainSeconds % 60)).slice(-2)}`
     },
     currentTime: {
       get () {
@@ -163,4 +169,12 @@ module.exports = {
     border: 0
     border-radius: 2px
     margin: 0
+  .duration
+    width: 50px
+    text-align: right
+    padding: 0 6px 0 0
+  .duration-text
+    line-height: 24px
+    white-space: nowrap
+    color: #ccc
 </style>
