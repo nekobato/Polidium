@@ -2,8 +2,7 @@
 div.white.settings
   div.row
     div.input-field.center.opacity
-      input#opacity_range.range.validate(type="range"
-        v-model="opacity")
+      input#opacity_range.range.validate(type="range", :value="opacity", @input="inputOpacity")
       label(for="opacity_range").label Opacity is {{ opacityFloor }}
       div.min-max.grey-text
         span.min 0
@@ -34,13 +33,8 @@ module.exports = {
     settings () {
       return this.$store.state.settings
     },
-    opacity: {
-      get () {
-        return this.settings.player.opacity * 100
-      },
-      set (value) {
-        ipc.commit(types.CHANGE_OPACITY, value / 100)
-      }
+    opacity () {
+      return this.settings.player.opacity * 100
     },
     opacityFloor () {
       return Math.floor(this.settings.player.opacity * 100)
@@ -61,6 +55,9 @@ module.exports = {
     },
     resizePlayer () {
       ipc.commit(types.RESIZE_PLAYER, { mode: true })
+    },
+    inputOpacity (e) {
+      ipc.commit(types.CHANGE_OPACITY, e.target.value / 100)
     }
   }
 }

@@ -19,7 +19,8 @@ div.playlist
     button.btn.play-btn(v-if="!isPlaying", @click="resume")
       i.material-icons.white-text play_arrow
     div.seekbar-container
-      input.seekbar(type="range", id="seekbar", min="0", max="100", v-model="currentTime")
+      input.seekbar(type="range", id="seekbar", min="0", max="100",
+        :value="currentTime", @input="inputCurrentTime")
     div.duration
       span.duration-text {{ videoRemaining }}
 </template>
@@ -50,14 +51,9 @@ module.exports = {
       var remainSeconds = Math.floor(this.video.duration - this.video.currentTime)
       return `${Math.floor(remainSeconds / 60)}:${('0' + (remainSeconds % 60)).slice(-2)}`
     },
-    currentTime: {
-      get () {
-        const percentage = this.video.currentTime / this.video.duration * 100
-        return isNaN(percentage) ? 0 : percentage
-      },
-      set (value) {
-        ipc.commit(types.VIDEO_SEEK, { percentage: value })
-      }
+    currentTime () {
+      const percentage = this.video.currentTime / this.video.duration * 100
+      return isNaN(percentage) ? 0 : percentage
     },
   },
   methods: {
@@ -75,6 +71,9 @@ module.exports = {
     },
     clear () {
       ipc.commit(types.CLEAR_QUEUES)
+    },
+    inputCurrentTime (e) {
+      ipc.commit(types.VIDEO_SEEK, { percentage: e.target.value })
     }
   },
   mounted () {
