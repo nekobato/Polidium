@@ -11,7 +11,7 @@ div.web
       div.switch
         label
           span Off
-          input(type="checkbox", v-model="clickThrough")
+          input(type="checkbox", :checked="clickThrough", @change="inputClickThrough")
           span.lever
           span On
 </template>
@@ -33,13 +33,8 @@ module.exports = {
       const encodedURL = this.$data.url.match(/^https?\:\/\//g) ? this.$data.url : 'http://' + this.$data.url
       return xss(encodedURL)
     },
-    clickThrough: {
-      get () {
-        return this.$store.state.settings.player.clickThrough
-      },
-      set (value) {
-        ipc.commit(types.SET_CLICKTHROUGH, { clickThrough: value })
-      }
+    clickThrough () {
+      return this.$store.state.settings.player.clickThrough
     }
   },
   methods: {
@@ -52,6 +47,9 @@ module.exports = {
     tryPasteClipboard (e) { // for Mac
       if (e.metaKey !== true) return
       this.url = clipboard.readText()
+    },
+    inputClickThrough (e) {
+      ipc.commit(types.SET_CLICKTHROUGH, { clickThrough: e.target.checked })
     }
   }
 }
