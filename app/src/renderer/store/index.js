@@ -9,11 +9,15 @@ const DEBUG = process.env.NODE_ENV !== 'production'
 
 Vue.config.debug = DEBUG ? true : false
 
+import videoModule from './modules/video'
+import webModule from './modules/web'
+import settingsModule from './modules/settings'
+
 const store = new Vuex.Store({
   modules: {
-    'video': require('./modules/video'),
-    'web': require('./modules/web'),
-    'settings': require('./modules/settings')
+    'video': videoModule,
+    'web': webModule,
+    'settings': settingsModule
   },
   strict: DEBUG
 })

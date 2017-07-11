@@ -25,11 +25,11 @@ div.playlist
       span.duration-text {{ videoRemaining }}
 </template>
 <script>
-const ipc = require('renderer/ipc')
-const types = require('root/mutation-types')
-const Sortable = require('sortablejs')
+import ipc from 'renderer/ipc'
+import types from 'root/mutation-types'
+import Sortable from 'sortablejs'
 
-module.exports = {
+export default {
   name: 'FileController',
   computed: {
     queues () {
@@ -39,7 +39,7 @@ module.exports = {
       return this.$store.state.video.playPointer
     },
     queueIsEmpty () {
-      return this.queues.length > 0 ? false : true
+      return (this.queues && this.queues.length) > 0 ? false : true
     },
     video () {
       return this.$store.state.video.video
