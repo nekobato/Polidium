@@ -1,6 +1,6 @@
-const types = require('root/mutation-types')
+import types from 'root/mutation-types'
 
-module.exports = {
+export default {
   state: {
     src: ''
   },

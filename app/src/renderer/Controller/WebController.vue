@@ -16,12 +16,12 @@ div.web
           span On
 </template>
 <script>
-const ipc = require('renderer/ipc')
-const { clipboard } = require('electron')
-const xss = require('xss')
-const types = require('root/mutation-types')
+import ipc from 'renderer/ipc'
+import { clipboard } from 'electron'
+import xss from 'xss'
+import types from 'root/mutation-types'
 
-module.exports = {
+export default {
   name: 'WebController',
   data () {
     return {

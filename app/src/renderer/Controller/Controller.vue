@@ -18,13 +18,13 @@ div.my-controller(
   component(:is="currentView")
 </template>
 <script>
-const ipc = require('renderer/ipc')
-const types = require('root/mutation-types')
-const FileController = require('./FileController.vue')
-const WebController = require('./WebController.vue')
-const Settings = require('./Settings.vue')
+import ipc from 'renderer/ipc'
+import types from 'root/mutation-types'
+import FileController from './FileController.vue'
+import WebController from './WebController.vue'
+import Settings from './Settings.vue'
 
-module.exports = {
+export default {
   data () {
     return {
       currentView: 'FileController'

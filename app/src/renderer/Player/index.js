@@ -1,8 +1,8 @@
-const Vue = require('vue')
-const store = require('../store')
-const Player = require('./Player.vue')
+import Vue from 'vue'
+import store from '../store'
+import Player from './Player.vue'
 
-const materialIcons = require('material-design-icons/iconfont/material-icons.css')
+import materialIcons from 'material-design-icons/iconfont/material-icons.css'
 
 new Vue({
   el: '#player',

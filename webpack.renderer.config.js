@@ -7,14 +7,13 @@ module.exports = {
     "player": "./app/src/renderer/player"
   },
   output: {
-    path: "./app/js",
+    path: path.join(__dirname, 'app/js'),
     publicPath: 'app',
     filename: '[name].js'
   },
   target: "electron-renderer",
   module: {
-    preLoaders: [],
-    loaders: [
+    rules: [
       {
         test: /\.vue$/,
         loader: 'vue-loader'

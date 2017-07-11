@@ -1,7 +1,7 @@
-const { ipcRenderer } = require('electron')
-const Vue = require('vue')
-const Vuex = require('vuex')
-const types = require('root/mutation-types')
+import { ipcRenderer } from 'electron'
+import Vue from 'vue'
+import Vuex from 'vuex'
+import types from 'root/mutation-types'
 
 Vue.use(Vuex)
 
@@ -22,4 +22,4 @@ ipcRenderer.on(types.CONNECT_COMMIT, (event, typeName, payload) => {
   store.commit(typeName, JSON.parse(payload))
 })
 
-module.exports = store
+export default store

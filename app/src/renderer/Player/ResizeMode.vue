@@ -5,10 +5,10 @@ div.resize
     span.text Restore
 </template>
 <script>
-const ipc = require('renderer/ipc')
-const types = require('root/mutation-types')
+import ipc from 'renderer/ipc'
+import types from 'root/mutation-types'
 
-module.exports = {
+export default {
   name: 'resize-mode',
   computed: {
     resizeMode () {

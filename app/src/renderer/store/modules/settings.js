@@ -1,5 +1,5 @@
-const { ipcRenderer } = require('electron')
-const types = require('root/mutation-types')
+import { ipcRenderer } from 'electron'
+import types from 'root/mutation-types'
 
 function getSettingsFromLocalStrage () {
   return settings = localStorage.settings ? JSON.parse(localStorage.settings) : {
@@ -18,7 +18,7 @@ const saveSettings = function () {
 
 const state = getSettingsFromLocalStrage()
 
-module.exports = {
+export default {
   state: state,
   mutations: {
     [types.CHANGE_MODE] (state, mode) {

@@ -2,7 +2,7 @@
 webview.web-player(nodeintegration v-bind="{ src: web.src }")
 </template>
 <script>
-module.exports = {
+export default {
   name: 'web-player',
   computed: {
     web () {

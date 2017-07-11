@@ -5,12 +5,12 @@ div.player(:style="playerStyle")
 </template>
 
 <script>
-const { ipcRenderer } = require('electron')
-const VideoPlayer = require('./VideoPlayer.vue')
-const WebPlayer = require('./WebPlayer.vue')
-const ResizeMode = require('./ResizeMode.vue')
+import { ipcRenderer } from 'electron'
+import VideoPlayer from './VideoPlayer.vue'
+import WebPlayer from './WebPlayer.vue'
+import ResizeMode from './ResizeMode.vue'
 
-module.exports = {
+export default {
   components: {
     'video-player': VideoPlayer,
     'web-player': WebPlayer,
