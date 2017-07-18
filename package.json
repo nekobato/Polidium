@@ -16,7 +16,7 @@
     "build:main": "webpack --progress --hide-modules --config ./webpack.main.config.js",
     "test:unit": "karma start test/unit/karma.conf.js",
     "test:e2e": "npm run pack && mocha test/e2e",
-    "pack": "npm run build && build --dir ./"
+    "pack": "build --dir ./"
   },
   "build": {
     "appId": "net.nekobato.polidium",
@@ -24,23 +24,6 @@
       "!src"
     ],
     "asar": true,
-    "linux": {
-      "arch": [
-        "ia32",
-        "x64"
-      ],
-      "target": [
-        "deb",
-        "AppImage",
-        "rpm"
-      ]
-    },
-    "win": {
-      "icon": "./app/app.ico",
-      "target": [
-        "squirrel"
-      ]
-    },
     "mac": {
       "category": "public.app-category.video",
       "icon": "./app/app.icns",
