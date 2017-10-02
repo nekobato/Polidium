@@ -3,13 +3,12 @@
 const electron = require('electron')
 const { app, Tray, nativeImage, globalShortcut, ipcMain } = electron
 const os = require('os')
-const DEBUG = process.env.DEBUG ? true : false
-const MAC = os.type() === 'Darwin' ? true : false
 const types = require('root/mutation-types')
 const PlayerWindow = require('./player')
 const ControllerWindow = require('./controller')
 
-if (MAC) app.dock.hide()
+const DEBUG = process.env.DEBUG ? true : false
+const MAC = os.type() === 'Darwin' ? true : false
 
 app.on('ready', () => {
 
