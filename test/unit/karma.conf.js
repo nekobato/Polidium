@@ -4,23 +4,14 @@ const path = require('path')
 const merge = require('webpack-merge')
 const webpack = require('webpack')
 
-const baseConfig = require('../../webpack.config')
-const projectRoot = path.resolve(__dirname, '../../')
+const baseConfig = require('../../.electron-vue/webpack.renderer.config')
+const projectRoot = path.resolve(__dirname, '../../src/renderer')
+
+// Set BABEL_ENV to use proper preset config
+process.env.BABEL_ENV = 'test'
 
 let webpackConfig = merge(baseConfig, {
-  // module: {
-  //   rules: [
-  //     {
-  //       test: /\.vue$/,
-  //       loader: 'vue-loader'
-  //       options: {
-  //         loaders: {
-  //           js: 'isparta'
-  //         }
-  //       }
-  //     }
-  //   ]
-  // },
+  devtool: '#inline-source-map',
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"testing"'
@@ -28,15 +19,14 @@ let webpackConfig = merge(baseConfig, {
   ]
 })
 
+// don't treat dependencies as externals
 delete webpackConfig.entry
+delete webpackConfig.externals
+delete webpackConfig.output.libraryTarget
 
-// // make sure isparta loader is applied
-// webpackConfig.module.preLoaders = webpackConfig.module.preLoaders || []
-// webpackConfig.module.preLoaders.unshift({
-//   test: /\.js$/,
-//   loader: 'isparta',
-//   include: path.resolve(projectRoot, 'src')
-// })
+// apply vue option to apply isparta-loader on js
+webpackConfig.module.rules
+  .find(rule => rule.use.loader === 'vue-loader').use.options.loaders.js = 'babel-loader'
 
 module.exports = config => {
   config.set({
@@ -44,38 +34,29 @@ module.exports = config => {
     client: {
       useIframe: false
     },
-    colors: true,
-    // coverageReporter: {
-    //   dir: './coverage',
-    //   reporters: [
-    //     { type: 'lcov', subdir: '.' },
-    //     { type: 'text-summary' }
-    //   ]
-    // },
+    coverageReporter: {
+      dir: './coverage',
+      reporters: [
+        { type: 'lcov', subdir: '.' },
+        { type: 'text-summary' }
+      ]
+    },
     customLaunchers: {
       'visibleElectron': {
         base: 'Electron',
         flags: ['--show']
       }
     },
-    frameworks: ['jasmine'],
+    frameworks: ['mocha', 'chai'],
     files: ['./index.js'],
     preprocessors: {
       './index.js': ['webpack', 'sourcemap']
     },
-    // reporters: ['spec', 'coverage'],
-    reporters: ['spec'],
+    reporters: ['spec', 'coverage'],
     singleRun: true,
     webpack: webpackConfig,
     webpackMiddleware: {
       noInfo: true
-    },
-    plugins: [
-      require("karma-jasmine"),
-      require("karma-webpack"),
-      require("karma-electron"),
-      require("karma-sourcemap-loader"),
-      require("karma-spec-reporter")
-    ]
+    }
   })
 }
