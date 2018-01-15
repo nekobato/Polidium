@@ -22,17 +22,19 @@ export default class {
       hasShadow: true
     })
 
-    this.win.setVisibleOnAllWorkspaces(!env.isDev)
+    this.win.setVisibleOnAllWorkspaces(true)
 
     this.win.on('blur', () => {
-      if (!env.isDev) this.win.hide()
+      this.win.hide()
     })
 
     this.win.loadURL(`${winURL}/#/controller/file`)
   }
 
-  showWindow (x) {
-    this.win.setPosition(x - config.controller.size.width / 2, 40)
+  showWindow (bounds) {
+    let display = electron.screen.getDisplayNearestPoint(bounds)
+
+    this.win.setPosition(bounds.x - config.controller.size.width / 2, display.bounds.y + 40)
     this.win.show()
     this.win.focus()
   }
@@ -41,7 +43,7 @@ export default class {
     if (this.win.isVisible()) {
       this.win.hide()
     } else {
-      this.showWindow(bounds.x)
+      this.showWindow(bounds)
     }
   }
 }
