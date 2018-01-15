@@ -1,7 +1,9 @@
 'use strict'
 
-import { BrowserWindow } from 'electron'
+import electron, { BrowserWindow } from 'electron'
 import env from './env'
+
+const config = require('./config')[env.isDev ? 'development' : 'production']
 
 const winURL = env.isDev
   ? `http://localhost:9080`
@@ -9,21 +11,25 @@ const winURL = env.isDev
 
 export default class {
   constructor () {
-    // var size = electron.screen.getPrimaryDisplay().workAreaSize
-    var size = { width: 400, height: 300 }
+    let windowSize = env.isDev ? config.player.size : electron.screen.getPrimaryDisplay().workAreaSize
+
+    if (env.isMac) {
+      windowSize.height = windowSize.height - electron.screen.getMenuBarHeight()
+    }
 
     this.win = new BrowserWindow({
       x: 0,
       y: 0,
-      width: env.isDev ? 400 : size.width,
-      height: env.isDev ? 300 : size.height - 24, // Macの上のトレイ分短く
+      width: windowSize.width,
+      height: windowSize.height,
       center: true,
       show: false,
       resizable: false,
       frame: false,
       transparent: true,
       skipTaskbar: true,
-      alwaysOnTop: true
+      alwaysOnTop: true,
+      hasShadow: false
     })
 
     this.win.setIgnoreMouseEvents(true)

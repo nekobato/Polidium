@@ -10,14 +10,14 @@ div.white.settings
   div.row.center.resize
     div.btn(@click="resizePlayer")
       i.material-icons.left transform
-      span resize player
+      span resize
   div.row.center.disruptive
     div.btn.blue(@click="reload")
       i.material-icons.left refresh
       span reload
     div.btn.blue(@click="reset")
       i.material-icons.left settings_applications
-      span reset settings
+      span reset
   div.row.center.disruptive
     div.btn.red(@click="quit")
       i.material-icons.left close

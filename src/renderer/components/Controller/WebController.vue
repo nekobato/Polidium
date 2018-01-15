@@ -14,6 +14,13 @@ div.web
           input(type="checkbox", :checked="clickThrough", @change="inputClickThrough")
           span.lever
           span On
+  div.input-group
+    div.btn.blue
+      i.material-icons arrow_back
+    div.btn.blue
+      i.material-icons arrow_forward
+    div.btn.blue
+      i.material-icons refresh
 </template>
 <script>
 import ipc from '@/lib/ipc'
