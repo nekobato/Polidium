@@ -11,11 +11,11 @@ import env from './env'
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
  */
-if (env.isDev) {
+if (!env.isDev) {
   global.__static = path.join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 
-if (env.isMac) app.dock.hide()
+// if (env.isMac) app.dock.hide()
 
 app.on('ready', createWindow)
 

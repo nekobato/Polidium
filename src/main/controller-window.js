@@ -5,10 +5,6 @@ import env from './env'
 
 const config = require('./config')[env.isDev ? 'development' : 'production']
 
-const winURL = env.isDev
-  ? `http://localhost:9080`
-  : `file://${__dirname}`
-
 export default class {
   constructor () {
     this.win = new BrowserWindow({
@@ -25,10 +21,11 @@ export default class {
     this.win.setVisibleOnAllWorkspaces(true)
 
     this.win.on('blur', () => {
-      this.win.hide()
+      // controller doesn't hide in Dev
+      if (!env.isDev) this.win.hide()
     })
 
-    this.win.loadURL(`${winURL}/#/controller/file`)
+    this.win.loadURL(`${config.winURL}#/controller/file`)
   }
 
   showWindow (bounds) {
@@ -41,7 +38,8 @@ export default class {
 
   toggle (bounds) {
     if (this.win.isVisible()) {
-      this.win.hide()
+      // controller doesn't hide in Dev
+      if (!env.isDev) this.win.hide()
     } else {
       this.showWindow(bounds)
     }

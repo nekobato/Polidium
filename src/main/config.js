@@ -2,6 +2,7 @@
 
 module.exports = {
   development: {
+    winURL: 'http://localhost:9080',
     controller: {
       size: {
         width: 320,
@@ -16,6 +17,7 @@ module.exports = {
     }
   },
   production: {
+    winURL: `file://${__dirname}/index.html`,
     controller: {
       size: {
         width: 320,

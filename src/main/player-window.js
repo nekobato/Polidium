@@ -5,10 +5,6 @@ import env from './env'
 
 const config = require('./config')[env.isDev ? 'development' : 'production']
 
-const winURL = env.isDev
-  ? `http://localhost:9080`
-  : `file://${__dirname}`
-
 export default class {
   constructor () {
     let windowSize = env.isDev ? config.player.size : electron.screen.getPrimaryDisplay().workAreaSize
@@ -35,7 +31,7 @@ export default class {
     this.win.setIgnoreMouseEvents(true)
     this.win.setVisibleOnAllWorkspaces(true)
 
-    this.win.loadURL(`${winURL}/#/player`)
+    this.win.loadURL(`${config.winURL}#/player`)
 
     this.win.on('closed', () => {
       this.win = null
