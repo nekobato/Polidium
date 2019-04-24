@@ -9,3 +9,9 @@ export const controllerViews = {
   web: 'Web',
   video: 'Video'
 };
+
+export const webviewAction = {
+  back: 'back',
+  forward: 'forward',
+  reload: 'reload',
+};

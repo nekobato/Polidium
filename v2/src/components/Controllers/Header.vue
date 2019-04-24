@@ -8,10 +8,10 @@
         <SettingsImage/>
       </div>
     </div>
-    <button class="btn mode video" @click="onVideoClicked">
+    <button class="btn mode video" :class="{ active: mode === 'Video' }" @click="onVideoClicked">
       <VideoImage/>
     </button>
-    <button class="btn mode web" @click="onWebClicked">
+    <button class="btn mode web" :class="{ active: mode === 'Web' }" @click="onWebClicked">
       <WebImage/>
     </button>
     <div class="btn" @click="onListClicked">
@@ -26,7 +26,7 @@ import SettingsImage from "@/assets/round-settings-24px.svg";
 import WebImage from "@/assets/round-web-24px.svg";
 import VideoImage from "@/assets/round-video_library-24px.svg";
 import ListImage from "@/assets/round-list-24px.svg";
-import { controllerViews } from "@/values";
+import { controllerViews } from "../../values";
 
 export default Vue.extend({
   components: {
@@ -38,7 +38,10 @@ export default Vue.extend({
   computed: {
     settingsIsVisible(): boolean {
       return this.$store.state.controllerView === controllerViews.settings;
-    }
+    },
+    mode(): string {
+      return this.$store.state.mode;
+    },
   },
   methods: {
     onClickOpenSettings(): void {
@@ -54,7 +57,7 @@ export default Vue.extend({
       this.$store.commit("changeModeToWeb");
     },
     onListClicked(): void {
-      this.$store.commit("changeController");
+      this.$store.commit("toggleController");
     }
   }
 });
@@ -77,6 +80,7 @@ export default Vue.extend({
   border: none;
   background: transparent;
   cursor: pointer;
+  outline: none;
 }
 .btn:hover {
   background: #ddd;
@@ -94,6 +98,9 @@ export default Vue.extend({
 .mode.web {
   border-left: 1px solid rgba(0, 0, 0, 0.16);
   /* border-radius: 0 16px 16px 0; */
+}
+.mode.active {
+  background: #ddd;
 }
 .container > a {
   text-decoration: none;

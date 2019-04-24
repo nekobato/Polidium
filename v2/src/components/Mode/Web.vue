@@ -1,11 +1,20 @@
 <template>
   <div class="container">
-    <webview class="webview" :src="webURL" />
+    <webview class="webview" :src="webURL" ref="webview"/>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import { webviewAction } from '../../values';
+
+type Webview = Element & {
+  canGoBack: () => boolean;
+  goBack: () => void;
+  canGoForward: () => boolean;
+  goForward: () => void;
+  reload: () => void;
+};
 
 export default Vue.extend({
   data: () => ({
@@ -14,8 +23,37 @@ export default Vue.extend({
     }
   }),
   computed: {
-    webURL: () => {
-      return 'https://google.com'
+    webURL(): string {
+      return this.$store.state.web.url;
+    },
+    action(): string {
+      return this.$store.state.web.action;
+    }
+  },
+  watch: {
+    action(action) {
+      if (action === '') {
+        return;
+      }
+
+      const webview = (this.$refs.webview as Webview);
+      switch (action) {
+        case webviewAction.back:
+          if (webview.canGoBack()) {
+            webview.goBack();
+          }
+          break;
+        case webviewAction.forward:
+          if (webview.canGoForward()) {
+            webview.goForward();
+          }
+          break;
+        case webviewAction.reload:
+          webview.reload();
+          break;
+      }
+
+      this.$store.commit('endWebAction');
     }
   }
 });

@@ -7,7 +7,7 @@
     </div>
     <div class="row">
       <span class="label">Hide on Launcher</span>
-      <input type="checkbox" />
+      <input type="checkbox" v-model="hideOnLauncher" />
     </div>
   </div>
 </template>
@@ -16,8 +16,17 @@
 import Vue from "vue";
 
 export default Vue.extend({
+  name: 'Settings',
   data() {
     return this.$store.state.settings;
+  },
+  watch: {
+    opacity(value) {
+      this.$store.dispatch('changeOpacity');
+    },
+    hideOnLauncher(value) {
+      this.$store.dispatch('changeHiding');
+    },
   },
   methods: {
   }

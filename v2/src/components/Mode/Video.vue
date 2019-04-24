@@ -34,4 +34,7 @@ export default Vue.extend({
 </script>
 
 <style scoped>
+.video {
+  height: 100%;
+}
 </style>

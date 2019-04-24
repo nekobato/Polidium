@@ -17,10 +17,14 @@
 import Vue from "vue";
 import Header from "./Controllers/Header.vue";
 import Settings from "./Controllers/Settings.vue";
+import Web from "./Controllers/Web.vue";
+import Video from "./Controllers/Video.vue";
 
 export default Vue.extend({
   components: {
     Settings,
+    Web,
+    Video,
     Header
   },
   computed: {
@@ -64,6 +68,7 @@ export default Vue.extend({
   border: 2px solid rgba(0, 0, 0, 0.24);
 }
 .screen-controller-container {
+  
 }
 .screen-controller {
   height: 32px;

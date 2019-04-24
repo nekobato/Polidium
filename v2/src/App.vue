@@ -1,5 +1,6 @@
 <template>
   <div id="app" ref="app">
+    <ResetCSS />
     <ScreenFrame>
       <component :is="mode" />
     </ScreenFrame>
@@ -7,13 +8,14 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
-import "reset-css";
+import ResetCSS from '@/components/ResetCSS.vue';
 import ScreenFrame from '@/components/ScreenFrame.vue';
 import Video from '@/components/Mode/Video.vue';
 import Web from '@/components/Mode/Web.vue';
 
 export default Vue.extend({
   components: {
+    ResetCSS,
     ScreenFrame,
     Video,
     Web

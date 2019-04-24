@@ -13,7 +13,6 @@
   "dependencies": {
     "electron": "^4.0.7",
     "electron-ipc-mock": "0.0.3",
-    "reset-css": "^4.0.1",
     "vue": "^2.6.6",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"
