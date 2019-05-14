@@ -2,12 +2,12 @@
   <div class="container">
     <div class="row">
       <span class="label">Window opacity</span>
-      <input class="input-opacity" type="range" from="0" to="100" v-model="opacity" />
+      <input class="input-opacity" type="range" from="0" to="100" v-model="opacity" @change="onChangeOpacity" />
       <span class="value-opacity">{{ opacity }}</span>
     </div>
     <div class="row">
       <span class="label">Hide on Launcher</span>
-      <input type="checkbox" v-model="hideOnLauncher" />
+      <input type="checkbox" v-model="hideOnLauncher" @change="onChangeHideOnLauncher" />
     </div>
   </div>
 </template>
@@ -20,15 +20,13 @@ export default Vue.extend({
   data() {
     return this.$store.state.settings;
   },
-  watch: {
-    opacity(value) {
-      this.$store.dispatch('changeOpacity');
-    },
-    hideOnLauncher(value) {
-      this.$store.dispatch('changeHiding');
-    },
-  },
   methods: {
+    onChangeOpacity() {
+      this.$store.commit('changeOpacity', { value: this.opacity });
+    },
+    onChangeHideOnLauncher(e: Event, value: boolean) {
+      this.$store.commit('changeHiding', { value: this.hideOnLauncher });
+    },
   }
 });
 </script>

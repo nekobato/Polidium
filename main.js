@@ -2,6 +2,7 @@
 
 const electron = require('electron');
 const {
+  // BrowserView,
   BrowserWindow,
   app,
   Tray,
@@ -37,53 +38,60 @@ function createWindow() {
     },
     frame: false,
     transparent: true,
-    hasShadow: false
     // skipTaskbar: false,
-    // alwaysOnTop: false
+    alwaysOnTop: false
   });
-
-  // this.win.setIgnoreMouseEvents(true);
-  // this.win.setVisibleOnAllWorkspaces(true);
 
   screenWindow.loadURL('http://localhost:8080');
 
   screenWindow.on('closed', function() {
     screenWindow = null;
   });
+
+  return screenWindow;
 }
 
 app.on('ready', () => {
   createWindow();
 
-  var trayIcon = nativeImage.createFromPath(__dirname + '/img/tray_icon.png');
-  var tray = new Tray(trayIcon);
+  const trayIconOn = nativeImage.createFromPath(__dirname + '/public/icon.png');
+  const trayIconOff = nativeImage.createFromPath(__dirname + '/public/icon.png');
+  const tray = new Tray(trayIconOff);
 
-  tray.on('click', (event, bounds) => {});
+  tray.on('click', (event, bounds) => {
+    if (screenWindow.isAlwaysOnTop()) {
+      // set transparent OFF
+      screenWindow.webContents.send(types.WINDOW_TRANSPARENT_OFF);
+      screenWindow.setIgnoreMouseEvents(false);
+      screenWindow.setVisibleOnAllWorkspaces(false);
+      screenWindow.setAlwaysOnTop(false);
+      tray.setImage(trayIconOff);
+    } else {
+      // set transparent ON
+      screenWindow.webContents.send(types.WINDOW_TRANSPARENT_ON);
+      screenWindow.setIgnoreMouseEvents(true);
+      screenWindow.setVisibleOnAllWorkspaces(true);
+      screenWindow.setAlwaysOnTop(true);
+      tray.setImage(trayIconOn);
+    }
+  });
 
-  // player.show();
+  // const view = new BrowserView();
+  // screenWindow.setBrowserView(view);
+  // view.setBounds({ x: 0, y: 24, width: 480, height: 320 });
+  // view.setAutoResize({ width: true, height: true });
+  // view.webContents.loadURL('https://electronjs.org');
+
+  ipcMain.on("SET_OPACITY", (_, payload) => {
+    const { value } = JSON.parse(payload);
+    screenWindow.setOpacity(parseInt(value, 10) / 100);
+  });
 
   ipcMain.on(types.CONNECT_COMMIT, (event, typeName, payload) => {
     if (DEBUG) console.log(typeName, payload);
-    player.win.webContents.send(types.CONNECT_COMMIT, typeName, payload);
+    screenWindow.win.webContents.send(types.CONNECT_COMMIT, typeName, payload);
 
     if (typeName === types.QUIT) app.quit();
-
-    // if (typeName === types.RESIZE_PLAYER) {
-    //   const parsedPayload = JSON.parse(payload);
-
-    //   if (parsedPayload.mode) {
-    //     player.win.focus();
-    //   } else {
-    //     player.win.blur();
-    //   }
-
-    //   player.win.setIgnoreMouseEvents(!parsedPayload.mode);
-    //   player.win.setAlwaysOnTop(true);
-    //   if (MAC) player.win.setVisibleOnAllWorkspaces(true);
-    //   player.win.setResizable(parsedPayload.mode);
-    //   player.win.setMovable(parsedPayload.mode);
-    //   if (MAC) player.win.setHasShadow(parsedPayload.mode);
-    // }
   });
 });
 

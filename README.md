@@ -1,53 +1,34 @@
-[![GitHub issues](https://img.shields.io/github/release/nekobato/Polidium.svg)](https://github.com/nekobato/Polidium/release)
+# v2
 
-# Polidium
-
-Polidiumは半透明ウィンドウとカーソル操作の透過を備えたメディアプレイヤーおよびブラウザです。
-
-![](https://github.com/nekobato/Polidium/blob/master/imageSource/screenshot0.jpg?raw=true)
-
-## Download
-
-- Mac: https://github.com/nekobato/Polidium/releases/latest
-- Windows: TBD
-
-## 機能
-
-### 操作方法
-
-起動するとメニューバーにアイコンが現れます。アイコンをクリックでコントローラーが表示され、そこから操作できます。
-
-### メディアプレイヤー
-
-- D&D操作による動画プレイリスト
-- コントローラーからのファイルの再生・停止・再生位置操作
-- 動画終了時の自動次送り
-
-<img src="https://github.com/nekobato/Polidium/blob/master/imageSource/screenshot1.jpg?raw=true" width="363" height="343" />
-
-### Webブラウザ
-
-- URL入力からのブラウザ表示
-- ポインター操作透過のON/OFFスイッチ
-
-<img src="https://github.com/nekobato/Polidium/blob/master/imageSource/screenshot2.jpg?raw=true" width="352" height="342" />
-
-
-### 操作パネル
-
-- プレイヤーの透過度調整
-- プレイヤーのりサイズ・移動モードへの切り替え
-- アプリケーションの終了もこちらから
-
-## Release Notes
-
-https://github.com/nekobato/Polidium/releases
-
-## Development
-
+## Project setup
 ```
-Clone this Repository
-cd Polidium
 npm install
-npm run dev
 ```
+
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Run your tests
+```
+npm run test
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
+
+### Run your unit tests
+```
+npm run test:unit
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).

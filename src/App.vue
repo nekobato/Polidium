@@ -23,7 +23,7 @@ export default Vue.extend({
   computed: {
     mode(): string {
       return this.$store.state.mode;
-    }
+    },
   }
 });
 </script>

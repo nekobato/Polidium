@@ -3,10 +3,14 @@ import * as Vuex from "vuex";
 import { mode, controllerViews } from "./values";
 const { ipcRenderer } =
   process.env.NODE_ENV === "browser"
-    ? require("electron-ipc-mock")()
-    : require("electron");
+    ? window.require("electron-ipc-mock")()
+    : window.require("electron");
 
 Vue.use(Vuex);
+
+function ipcSend(event: string, payload: any): void {
+  ipcRenderer.send(event, JSON.stringify(payload));
+}
 
 const state = {
   settings: localStorage.Settings
@@ -18,13 +22,13 @@ const state = {
   window: {
     onMouse: false
   },
-  mode: mode.video,
+  mode: mode.web,
   controllerView: controllerViews.none,
   video: {
     source: ""
   },
   web: {
-    url: "",
+    url: "https://google.com",
     action: ""
   },
   views: {
@@ -57,13 +61,13 @@ const Store = new Vuex.Store({
     closeSettings(store) {
       store.controllerView = controllerViews.none;
     },
-    changeOpacity(store, payload) {
-      store.settings.opacity = payload.opacity;
-      ipcRenderer.send("changeOpacity", payload);
+    changeOpacity(store, { value }) {
+      store.settings.opacity = value;
+      ipcSend("SET_OPACITY", { value });
     },
     hideOnLauncher(store, payload) {
-      store.settings.hideOnLauncher = payload.hideOnLauncher;
-      ipcRenderer.send("hideOnLauncher", payload);
+      store.settings.hideOnLauncher = payload.value;
+      ipcSend("hideOnLauncher", payload);
     },
     webSubmitUrl(store, { url }) {
       store.web.url = url;
@@ -75,21 +79,6 @@ const Store = new Vuex.Store({
       store.web.action = "";
     }
   },
-  actions: {
-    webDoRefresh() {},
-    webGotoPrev() {},
-    webGotoNext() {},
-    changeOpacity(value) {
-      ipcRenderer.send("changeOpacity", {
-        opacity: value
-      });
-    },
-    changeHiding(value) {
-      ipcRenderer.send("changeHiding", {
-        value
-      });
-    }
-  }
 });
 
 export default Store;

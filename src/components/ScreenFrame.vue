@@ -5,7 +5,6 @@
     </div>
     <div class="screen">
       <slot/>
-      <div class="screen-border" v-show="onMouse"/>
     </div>
     <div class="controllers-container">
       <component :is="controllerView"/>
@@ -49,7 +48,7 @@ export default Vue.extend({
 <style scoped>
 .screen-frame {
   display: grid;
-  grid-template-rows: 32px 1fr;
+  grid-template-rows: 24px 1fr;
   width: 100%;
   height: 100%;
 }
@@ -59,19 +58,11 @@ export default Vue.extend({
   border-radius: 4px;
   overflow: hidden;
 }
-.screen-border {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border: 2px solid rgba(0, 0, 0, 0.24);
-}
 .screen-controller-container {
   
 }
 .screen-controller {
-  height: 32px;
+  height: 24px;
   background: #ccc;
   overflow: hidden;
   -webkit-app-region: drag;
@@ -79,7 +70,7 @@ export default Vue.extend({
 }
 .controllers-container {
   position: absolute;
-  top: 32px;
+  top: 24px;
   left: 0;
   width: 320px;
   height: 160px;

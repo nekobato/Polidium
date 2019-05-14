@@ -76,7 +76,7 @@ export default Vue.extend({
 .btn {
   padding: 4px 8px;
   width: 40px;
-  height: 32px;
+  height: 100%;
   border: none;
   background: transparent;
   cursor: pointer;
