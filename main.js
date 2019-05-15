@@ -2,9 +2,9 @@
 
 const electron = require('electron');
 const {
-  // BrowserView,
-  BrowserWindow,
   app,
+  BrowserView,
+  BrowserWindow,
   Tray,
   nativeImage,
   globalShortcut,
@@ -15,6 +15,13 @@ const MAC = process.platform === 'darwin';
 const types = require('./mutation-types');
 
 // if (MAC) app.dock.hide();
+
+app.commandLine.appendSwitch(
+  'widevine-cdm-path',
+  './lib/WidevineCdm/mac_x64/libwidevinecdm.dylib'
+);
+// The version of plugin can be got from `chrome://plugins` page in Chrome.
+app.commandLine.appendSwitch('widevine-cdm-version', '4.10.1303.2');
 
 let screenWindow = null;
 
@@ -48,6 +55,13 @@ function createWindow() {
     screenWindow = null;
   });
 
+  screenWindow.webContents.on(
+    'new-window',
+    (event, url, frameName, disposition, options) => {
+      console.log(event, url, frameName, disposition, options);
+    }
+  );
+
   return screenWindow;
 }
 
@@ -55,7 +69,9 @@ app.on('ready', () => {
   createWindow();
 
   const trayIconOn = nativeImage.createFromPath(__dirname + '/public/icon.png');
-  const trayIconOff = nativeImage.createFromPath(__dirname + '/public/icon.png');
+  const trayIconOff = nativeImage.createFromPath(
+    __dirname + '/public/icon.png'
+  );
   const tray = new Tray(trayIconOff);
 
   tray.on('click', (event, bounds) => {
@@ -76,13 +92,35 @@ app.on('ready', () => {
     }
   });
 
-  // const view = new BrowserView();
-  // screenWindow.setBrowserView(view);
-  // view.setBounds({ x: 0, y: 24, width: 480, height: 320 });
-  // view.setAutoResize({ width: true, height: true });
-  // view.webContents.loadURL('https://electronjs.org');
+  const webview = new BrowserView();
+  screenWindow.setBrowserView(webview);
+  adjustWebview();
+  webview.webContents.loadURL('https://google.com');
 
-  ipcMain.on("SET_OPACITY", (_, payload) => {
+  screenWindow.on('resize', () => {
+    adjustWebview();
+  });
+
+  webview.webContents.on(
+    'new-window',
+    (event, url, frameName, disposition, options) => {
+      console.log(event, url, frameName, disposition, options);
+    }
+  );
+
+  function adjustWebview() {
+    const { width, height } = screenWindow.getBounds();
+    webview.setBounds({
+      x: 0,
+      y: 48,
+      width,
+      height: height - 24
+    });
+  }
+
+  screenWindow.setOpacity(0.5);
+
+  ipcMain.on('SET_OPACITY', (_, payload) => {
     const { value } = JSON.parse(payload);
     screenWindow.setOpacity(parseInt(value, 10) / 100);
   });

@@ -48,7 +48,7 @@ export default Vue.extend({
 <style scoped>
 .screen-frame {
   display: grid;
-  grid-template-rows: 24px 1fr;
+  grid-template-rows: 48px 1fr;
   width: 100%;
   height: 100%;
 }
@@ -59,10 +59,9 @@ export default Vue.extend({
   overflow: hidden;
 }
 .screen-controller-container {
-  
 }
 .screen-controller {
-  height: 24px;
+  height: 48px;
   background: #ccc;
   overflow: hidden;
   -webkit-app-region: drag;
@@ -70,7 +69,7 @@ export default Vue.extend({
 }
 .controllers-container {
   position: absolute;
-  top: 24px;
+  top: 48px;
   left: 0;
   width: 320px;
   height: 160px;
