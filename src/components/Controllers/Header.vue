@@ -15,7 +15,7 @@
       <WebImage/>
     </button>
     <div class="btn" @click="onListClicked">
-      <ListImage />
+      <ListImage/>
     </div>
   </div>
 </template>
@@ -41,7 +41,7 @@ export default Vue.extend({
     },
     mode(): string {
       return this.$store.state.mode;
-    },
+    }
   },
   methods: {
     onClickOpenSettings(): void {
@@ -74,7 +74,7 @@ export default Vue.extend({
 }
 
 .btn {
-  padding: 4px 8px;
+  padding: 0 8px;
   width: 40px;
   height: 100%;
   border: none;
