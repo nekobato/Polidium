@@ -10,18 +10,21 @@ const {
   globalShortcut,
   ipcMain
 } = electron;
+const widevine = require('electron-widevinecdm');
 const DEBUG = !!process.env.DEBUG;
 const MAC = process.platform === 'darwin';
 const types = require('./mutation-types');
 
 // if (MAC) app.dock.hide();
 
-app.commandLine.appendSwitch(
-  'widevine-cdm-path',
-  './lib/WidevineCdm/mac_x64/libwidevinecdm.dylib'
-);
-// The version of plugin can be got from `chrome://plugins` page in Chrome.
-app.commandLine.appendSwitch('widevine-cdm-version', '4.10.1303.2');
+widevine.load(app);
+
+// app.commandLine.appendSwitch(
+//   'widevine-cdm-path',
+//   './lib/WidevineCdm/_platform_specific/mac_x64/libwidevinecdm.'
+// );
+// // The version of plugin can be got from `chrome://plugins` page in Chrome.
+// app.commandLine.appendSwitch('widevine-cdm-version', '4.10.1303.2');
 
 let screenWindow = null;
 
@@ -40,8 +43,7 @@ function createWindow() {
     resizable: true,
     webPreferences: {
       nodeIntegration: true,
-      allowRunningInsecureContent: DEBUG ? true : false,
-      webviewTag: true
+      plugins: true
     },
     frame: false,
     transparent: true,
@@ -93,7 +95,7 @@ app.on('ready', () => {
   });
 
   const webview = new BrowserView();
-  screenWindow.setBrowserView(webview);
+  // screenWindow.setBrowserView(webview);
   adjustWebview();
   webview.webContents.loadURL('https://google.com');
 
@@ -117,8 +119,6 @@ app.on('ready', () => {
       height: height - 24
     });
   }
-
-  screenWindow.setOpacity(0.5);
 
   ipcMain.on('SET_OPACITY', (_, payload) => {
     const { value } = JSON.parse(payload);

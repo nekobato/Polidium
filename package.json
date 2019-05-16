@@ -54,6 +54,7 @@
   "homepage": "https://github.com/nekobato/Polidium",
   "dependencies": {
     "electron": "^5.0.0",
+    "electron-widevinecdm-dev": "github:oscartbeaumont-ext/electron-widevinecdm-dev",
     "vue": "^2.6.6",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"
@@ -64,11 +65,12 @@
     "@vue/cli-plugin-unit-jest": "^3.4.0",
     "@vue/cli-service": "^3.4.0",
     "@vue/test-utils": "^1.0.0-beta.20",
+    "electron-builder": "^10.7.0",
+    "electron-ipc-mock": "0.0.3",
+    "electron-widevinecdm": "^7.0.0",
     "ts-jest": "^23.0.0",
     "typescript": "^3.0.0",
     "vue-svg-loader": "^0.12.0",
-    "vue-template-compiler": "^2.5.21",
-    "electron-builder": "^10.7.0",
-    "electron-ipc-mock": "0.0.3"
+    "vue-template-compiler": "^2.5.21"
   }
 }

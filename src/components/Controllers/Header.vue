@@ -1,19 +1,24 @@
 <template>
   <div class="container">
-    <div class="btn-container">
-      <div class="btn settings open" v-show="!settingsIsVisible" @click="onClickOpenSettings">
-        <SettingsImage/>
-      </div>
-      <div class="btn settings close" v-show="settingsIsVisible" @click="onClickCloseSettings">
-        <SettingsImage/>
-      </div>
+    <div class="mode-container">
+      <button class="btn mode video" :class="{ active: mode === 'Video' }" @click="onVideoClicked">
+        <VideoImage/>
+      </button>
+      <button class="btn mode web" :class="{ active: mode === 'Web' }" @click="onWebClicked">
+        <WebImage/>
+      </button>
     </div>
-    <button class="btn mode video" :class="{ active: mode === 'Video' }" @click="onVideoClicked">
-      <VideoImage/>
-    </button>
-    <button class="btn mode web" :class="{ active: mode === 'Web' }" @click="onWebClicked">
-      <WebImage/>
-    </button>
+    <div class="opacity-container">
+      <input
+        class="input-opacity"
+        type="range"
+        from="0"
+        to="100"
+        v-model="opacity"
+        @change="onChangeOpacity"
+      >
+      <span class="value-opacity">{{ opacity }}</span>
+    </div>
     <div class="btn" @click="onListClicked">
       <ListImage/>
     </div>
@@ -34,6 +39,11 @@ export default Vue.extend({
     WebImage,
     VideoImage,
     ListImage
+  },
+  data() {
+    return {
+      opacity: 1
+    };
   },
   computed: {
     settingsIsVisible(): boolean {
@@ -58,19 +68,33 @@ export default Vue.extend({
     },
     onListClicked(): void {
       this.$store.commit("toggleController");
-    }
+    },
+    onChangeOpacity() {}
   }
 });
 </script>
 
 <style scoped>
 .container {
+  position: relative;
   display: flex;
   justify-content: left;
   align-items: center;
   width: 100%;
   height: 100%;
   user-select: none;
+}
+
+.mode-container {
+  position: absolute;
+  top: 0;
+  left: 16px;
+}
+
+.opacity-container {
+  position: absolute;
+  top: 0;
+  right: 16px;
 }
 
 .btn {
@@ -86,10 +110,9 @@ export default Vue.extend({
   background: #ddd;
 }
 .mode {
-  margin: 2px 0;
-  padding: 2px 8px;
-  width: 120px;
-  height: 28px;
+  padding: 0 8px;
+  width: 48px;
+  height: 24px;
   background: #999;
 }
 .mode.video {
