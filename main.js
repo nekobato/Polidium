@@ -1,15 +1,7 @@
 'use strict';
 
 const electron = require('electron');
-const {
-  app,
-  BrowserView,
-  BrowserWindow,
-  Tray,
-  nativeImage,
-  globalShortcut,
-  ipcMain
-} = electron;
+const { app, BrowserView, BrowserWindow, Tray, nativeImage, globalShortcut, ipcMain } = electron;
 const widevine = require('electron-widevinecdm');
 const DEBUG = !!process.env.DEBUG;
 const MAC = process.platform === 'darwin';
@@ -43,12 +35,12 @@ function createWindow() {
     resizable: true,
     webPreferences: {
       nodeIntegration: true,
-      plugins: true
+      plugins: true,
     },
     frame: false,
     transparent: true,
     // skipTaskbar: false,
-    alwaysOnTop: false
+    alwaysOnTop: false,
   });
 
   screenWindow.loadURL('http://localhost:8080');
@@ -57,12 +49,9 @@ function createWindow() {
     screenWindow = null;
   });
 
-  screenWindow.webContents.on(
-    'new-window',
-    (event, url, frameName, disposition, options) => {
-      console.log(event, url, frameName, disposition, options);
-    }
-  );
+  screenWindow.webContents.on('new-window', (event, url, frameName, disposition, options) => {
+    console.log(event, url, frameName, disposition, options);
+  });
 
   return screenWindow;
 }
@@ -71,9 +60,7 @@ app.on('ready', () => {
   createWindow();
 
   const trayIconOn = nativeImage.createFromPath(__dirname + '/public/icon.png');
-  const trayIconOff = nativeImage.createFromPath(
-    __dirname + '/public/icon.png'
-  );
+  const trayIconOff = nativeImage.createFromPath(__dirname + '/public/icon.png');
   const tray = new Tray(trayIconOff);
 
   tray.on('click', (event, bounds) => {
@@ -94,31 +81,31 @@ app.on('ready', () => {
     }
   });
 
-  const webview = new BrowserView();
-  // screenWindow.setBrowserView(webview);
-  adjustWebview();
-  webview.webContents.loadURL('https://google.com');
+  // const webview = new BrowserView();
+  // // screenWindow.setBrowserView(webview);
+  // adjustWebview();
+  // webview.webContents.loadURL('https://google.com');
 
-  screenWindow.on('resize', () => {
-    adjustWebview();
-  });
+  // screenWindow.on('resize', () => {
+  //   adjustWebview();
+  // });
 
-  webview.webContents.on(
-    'new-window',
-    (event, url, frameName, disposition, options) => {
-      console.log(event, url, frameName, disposition, options);
-    }
-  );
+  // webview.webContents.on(
+  //   'new-window',
+  //   (event, url, frameName, disposition, options) => {
+  //     console.log(event, url, frameName, disposition, options);
+  //   }
+  // );
 
-  function adjustWebview() {
-    const { width, height } = screenWindow.getBounds();
-    webview.setBounds({
-      x: 0,
-      y: 48,
-      width,
-      height: height - 24
-    });
-  }
+  // function adjustWebview() {
+  //   const { width, height } = screenWindow.getBounds();
+  //   webview.setBounds({
+  //     x: 0,
+  //     y: 48,
+  //     width,
+  //     height: height - 24
+  //   });
+  // }
 
   ipcMain.on('SET_OPACITY', (_, payload) => {
     const { value } = JSON.parse(payload);

@@ -1,30 +1,22 @@
 <template>
   <div class="screen-frame" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
-    <div class="screen-controller-container">
-      <Header class="screen-controller"/>
-    </div>
+    <Header class="header"/>
     <div class="screen">
       <slot/>
-    </div>
-    <div class="controllers-container">
-      <component :is="controllerView"/>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Header from "./Controllers/Header.vue";
-import Settings from "./Controllers/Settings.vue";
-import Web from "./Controllers/Web.vue";
-import Video from "./Controllers/Video.vue";
+import Vue from 'vue';
+import Header from './Controllers/Header.vue';
 
 export default Vue.extend({
   components: {
-    Settings,
-    Web,
-    Video,
-    Header
+    Header,
+  },
+  data() {
+    return this.$store.state.settings;
   },
   computed: {
     onMouse(): boolean {
@@ -32,16 +24,16 @@ export default Vue.extend({
     },
     controllerView(): string {
       return this.$store.state.controllerView;
-    }
+    },
   },
   methods: {
     onMouseEnter(): void {
-      this.$store.commit("onMouseEnter");
+      this.$store.commit('onMouseEnter');
     },
     onMouseLeave(): void {
-      this.$store.commit("onMouseLeave");
-    }
-  }
+      this.$store.commit('onMouseLeave');
+    },
+  },
 });
 </script>
 
@@ -52,15 +44,12 @@ export default Vue.extend({
   width: 100%;
   height: 100%;
 }
-
 .screen {
   position: relative;
   border-radius: 4px;
   overflow: hidden;
 }
-.screen-controller-container {
-}
-.screen-controller {
+.header {
   height: 48px;
   background: #ccc;
   overflow: hidden;

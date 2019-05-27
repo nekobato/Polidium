@@ -55,6 +55,8 @@
   "dependencies": {
     "electron": "^5.0.0",
     "electron-widevinecdm-dev": "github:oscartbeaumont-ext/electron-widevinecdm-dev",
+    "sass": "^1.20.1",
+    "sass-loader": "^7.1.0",
     "vue": "^2.6.6",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"

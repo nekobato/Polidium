@@ -1,12 +1,12 @@
 <template>
   <div class="container">
-    <!-- <webview class="webview" :src="webURL" ref="webview"/> -->
+    <webview class="webview" :src="webURL" ref="webview"/>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { webviewAction } from "../../values";
+import Vue from 'vue';
+import { webviewAction } from '../../values';
 
 type Webview = Element & {
   canGoBack: () => boolean;
@@ -19,8 +19,8 @@ type Webview = Element & {
 export default Vue.extend({
   data: () => ({
     controller: {
-      show: true
-    }
+      show: true,
+    },
   }),
   computed: {
     webURL(): string {
@@ -28,11 +28,11 @@ export default Vue.extend({
     },
     action(): string {
       return this.$store.state.web.action;
-    }
+    },
   },
   watch: {
     action(action) {
-      if (action === "") {
+      if (action === '') {
         return;
       }
 
@@ -53,9 +53,9 @@ export default Vue.extend({
           break;
       }
 
-      this.$store.commit("endWebAction");
-    }
-  }
+      this.$store.commit('endWebAction');
+    },
+  },
 });
 </script>
 
