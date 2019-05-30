@@ -34,6 +34,7 @@ function createWindow() {
     show: true,
     resizable: true,
     webPreferences: {
+      webviewTag: true,
       nodeIntegration: true,
       plugins: true,
     },

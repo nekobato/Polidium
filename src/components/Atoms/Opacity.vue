@@ -18,7 +18,7 @@ import Vue from 'vue';
 export default Vue.extend({
   data() {
     return {
-      opacity: 1,
+      opacity: 100,
     };
   },
   methods: {
@@ -39,8 +39,6 @@ export default Vue.extend({
   height: 100%;
   font-size: 14px;
   text-align: center;
-}
-.opacity-range {
   appearance: none;
   background-color: #999;
   margin: 10px 0 0;
@@ -66,5 +64,14 @@ export default Vue.extend({
     box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.6);
     transition: 0.4s;
   }
+}
+.opacity-value {
+  display: inline-block;
+  width: 32px;
+  text-align: right;
+  font-size: 14px;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.5);
+  line-height: 24px;
 }
 </style>

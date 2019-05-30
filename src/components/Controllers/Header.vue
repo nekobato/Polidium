@@ -32,7 +32,6 @@ import Video from '@/components/Controllers/Video.vue';
 import { controllerViews } from '../../values';
 
 export default Vue.extend({
-  name: 'header',
   components: {
     SettingsImage,
     WebImage,
@@ -108,6 +107,7 @@ export default Vue.extend({
   right: 16px;
   width: 240px;
   height: 100%;
+  -webkit-app-region: no-drag;
 }
 
 .btn {

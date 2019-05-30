@@ -23,12 +23,22 @@ export default Vue.extend({
     },
   }),
   computed: {
+    webviewElement(): any {
+      return this.$refs.webview;
+    },
     webURL(): string {
       return this.$store.state.web.url;
     },
     action(): string {
       return this.$store.state.web.action;
     },
+  },
+  methods: {
+    setUrl (e: any) {
+      if (e.isMainFrame) {
+        this.$store.commit('webSubmitUrl', { url: e.url });
+      }
+    }
   },
   watch: {
     action(action) {
@@ -56,6 +66,9 @@ export default Vue.extend({
       this.$store.commit('endWebAction');
     },
   },
+  mounted() {
+    this.webviewElement.addEventListener('load-commit', this.setUrl)
+  }
 });
 </script>
 
