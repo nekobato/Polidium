@@ -1,18 +1,24 @@
 <template>
   <div class="web-controller">
-    <button class="button prev" @click="onClickPrevious"><PreviousIcon class="icon"/></button>
-    <button class="button next" @click="onClickNext"><NextIcon class="icon"/></button>
-    <button class="button refresh" @click="onClickReload"><ReloadIcon class="icon"/></button>
+    <button class="button prev" @click="onClickPrevious">
+      <PreviousIcon class="icon"/>
+    </button>
+    <button class="button next" @click="onClickNext">
+      <NextIcon class="icon"/>
+    </button>
+    <button class="button refresh" @click="onClickReload">
+      <ReloadIcon class="icon"/>
+    </button>
     <div class="url-container">
       <form @submit.prevent="onSubmitUrl">
-        <input class="url" type="url" v-model="url" />
+        <input class="url" type="url" v-model="url">
       </form>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue';
 import { mapMutations } from 'vuex';
 import { webviewAction } from '../../values';
 import PreviousIcon from '@/components/Icons/Previous.vue';
@@ -24,45 +30,45 @@ export default Vue.extend({
   components: {
     PreviousIcon,
     NextIcon,
-    ReloadIcon
+    ReloadIcon,
   },
   data() {
     return {
       url: '',
-    }
+    };
   },
   computed: {
     storeUrl(): string {
       return this.$store.state.web.url;
-    }
+    },
   },
   methods: {
     onSubmitUrl() {
       this.$store.commit('webSubmitUrl', {
-        url: this.$data.url
+        url: this.$data.url,
       });
     },
     onClickPrevious() {
       this.$store.commit('webAction', {
-        action: webviewAction.back
+        action: webviewAction.back,
       });
     },
     onClickReload() {
       this.$store.commit('webAction', {
-        action: webviewAction.reload
+        action: webviewAction.reload,
       });
     },
     onClickNext() {
       this.$store.commit('webAction', {
-        action: webviewAction.forward
+        action: webviewAction.forward,
       });
     },
   },
   watch: {
     storeUrl(url) {
       this.$data.url = url;
-    }
-  }
+    },
+  },
 });
 </script>
 
@@ -77,26 +83,38 @@ $button-width: 32px;
   background: #888;
 }
 .button {
-  padding: 0;
+  padding: 2px;
   width: 32px;
   border: none;
   background: transparent;
+  outline: none;
+  cursor: pointer;
 }
 .icon {
   width: 20px;
   height: 20px;
   fill: hsla(0, 0, 100%, 1);
+  filter: url(#drop-shadow);
+  transition: fill 0.16s;
+  &:hover {
+    fill: hsla(0, 0, 90%, 1);
+  }
+  &:active {
+    fill: hsla(0, 0, 80%, 1);
+  }
 }
 .url-container {
   display: block;
-  padding: 2px 8px;
+  padding: 3px 8px;
 }
 .url {
-  padding: 1px 4px;
+  padding: 1px 8px;
   width: 100%;
   line-height: 16px;
-  border-radius: 4px;
+  border-radius: 8px;
   border: none;
   font-size: 12px;
+  font-weight: bold;
+  color: hsla(0, 0, 50%, 1);
 }
 </style>
