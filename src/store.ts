@@ -12,6 +12,11 @@ function ipcSend(event: string, payload: any): void {
   ipcRenderer.send(event, JSON.stringify(payload));
 }
 
+ipcRenderer.on('SET_OPACITY', (_: any, payload: string) => {
+  console.log('set opacity');
+  Store.commit('changeOpacity', { value: parseInt(payload, 10) });
+})
+
 const state = {
   settings: localStorage.Settings
     ? JSON.parse(localStorage.Settings)
@@ -62,6 +67,7 @@ const Store = new Vuex.Store({
       store.controllerView = controllerViews.none;
     },
     changeOpacity(store, { value }) {
+      console.log('change', value);
       store.settings.opacity = value;
       ipcSend("SET_OPACITY", { value });
     },

@@ -1,7 +1,7 @@
 'use strict';
 
 const electron = require('electron');
-const { app, BrowserView, BrowserWindow, Tray, nativeImage, globalShortcut, ipcMain } = electron;
+const { app, BrowserWindow, Tray, nativeImage, globalShortcut, ipcMain, Menu } = electron;
 const widevine = require('electron-widevinecdm');
 const DEBUG = !!process.env.DEBUG;
 const MAC = process.platform === 'darwin';
@@ -57,8 +57,36 @@ function createWindow() {
   return screenWindow;
 }
 
+function createMenu() {
+  const menu = new Menu.buildFromTemplate([
+    {
+      label: 'Polidium',
+      role: 'appMenu',
+    },
+    {
+      label: 'View',
+      role: 'viewMenu'
+    },
+    {
+      label: 'Hoge',
+      submenu: [
+        {
+          id: 'reset_opacity',
+          label: 'Reset Opacity',
+          click(_, browserWindow) {
+            browserWindow.setOpacity(1);
+            browserWindow.webContents.send(types.SET_OPACITY, 100);
+          },
+        },
+      ],
+    },
+  ]);
+  Menu.setApplicationMenu(menu);
+}
+
 app.on('ready', () => {
   createWindow();
+  createMenu();
 
   const trayIconOn = nativeImage.createFromPath(__dirname + '/public/icon.png');
   const trayIconOff = nativeImage.createFromPath(__dirname + '/public/icon.png');

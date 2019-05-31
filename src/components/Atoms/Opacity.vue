@@ -6,7 +6,6 @@
       from="0"
       to="100"
       v-model="opacity"
-      @change="onChangeOpacity"
     >
     <span class="opacity-value">{{ opacity }}</span>
   </div>
@@ -16,14 +15,14 @@
 import Vue from 'vue';
 
 export default Vue.extend({
-  data() {
-    return {
-      opacity: 100,
-    };
-  },
-  methods: {
-    onChangeOpacity() {
-      this.$store.commit('changeOpacity', { value: this.opacity });
+  computed: {
+    opacity: {
+      get(): number {
+        return this.$store.state.settings.opacity;
+      },
+      set(value: number) {
+        this.$store.commit('changeOpacity', { value });
+      },
     },
   },
 });
