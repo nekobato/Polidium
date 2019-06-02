@@ -1,15 +1,22 @@
-'use strict';
-
-const electron = require('electron');
-const { app, BrowserWindow, Tray, nativeImage, globalShortcut, ipcMain, Menu } = electron;
-const widevine = require('electron-widevinecdm');
-const DEBUG = !!process.env.DEBUG;
+import electron from 'electron';
+import {
+  app,
+  BrowserWindow,
+  Tray,
+  nativeImage,
+  globalShortcut,
+  ipcMain,
+  Menu,
+  systemPreferences,
+} from 'electron';
+// import widevine from 'electron-widevinecdm';
+import * as types from '../shared/mutation-types';
+const isDev = !!process.env.DEBUG;
 const MAC = process.platform === 'darwin';
-const types = require('./mutation-types');
 
 // if (MAC) app.dock.hide();
 
-widevine.load(app);
+// widevine.load(app);
 
 // app.commandLine.appendSwitch(
 //   'widevine-cdm-path',
@@ -18,7 +25,7 @@ widevine.load(app);
 // // The version of plugin can be got from `chrome://plugins` page in Chrome.
 // app.commandLine.appendSwitch('widevine-cdm-version', '4.10.1303.2');
 
-let screenWindow = null;
+let screenWindow: BrowserWindow | null = null;
 
 function createWindow() {
   const { screen } = electron;
@@ -27,8 +34,8 @@ function createWindow() {
   screenWindow = new BrowserWindow({
     x: 0,
     y: 0,
-    width: DEBUG ? 480 : workAreaSize.width,
-    height: DEBUG ? 320 : workAreaSize.height - 24, // size of Mac tray size
+    width: isDev ? 480 : workAreaSize.width,
+    height: isDev ? 320 : workAreaSize.height - 24, // size of Mac tray size
     minWidth: 320,
     minHeight: 240,
     show: true,
@@ -59,16 +66,9 @@ function createWindow() {
 
 function createMenu() {
   const menu = new Menu.buildFromTemplate([
+    // @ts-ignore: appMenu is not defined in d.ts
     {
       label: 'Polidium',
-      role: 'appMenu',
-    },
-    {
-      label: 'View',
-      role: 'viewMenu'
-    },
-    {
-      label: 'Hoge',
       submenu: [
         {
           id: 'reset_opacity',
@@ -78,37 +78,58 @@ function createMenu() {
             browserWindow.webContents.send(types.SET_OPACITY, 100);
           },
         },
+        {
+          id: 'switch_hide_taskbar',
+          label: 'Hide on Taskbar',
+          type: 'checkbox',
+        },
+        {
+          type: 'separator',
+        },
+        {
+          id: 'quit',
+          label: 'Quit Polidium',
+          role: 'quit',
+        },
       ],
+    },
+    // @ts-ignore: viewMenu is not defined in d.ts
+    {
+      label: 'View',
+      role: 'viewMenu',
     },
   ]);
   Menu.setApplicationMenu(menu);
 }
 
+function setIcon() {
+  // https://electronjs.org/docs/tutorial/mojave-dark-mode-guide
+  const darkOrLight = systemPreferences.isDarkMode() ? 'dark' : 'light';
+  const trayIconOn = nativeImage.createFromPath(`${__dirname}/public/icon_on_${darkOrLight}.png`);
+  const trayIconOff = nativeImage.createFromPath(`${__dirname}/public/icon_off_${darkOrLight}.png`);
+  const tray = new Tray(trayIconOff);
+
+  tray.on('click', () => {
+    if (!screenWindow) {
+      return;
+    }
+    // Click through
+    const isOn = screenWindow.isAlwaysOnTop() ? true : false;
+
+    screenWindow.webContents.send(
+      isOn ? types.WINDOW_TRANSPARENT_OFF : types.WINDOW_TRANSPARENT_ON,
+    );
+    screenWindow.setIgnoreMouseEvents(isOn ? false : true);
+    screenWindow.setVisibleOnAllWorkspaces(isOn ? false : true);
+    screenWindow.setAlwaysOnTop(isOn ? false : true);
+    tray.setImage(isOn ? trayIconOff : trayIconOn);
+  });
+}
+
 app.on('ready', () => {
   createWindow();
   createMenu();
-
-  const trayIconOn = nativeImage.createFromPath(__dirname + '/public/icon.png');
-  const trayIconOff = nativeImage.createFromPath(__dirname + '/public/icon.png');
-  const tray = new Tray(trayIconOff);
-
-  tray.on('click', (event, bounds) => {
-    if (screenWindow.isAlwaysOnTop()) {
-      // set transparent OFF
-      screenWindow.webContents.send(types.WINDOW_TRANSPARENT_OFF);
-      screenWindow.setIgnoreMouseEvents(false);
-      screenWindow.setVisibleOnAllWorkspaces(false);
-      screenWindow.setAlwaysOnTop(false);
-      tray.setImage(trayIconOff);
-    } else {
-      // set transparent ON
-      screenWindow.webContents.send(types.WINDOW_TRANSPARENT_ON);
-      screenWindow.setIgnoreMouseEvents(true);
-      screenWindow.setVisibleOnAllWorkspaces(true);
-      screenWindow.setAlwaysOnTop(true);
-      tray.setImage(trayIconOn);
-    }
-  });
+  setIcon();
 
   // const webview = new BrowserView();
   // // screenWindow.setBrowserView(webview);
@@ -136,15 +157,16 @@ app.on('ready', () => {
   //   });
   // }
 
-  ipcMain.on('SET_OPACITY', (_, payload) => {
+  ipcMain.on('SET_OPACITY', (_: string, payload: string) => {
+    if (!screenWindow) return;
     const { value } = JSON.parse(payload);
     screenWindow.setOpacity(parseInt(value, 10) / 100);
   });
 
-  ipcMain.on(types.CONNECT_COMMIT, (event, typeName, payload) => {
-    if (DEBUG) console.log(typeName, payload);
-    screenWindow.win.webContents.send(types.CONNECT_COMMIT, typeName, payload);
-
+  ipcMain.on(types.CONNECT_COMMIT, (event: string, typeName: string, payload: any) => {
+    if (!screenWindow) return;
+    if (isDev) console.log(typeName, payload);
+    screenWindow.webContents.send(types.CONNECT_COMMIT, typeName, payload);
     if (typeName === types.QUIT) app.quit();
   });
 });

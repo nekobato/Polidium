@@ -7,10 +7,11 @@
   "scripts": {
     "pack": "npm run build && build --dir ./",
     "start": "electron .",
-    "dev": "DEBUG=true electron .",
+    "dev": "npm run build:main && DEBUG=true electron ./dist/main/main.js",
     "serve": "vue-cli-service serve",
     "serve:browser": "NODE_ENV=browser vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build && npm run build:main",
+    "build:main": "tsc -p tsconfig.main.json",
     "test:unit": "vue-cli-service test:unit"
   },
   "build": {

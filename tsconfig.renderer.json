@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "types": ["webpack-env", "jest"],
+  "paths": {
+    "@/*": ["src/renderer/*"]
+  },
+  "file": ["./node_modules/vue-router/types/vue.d.ts", "./node_modules/vuex/types/vue.d.ts"],
+  "include": [
+    "src/renderer/**/*.ts",
+    "src/renderer/**/*.tsx",
+    "src/renderer/**/*.vue",
+    "src/renderer/**/*.svg",
+    "src/shared/**/*.ts",
+    "tests/**/*.ts",
+    "tests/**/*.tsx"
+  ]
+}
