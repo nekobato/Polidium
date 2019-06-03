@@ -1,21 +1,21 @@
 <template>
   <div class="container">
     <div class="header-top">
-      <button class="btn mode video" :class="{ active: mode === 'Video' }" @click="onVideoClicked">
-        <VideoIcon class="icon video"/>
-      </button>
       <button class="btn mode web" :class="{ active: mode === 'Web' }" @click="onWebClicked">
-        <WebIcon class="icon video"/>
+        <WebIcon class="icon video" />
+      </button>
+      <button class="btn mode video" :class="{ active: mode === 'Video' }" @click="onVideoClicked">
+        <VideoIcon class="icon video" />
       </button>
       <div class="btn" @click="onListClicked">
-        <ListIcon class="icon list"/>
+        <ListIcon class="icon list" />
       </div>
       <div class="opacity-container">
-        <Opacity/>
+        <Opacity />
       </div>
     </div>
     <div class="header-bottom">
-      <component :is="mode"/>
+      <component :is="mode" />
     </div>
   </div>
 </template>
