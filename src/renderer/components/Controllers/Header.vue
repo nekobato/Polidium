@@ -7,9 +7,6 @@
       <button class="btn mode video" :class="{ active: mode === 'Video' }" @click="onVideoClicked">
         <VideoIcon class="icon video" />
       </button>
-      <div class="btn" @click="onListClicked">
-        <ListIcon class="icon list" />
-      </div>
       <div class="opacity-container">
         <Opacity />
       </div>
@@ -25,14 +22,11 @@ import Vue from 'vue';
 import Opacity from '@/components/Atoms/Opacity.vue';
 import WebIcon from '@/components/Icons/Web.vue';
 import VideoIcon from '@/components/Icons/Video.vue';
-import ListIcon from '@/components/Icons/List.vue';
 import Web from '@/components/Controllers/Web.vue';
 import Video from '@/components/Controllers/Video.vue';
-import { controllerViews } from '../../values';
 
 export default Vue.extend({
   components: {
-    ListIcon,
     Opacity,
     WebIcon,
     VideoIcon,
@@ -45,9 +39,6 @@ export default Vue.extend({
     };
   },
   computed: {
-    settingsIsVisible(): boolean {
-      return this.$store.state.controllerView === controllerViews.settings;
-    },
     mode(): string {
       return this.$store.state.mode;
     },

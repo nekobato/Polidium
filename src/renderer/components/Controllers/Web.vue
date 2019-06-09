@@ -1,17 +1,17 @@
 <template>
   <div class="web-controller">
     <button class="button prev" @click="onClickPrevious">
-      <PreviousIcon class="icon"/>
+      <PreviousIcon class="icon" />
     </button>
     <button class="button next" @click="onClickNext">
-      <NextIcon class="icon"/>
+      <NextIcon class="icon" />
     </button>
     <button class="button refresh" @click="onClickReload">
-      <ReloadIcon class="icon"/>
+      <ReloadIcon class="icon" />
     </button>
     <div class="url-container">
       <form @submit.prevent="onSubmitUrl">
-        <input class="url" type="url" v-model="url">
+        <input class="url" type="url" v-model="url" />
       </form>
     </div>
   </div>
@@ -85,10 +85,6 @@ $button-width: 32px;
 .button {
   padding: 2px;
   width: 32px;
-  border: none;
-  background: transparent;
-  outline: none;
-  cursor: pointer;
 }
 .icon {
   width: 20px;

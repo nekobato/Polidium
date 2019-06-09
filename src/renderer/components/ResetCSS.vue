@@ -122,7 +122,7 @@ blockquote:before,
 blockquote:after,
 q:before,
 q:after {
-  content: "";
+  content: '';
   content: none;
 }
 table {
@@ -139,5 +139,12 @@ table {
 
 a {
   text-decoration: none;
+}
+button {
+  padding: 0;
+  border: none;
+  background: transparent;
+  outline: none;
+  cursor: pointer;
 }
 </style>

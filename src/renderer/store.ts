@@ -1,10 +1,10 @@
-import Vue from "vue";
-import * as Vuex from "vuex";
-import { mode, controllerViews } from "./values";
+import Vue from 'vue';
+import * as Vuex from 'vuex';
+import { mode } from './values';
 const { ipcRenderer } =
-  process.env.NODE_ENV === "browser"
-    ? window.require("electron-ipc-mock")()
-    : window.require("electron");
+  process.env.NODE_ENV === 'browser'
+    ? window.require('electron-ipc-mock')()
+    : window.require('electron');
 
 Vue.use(Vuex);
 
@@ -15,31 +15,37 @@ function ipcSend(event: string, payload: any): void {
 ipcRenderer.on('SET_OPACITY', (_: any, payload: string) => {
   console.log('set opacity');
   Store.commit('changeOpacity', { value: parseInt(payload, 10) });
-})
+});
 
 const state = {
   settings: localStorage.Settings
     ? JSON.parse(localStorage.Settings)
     : {
         opacity: 100,
-        hideOnLauncher: false
+        hideOnLauncher: false,
       },
   window: {
-    onMouse: false
+    onMouse: false,
   },
-  mode: mode.web,
-  controllerView: controllerViews.none,
+  mode: mode.video,
   video: {
-    source: ""
+    source: '',
+    media: {
+      index: 0,
+      duration: 0,
+      currentTime: 0,
+    },
+    fileList: [],
   },
   web: {
-    url: "https://google.com",
-    action: ""
+    url: 'https://google.com',
+    action: '',
+    histories: [],
   },
   views: {
     window: false,
-    controller: ""
-  }
+    controller: '',
+  },
 };
 
 const Store = new Vuex.Store({
@@ -57,23 +63,14 @@ const Store = new Vuex.Store({
     changeModeToWeb(store) {
       store.mode = mode.web;
     },
-    toggleController(store) {
-      store.controllerView = store.mode;
-    },
-    openSettings(store) {
-      store.controllerView = controllerViews.settings;
-    },
-    closeSettings(store) {
-      store.controllerView = controllerViews.none;
-    },
     changeOpacity(store, { value }) {
       console.log('change', value);
       store.settings.opacity = value;
-      ipcSend("SET_OPACITY", { value });
+      ipcSend('SET_OPACITY', { value });
     },
     hideOnLauncher(store, payload) {
       store.settings.hideOnLauncher = payload.value;
-      ipcSend("hideOnLauncher", payload);
+      ipcSend('hideOnLauncher', payload);
     },
     webSubmitUrl(store, { url }) {
       store.web.url = url;
@@ -82,8 +79,8 @@ const Store = new Vuex.Store({
       store.web.action = action;
     },
     endWebAction(store) {
-      store.web.action = "";
-    }
+      store.web.action = '';
+    },
   },
 });
 

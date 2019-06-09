@@ -1,45 +1,61 @@
 <template>
-  <div class="web-controller">
+  <div class="video-controller">
+    <button class="button play">
+      <PlayIcon class="icon" />
+    </button>
+    <div class="seekbar-container">
+      <Seekbar />
+    </div>
+    <button class="button list">
+      <ListIcon class="icon" />
+    </button>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue';
 import { mapMutations } from 'vuex';
 import { webviewAction } from '../../values';
+import PlayIcon from '../Icons/Play.vue';
+import PauseIcon from '../Icons/Pause.vue';
+import ListIcon from '../Icons/List.vue';
+import Seekbar from '../Atoms/Seekbar.vue';
 
 export default Vue.extend({
   name: 'Web',
-  components: {},
-  data() {
-    return {
-    }
+  components: {
+    PlayIcon,
+    PauseIcon,
+    ListIcon,
+    Seekbar,
   },
-  methods: {
-  }
+  data() {
+    return {};
+  },
+  methods: {},
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .video-controller {
-  padding: 4px;
+  display: grid;
+  grid-template-columns: 24px 1fr 24px;
+  padding: 0 4px;
   width: 100%;
   height: 100%;
   background: #888;
 }
-.button-container {
-  width: 148px;
-  background: #ccc;
+.seekbar-container {
+  padding: 0 8px;
+  width: 100%;
 }
 .button {
-  padding: 0;
-  width: 48px;
-}
-.url-container {
-  display: block;
-  padding: 8px;
-}
-.url {
-  width: 100%;
+  width: 24px;
+  height: 24px;
+  > .icon {
+    width: 100%;
+    height: 100%;
+    fill: hsla(0, 0, 0, 1);
+  }
 }
 </style>
