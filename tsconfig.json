@@ -15,5 +15,5 @@
     "baseUrl": ".",
     "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist", "*.config.js"]
 }

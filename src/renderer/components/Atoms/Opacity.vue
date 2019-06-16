@@ -1,12 +1,6 @@
 <template>
   <div class="container">
-    <input
-      class="opacity-range"
-      type="range"
-      from="0"
-      to="100"
-      v-model="opacity"
-    >
+    <input class="opacity-range" type="range" from="0" to="100" v-model="opacity" />
     <span class="opacity-value">{{ opacity }}</span>
   </div>
 </template>
@@ -31,7 +25,8 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .container {
   display: grid;
-  grid-template-columns: 1fr 24px;
+  grid-template-columns: 1fr 28px;
+  padding-right: 4px;
   height: 100%;
 }
 .opacity-range {
@@ -53,8 +48,8 @@ export default Vue.extend({
     cursor: pointer;
     position: relative;
     border: 2px solid rgba(0, 0, 0, 0.7);
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     display: block;
     background-color: #fff;
     border-radius: 50%;
@@ -65,8 +60,7 @@ export default Vue.extend({
   }
 }
 .opacity-value {
-  display: inline-block;
-  width: 32px;
+  display: block;
   text-align: right;
   font-size: 14px;
   font-weight: bold;

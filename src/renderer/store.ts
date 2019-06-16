@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import * as Vuex from 'vuex';
+import * as types from '../shared/mutation-types';
 import { mode } from './values';
 const { ipcRenderer } =
   process.env.NODE_ENV === 'browser'
@@ -17,7 +18,47 @@ ipcRenderer.on('SET_OPACITY', (_: any, payload: string) => {
   Store.commit('changeOpacity', { value: parseInt(payload, 10) });
 });
 
-const state = {
+ipcRenderer.on(types.SET_HIDE_ON_TASKBAR, (_: any, toggle: string) => {
+  console.log(types.SET_HIDE_ON_TASKBAR);
+  window.localStorage.setItem('hideOnTaskBar', toggle);
+});
+
+const hideOnTaskBar = localStorage.getItem('hideOnTaskBar');
+
+if (hideOnTaskBar === 'false') {
+  ipcRenderer.send(types.SET_HIDE_ON_TASKBAR, hideOnTaskBar);
+}
+
+export type State = {
+  settings: {
+    opacity: number;
+    hideOnLauncher: boolean;
+  };
+  window: {
+    onMouse: boolean;
+  };
+  mode: string;
+  video: {
+    source: string;
+    media: {
+      index: number;
+      duration: number;
+      currentTime: number;
+    };
+    fileList: any[];
+  };
+  web: {
+    url: string;
+    action: string;
+    histories: any[];
+  };
+  views: {
+    window: boolean;
+    controller: string;
+  };
+};
+
+const state: State = {
   settings: localStorage.Settings
     ? JSON.parse(localStorage.Settings)
     : {
@@ -80,6 +121,10 @@ const Store = new Vuex.Store({
     },
     endWebAction(store) {
       store.web.action = '';
+    },
+    seekMedia(store, parcentage) {
+      store.video.media.currentTime = store.video.media.duration * parcentage;
+      console.log(parcentage);
     },
   },
 });

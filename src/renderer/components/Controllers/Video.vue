@@ -50,8 +50,8 @@ export default Vue.extend({
   width: 100%;
 }
 .button {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   > .icon {
     width: 100%;
     height: 100%;

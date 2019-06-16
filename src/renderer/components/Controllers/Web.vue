@@ -21,9 +21,9 @@
 import Vue from 'vue';
 import { mapMutations } from 'vuex';
 import { webviewAction } from '../../values';
-import PreviousIcon from '@/components/Icons/Previous.vue';
-import NextIcon from '@/components/Icons/Next.vue';
-import ReloadIcon from '@/components/Icons/Reload.vue';
+import PreviousIcon from '../Icons/Previous.vue';
+import NextIcon from '../Icons/Next.vue';
+import ReloadIcon from '../Icons/Reload.vue';
 
 export default Vue.extend({
   name: 'Web',
@@ -83,7 +83,7 @@ $button-width: 32px;
   background: #888;
 }
 .button {
-  padding: 2px;
+  padding: 3px;
   width: 32px;
 }
 .icon {
@@ -101,7 +101,7 @@ $button-width: 32px;
 }
 .url-container {
   display: block;
-  padding: 3px 8px;
+  padding: 4px 8px;
 }
 .url {
   padding: 1px 8px;

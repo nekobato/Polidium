@@ -1,8 +1,8 @@
 <template>
   <div class="screen-frame" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
-    <Header class="header"/>
+    <Header class="header" />
     <div class="screen">
-      <slot/>
+      <slot />
     </div>
   </div>
 </template>
@@ -53,8 +53,6 @@ export default Vue.extend({
   height: 48px;
   background: #ccc;
   overflow: hidden;
-  -webkit-app-region: drag;
-  cursor: grab;
 }
 .controllers-container {
   position: absolute;

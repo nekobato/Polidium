@@ -8,10 +8,10 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
-import ResetCSS from '@/components/ResetCSS.vue';
-import ScreenFrame from '@/components/ScreenFrame.vue';
-import Video from '@/components/Mode/Video.vue';
-import Web from '@/components/Mode/Web.vue';
+import ResetCSS from './components/ResetCSS.vue';
+import ScreenFrame from './components/ScreenFrame.vue';
+import Video from './components/Mode/Video.vue';
+import Web from './components/Mode/Web.vue';
 
 export default Vue.extend({
   components: {

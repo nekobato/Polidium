@@ -3,12 +3,13 @@ import {
   app,
   BrowserWindow,
   Tray,
-  nativeImage,
   globalShortcut,
   ipcMain,
   Menu,
   systemPreferences,
 } from 'electron';
+import path from 'path';
+import menuTemplate from './menu';
 // import widevine from 'electron-widevinecdm';
 import * as types from '../shared/mutation-types';
 const isDev = !!process.env.DEBUG;
@@ -26,10 +27,10 @@ const MAC = process.platform === 'darwin';
 // app.commandLine.appendSwitch('widevine-cdm-version', '4.10.1303.2');
 
 let screenWindow: BrowserWindow | null = null;
+let tray: Tray | null = null;
 
 function createWindow() {
-  const { screen } = electron;
-  const { workAreaSize } = screen.getPrimaryDisplay();
+  const { workAreaSize } = electron.screen.getPrimaryDisplay();
 
   screenWindow = new BrowserWindow({
     x: 0,
@@ -47,8 +48,9 @@ function createWindow() {
     },
     frame: false,
     transparent: true,
-    // skipTaskbar: false,
+    skipTaskbar: true,
     alwaysOnTop: false,
+    icon: path.join(__dirname, '../assets/', `app_icon_dark_off.png`),
   });
 
   screenWindow.loadURL('http://localhost:8080');
@@ -64,53 +66,16 @@ function createWindow() {
   return screenWindow;
 }
 
-function createMenu() {
-  const menu = new Menu.buildFromTemplate([
-    // @ts-ignore: appMenu is not defined in d.ts
-    {
-      label: 'Polidium',
-      submenu: [
-        {
-          id: 'reset_opacity',
-          label: 'Reset Opacity',
-          click(_, browserWindow) {
-            browserWindow.setOpacity(1);
-            browserWindow.webContents.send(types.SET_OPACITY, 100);
-          },
-        },
-        {
-          id: 'switch_hide_taskbar',
-          label: 'Hide on Taskbar',
-          type: 'checkbox',
-        },
-        {
-          type: 'separator',
-        },
-        {
-          id: 'quit',
-          label: 'Quit Polidium',
-          role: 'quit',
-        },
-      ],
-    },
-    // @ts-ignore: viewMenu is not defined in d.ts
-    {
-      label: 'View',
-      role: 'viewMenu',
-    },
-  ]);
-  Menu.setApplicationMenu(menu);
-}
-
 function setIcon() {
   // https://electronjs.org/docs/tutorial/mojave-dark-mode-guide
   const darkOrLight = systemPreferences.isDarkMode() ? 'dark' : 'light';
-  const trayIconOn = nativeImage.createFromPath(`${__dirname}/public/icon_on_${darkOrLight}.png`);
-  const trayIconOff = nativeImage.createFromPath(`${__dirname}/public/icon_off_${darkOrLight}.png`);
-  const tray = new Tray(trayIconOff);
+  const trayIconOn = path.join(__dirname, '../assets/', `app_icon_${darkOrLight}_on.png`);
+  const trayIconOff = path.join(__dirname, '../assets/', `app_icon_${darkOrLight}_off.png`);
+  console.log(trayIconOff);
+  tray = new Tray(trayIconOff);
 
   tray.on('click', () => {
-    if (!screenWindow) {
+    if (!screenWindow || !tray) {
       return;
     }
     // Click through
@@ -128,39 +93,23 @@ function setIcon() {
 
 app.on('ready', () => {
   createWindow();
-  createMenu();
+
+  const menu = Menu.buildFromTemplate(menuTemplate);
+  Menu.setApplicationMenu(menu);
+
   setIcon();
-
-  // const webview = new BrowserView();
-  // // screenWindow.setBrowserView(webview);
-  // adjustWebview();
-  // webview.webContents.loadURL('https://google.com');
-
-  // screenWindow.on('resize', () => {
-  //   adjustWebview();
-  // });
-
-  // webview.webContents.on(
-  //   'new-window',
-  //   (event, url, frameName, disposition, options) => {
-  //     console.log(event, url, frameName, disposition, options);
-  //   }
-  // );
-
-  // function adjustWebview() {
-  //   const { width, height } = screenWindow.getBounds();
-  //   webview.setBounds({
-  //     x: 0,
-  //     y: 48,
-  //     width,
-  //     height: height - 24
-  //   });
-  // }
 
   ipcMain.on('SET_OPACITY', (_: string, payload: string) => {
     if (!screenWindow) return;
     const { value } = JSON.parse(payload);
     screenWindow.setOpacity(parseInt(value, 10) / 100);
+  });
+
+  ipcMain.on('SET_HIDE_ON_TASKBAR', (_: string, value: string) => {
+    if (!screenWindow) return;
+    const toggle = value === 'true';
+    screenWindow.setSkipTaskbar(toggle);
+    menu.getMenuItemById('switch_hide_taskbar').checked = toggle;
   });
 
   ipcMain.on(types.CONNECT_COMMIT, (event: string, typeName: string, payload: any) => {

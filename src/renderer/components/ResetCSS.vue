@@ -1,4 +1,11 @@
 <template></template>
+<script lang="ts">
+import Vue from 'vue'
+export default Vue.extend({
+  
+})
+</script>
+
 <style>
 /* http://meyerweb.com/eric/tools/css/reset/
   v2.0 | 20110126

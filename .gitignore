@@ -8,6 +8,7 @@ app/js
 release/
 app/main.js
 /dist
+!dist/assets
 
 # local env files
 .env.local

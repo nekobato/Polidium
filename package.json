@@ -3,23 +3,30 @@
   "productName": "Polidium",
   "version": "2.0.2",
   "description": "Polid Movie Screen",
-  "main": "./main.js",
+  "copyright": "© 2019, nekobato",
+  "main": "./dist/main/main.js",
   "scripts": {
-    "pack": "npm run build && build --dir ./",
+    "pack": "npm run build && electron-builder",
     "start": "electron .",
     "dev": "npm run build:main && DEBUG=true electron ./dist/main/main.js",
     "serve": "vue-cli-service serve",
     "serve:browser": "NODE_ENV=browser vue-cli-service serve",
-    "build": "vue-cli-service build && npm run build:main",
+    "build": "npm run build:renderer && npm run build:main",
     "build:main": "tsc -p tsconfig.main.json",
+    "build:renderer": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit"
   },
   "build": {
     "appId": "net.nekobato.polidium",
     "files": [
-      "!src"
+      "dist/**/*",
+      "node_modules/**/*",
+      "package.json"
     ],
-    "asar": true,
+    "directories": {
+      "buildResources": "public"
+    },
+    "publish": null,
     "linux": {
       "arch": [
         "ia32",
@@ -32,14 +39,14 @@
       ]
     },
     "win": {
-      "icon": "./app/app.ico",
+      "icon": "./public/icon.ico",
       "target": [
         "squirrel"
       ]
     },
     "mac": {
       "category": "public.app-category.video",
-      "icon": "./app/app.icns",
+      "icon": "./public/icon.icns",
       "target": "default"
     }
   },
@@ -53,27 +60,25 @@
     "url": "https://github.com/nekobato/Polidium/issues"
   },
   "homepage": "https://github.com/nekobato/Polidium",
-  "dependencies": {
-    "electron": "^5.0.0",
-    "electron-widevinecdm-dev": "github:oscartbeaumont-ext/electron-widevinecdm-dev",
-    "sass": "^1.20.1",
-    "sass-loader": "^7.1.0",
-    "vue": "^2.6.6",
-    "vue-router": "^3.0.1",
-    "vuex": "^3.0.1"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@types/jest": "^23.1.4",
-    "@vue/cli-plugin-typescript": "^3.4.0",
-    "@vue/cli-plugin-unit-jest": "^3.4.0",
-    "@vue/cli-service": "^3.4.0",
-    "@vue/test-utils": "^1.0.0-beta.20",
-    "electron-builder": "^10.7.0",
+    "@types/jest": "24.0.15",
+    "@vue/cli-plugin-typescript": "3.8.1",
+    "@vue/cli-plugin-unit-jest": "3.8.0",
+    "@vue/cli-service": "3.8.4",
+    "@vue/test-utils": "1.0.0-beta.20",
+    "electron": "5.0.4",
+    "electron-builder": "^20.44.1",
     "electron-ipc-mock": "0.0.3",
-    "electron-widevinecdm": "^7.0.0",
-    "ts-jest": "^23.0.0",
-    "typescript": "^3.0.0",
-    "vue-svg-loader": "^0.12.0",
-    "vue-template-compiler": "^2.5.21"
+    "electron-widevinecdm": "7.0.0",
+    "electron-widevinecdm-dev": "github:oscartbeaumont-ext/electron-widevinecdm-dev",
+    "sass": "1.21.0",
+    "sass-loader": "7.1.0",
+    "ts-jest": "24.0.2",
+    "typescript": "3.5.2",
+    "vue": "2.6.10",
+    "vue-router": "3.0.6",
+    "vue-svg-loader": "0.12.0",
+    "vuex": "3.1.1"
   }
 }

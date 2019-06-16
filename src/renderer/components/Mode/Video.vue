@@ -1,6 +1,7 @@
 <template>
   <div class="video">
-    <video class="video"
+    <video
+      class="video"
       ref="video"
       :src="videoSource"
       @canplay="onVideoCanplay"
@@ -14,13 +15,13 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue';
 
 export default Vue.extend({
   computed: {
     videoSource(): string {
       return this.$store.state.video.source;
-    }
+    },
   },
   methods: {
     onVideoCanplay() {},
@@ -36,5 +37,6 @@ export default Vue.extend({
 <style scoped>
 .video {
   height: 100%;
+  background: #000;
 }
 </style>
