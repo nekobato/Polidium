@@ -1,7 +1,8 @@
 import Vue from 'vue';
 import * as Vuex from 'vuex';
-import * as types from '../shared/mutation-types';
-import { mode } from './values';
+import * as types from '../../shared/mutation-types';
+import { mode } from '../values';
+import { state } from './state';
 const { ipcRenderer } =
   process.env.NODE_ENV === 'browser'
     ? window.require('electron-ipc-mock')()
@@ -18,76 +19,17 @@ ipcRenderer.on('SET_OPACITY', (_: any, payload: string) => {
   Store.commit('changeOpacity', { value: parseInt(payload, 10) });
 });
 
+// Hide On Taskbar
 ipcRenderer.on(types.SET_HIDE_ON_TASKBAR, (_: any, toggle: string) => {
   console.log(types.SET_HIDE_ON_TASKBAR);
-  window.localStorage.setItem('hideOnTaskBar', toggle);
+  window.localStorage.setItem('Settings.hideOnTaskBar', toggle);
 });
 
-const hideOnTaskBar = localStorage.getItem('hideOnTaskBar');
+const hideOnTaskBar = localStorage.getItem('Settings.hideOnTaskBar');
 
 if (hideOnTaskBar === 'false') {
   ipcRenderer.send(types.SET_HIDE_ON_TASKBAR, hideOnTaskBar);
 }
-
-export type State = {
-  settings: {
-    opacity: number;
-    hideOnLauncher: boolean;
-  };
-  window: {
-    onMouse: boolean;
-  };
-  mode: string;
-  video: {
-    source: string;
-    media: {
-      index: number;
-      duration: number;
-      currentTime: number;
-    };
-    fileList: any[];
-  };
-  web: {
-    url: string;
-    action: string;
-    histories: any[];
-  };
-  views: {
-    window: boolean;
-    controller: string;
-  };
-};
-
-const state: State = {
-  settings: localStorage.Settings
-    ? JSON.parse(localStorage.Settings)
-    : {
-        opacity: 100,
-        hideOnLauncher: false,
-      },
-  window: {
-    onMouse: false,
-  },
-  mode: mode.video,
-  video: {
-    source: '',
-    media: {
-      index: 0,
-      duration: 0,
-      currentTime: 0,
-    },
-    fileList: [],
-  },
-  web: {
-    url: 'https://google.com',
-    action: '',
-    histories: [],
-  },
-  views: {
-    window: false,
-    controller: '',
-  },
-};
 
 const Store = new Vuex.Store({
   state,

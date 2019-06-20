@@ -1,13 +1,13 @@
 <template>
   <div id="app" ref="app">
-    <ResetCSS />
+    <ResetCSS/>
     <ScreenFrame>
-      <component :is="mode" />
+      <component :is="mode"/>
     </ScreenFrame>
   </div>
 </template>
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue';
 import ResetCSS from './components/ResetCSS.vue';
 import ScreenFrame from './components/ScreenFrame.vue';
 import Video from './components/Mode/Video.vue';
@@ -18,13 +18,13 @@ export default Vue.extend({
     ResetCSS,
     ScreenFrame,
     Video,
-    Web
+    Web,
   },
   computed: {
     mode(): string {
       return this.$store.state.mode;
     },
-  }
+  },
 });
 </script>
 
@@ -42,7 +42,7 @@ body {
 }
 
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-align: center;
   color: #2c3e50;
