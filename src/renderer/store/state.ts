@@ -1,6 +1,6 @@
 import { mode } from '../values';
 
-export const state = {
+const state = {
   settings: localStorage.Settings
     ? JSON.parse(localStorage.Settings)
     : {
@@ -32,3 +32,5 @@ export const state = {
 };
 
 export type State = typeof state;
+
+export default state;

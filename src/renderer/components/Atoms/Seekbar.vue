@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { State } from '../../store';
+import { State } from '../../store/state';
 
 export default Vue.extend({
   computed: {

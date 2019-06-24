@@ -9,11 +9,14 @@ import {
   systemPreferences,
 } from 'electron';
 import path from 'path';
+import logger from './log';
 import menuTemplate from './menu';
 // import widevine from 'electron-widevinecdm';
 import * as types from '../shared/mutation-types';
 const isDev = !!process.env.DEBUG;
 const MAC = process.platform === 'darwin';
+
+logger.debug('Debug Mode', { mac: MAC });
 
 // if (MAC) app.dock.hide();
 
@@ -53,14 +56,14 @@ function createWindow() {
     icon: path.join(__dirname, '../assets/', `app_icon_dark_off.png`),
   });
 
-  screenWindow.loadURL('http://localhost:8080');
+  screenWindow.loadURL(DEBUG ? 'http://localhost:8080' : './dist/renderer/index.html');
 
   screenWindow.on('closed', function() {
     screenWindow = null;
   });
 
   screenWindow.webContents.on('new-window', (event, url, frameName, disposition, options) => {
-    console.log(event, url, frameName, disposition, options);
+    logger.debug('new window', [event, url, frameName, disposition, options]);
   });
 
   return screenWindow;
@@ -80,6 +83,7 @@ function setIcon() {
     }
     // Click through
     const isOn = screenWindow.isAlwaysOnTop() ? true : false;
+    logger.debug('tray is clicked', { isOn: isOn });
 
     screenWindow.webContents.send(
       isOn ? types.WINDOW_TRANSPARENT_OFF : types.WINDOW_TRANSPARENT_ON,
@@ -103,6 +107,7 @@ app.on('ready', () => {
     if (!screenWindow) return;
     const { value } = JSON.parse(payload);
     screenWindow.setOpacity(parseInt(value, 10) / 100);
+    logger.debug('set Opacity', { value: value });
   });
 
   ipcMain.on('SET_HIDE_ON_TASKBAR', (_: string, value: string) => {
@@ -110,14 +115,15 @@ app.on('ready', () => {
     const toggle = value === 'true';
     screenWindow.setSkipTaskbar(toggle);
     menu.getMenuItemById('switch_hide_taskbar').checked = toggle;
+    logger.debug('hide of taskbar', { toggle: toggle });
   });
 
-  ipcMain.on(types.CONNECT_COMMIT, (event: string, typeName: string, payload: any) => {
-    if (!screenWindow) return;
-    if (isDev) console.log(typeName, payload);
-    screenWindow.webContents.send(types.CONNECT_COMMIT, typeName, payload);
-    if (typeName === types.QUIT) app.quit();
-  });
+  // ipcMain.on(types.CONNECT_COMMIT, (event: string, typeName: string, payload: any) => {
+  //   if (!screenWindow) return;
+  //   if (isDev) console.log(typeName, payload);
+  //   screenWindow.webContents.send(types.CONNECT_COMMIT, typeName, payload);
+  //   if (typeName === types.QUIT) app.quit();
+  // });
 });
 
 app.on('will-quit', () => {

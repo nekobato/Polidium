@@ -2,7 +2,7 @@ import Vue from 'vue';
 import * as Vuex from 'vuex';
 import * as types from '../../shared/mutation-types';
 import { mode } from '../values';
-import { state } from './state';
+import state from './state';
 const { ipcRenderer } =
   process.env.NODE_ENV === 'browser'
     ? window.require('electron-ipc-mock')()
