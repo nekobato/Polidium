@@ -68,6 +68,9 @@ const Store = new Vuex.Store({
       store.video.media.currentTime = store.video.media.duration * parcentage;
       console.log(parcentage);
     },
+    [types.VIDEO_LIST_TOGGLE](store, flag) {
+      store.video.fileList.isVisible = flag;
+    },
   },
 });
 

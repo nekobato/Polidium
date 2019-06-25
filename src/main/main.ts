@@ -13,7 +13,7 @@ import logger from './log';
 import menuTemplate from './menu';
 // import widevine from 'electron-widevinecdm';
 import * as types from '../shared/mutation-types';
-const isDev = !!process.env.DEBUG;
+import { DEBUG } from './env';
 const MAC = process.platform === 'darwin';
 
 logger.debug('Debug Mode', { mac: MAC });
@@ -38,8 +38,8 @@ function createWindow() {
   screenWindow = new BrowserWindow({
     x: 0,
     y: 0,
-    width: isDev ? 480 : workAreaSize.width,
-    height: isDev ? 320 : workAreaSize.height - 24, // size of Mac tray size
+    width: DEBUG ? 480 : workAreaSize.width,
+    height: DEBUG ? 320 : workAreaSize.height - 24, // size of Mac tray size
     minWidth: 320,
     minHeight: 240,
     show: true,

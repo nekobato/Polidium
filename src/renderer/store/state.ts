@@ -18,7 +18,10 @@ const state = {
       duration: 0,
       currentTime: 0,
     },
-    fileList: [],
+    fileList: {
+      isVisible: true,
+      data: [],
+    },
   },
   web: {
     url: 'https://google.com',

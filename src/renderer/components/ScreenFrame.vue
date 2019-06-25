@@ -4,16 +4,19 @@
     <div class="screen">
       <slot />
     </div>
+    <VideoList class="video-list" v-show="videoFileList.isVisible" />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import Header from './Controllers/Header.vue';
+import VideoList from './Controllers/VideoList.vue';
 
 export default Vue.extend({
   components: {
     Header,
+    VideoList,
   },
   data() {
     return this.$store.state.settings;
@@ -24,6 +27,9 @@ export default Vue.extend({
     },
     controllerView(): string {
       return this.$store.state.controllerView;
+    },
+    videoFileList(): boolean {
+      return this.$store.state.video.fileList;
     },
   },
   methods: {
@@ -61,5 +67,13 @@ export default Vue.extend({
   width: 320px;
   height: 160px;
   background: transparent;
+}
+.video-list {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  bottom: 0;
+  width: 320px;
+  height: auto;
 }
 </style>

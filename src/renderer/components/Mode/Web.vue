@@ -77,7 +77,7 @@ export default Vue.extend({
 .webview {
   width: 100%;
   height: 100%;
-  background: transparent;
+  background: #fff;
 }
 
 .web-controller {

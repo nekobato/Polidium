@@ -6,7 +6,7 @@
     <div class="seekbar-container">
       <Seekbar />
     </div>
-    <button class="button list">
+    <button class="button list" @click="toggleList">
       <ListIcon class="icon" />
     </button>
   </div>
@@ -16,6 +16,7 @@
 import Vue from 'vue';
 import { mapMutations } from 'vuex';
 import { webviewAction } from '../../values';
+import * as types from '../../../shared/mutation-types';
 import PlayIcon from '../Icons/Play.vue';
 import PauseIcon from '../Icons/Pause.vue';
 import ListIcon from '../Icons/List.vue';
@@ -32,7 +33,13 @@ export default Vue.extend({
   data() {
     return {};
   },
-  methods: {},
+  computed: {},
+  methods: {
+    toggleList() {
+      const now = this.$store.state.video.fileList.isVisible;
+      this.$store.commit(types.VIDEO_LIST_TOGGLE, !now);
+    },
+  },
 });
 </script>
 
