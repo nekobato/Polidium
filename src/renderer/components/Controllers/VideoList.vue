@@ -1,8 +1,11 @@
 <template>
-  <div class="video-list">
-    <div class="droppable-frame" v-show="onDrag">
-      <div class="dashed-frame">
-        <AddToListIcon class="add-item-icon" />
+  <div class="video-list" @dragover="onDragOver" @dragleave="onDragLeave">
+    <ul class="list">
+      <ListItem class="list-item" v-for="(file, index) in fileList" :key="index" title="file.name"/>
+    </ul>
+    <div class="droppable-frame" v-show="isDragOver">
+      <div class="dashed-frame" @drop="onDrop($event)">
+        <AddToListIcon class="add-item-icon"/>
       </div>
     </div>
   </div>
@@ -11,18 +14,44 @@
 <script lang="ts">
 import Vue from 'vue';
 import AddToListIcon from '../Icons/AddToList.vue';
+import ListItem from '../Atoms/AddToList.vue';
+import * as types from '../../../shared/mutation-types';
 
 export default Vue.extend({
   name: 'VideoList',
   components: {
     AddToListIcon,
+    ListItem,
   },
   data() {
     return {
-      onDrag: false,
+      isDragOver: false,
     };
   },
-  methods: {},
+  computed: {
+    fileList(): any[] {
+      return this.$store.state.video.fileList;
+    },
+  },
+  methods: {
+    onDrop(e: any) {
+      const files = e.target.files as any[];
+      this.$store.commit(
+        types.VIDEO_LIST_ADD_FILE,
+        files.filter(file => {
+          if (file.type.match('video.*')) {
+            return true;
+          }
+        }),
+      );
+    },
+    onDragOver() {
+      this.isDragOver = true;
+    },
+    onDragLeave() {
+      this.isDragOver = false;
+    },
+  },
 });
 </script>
 
