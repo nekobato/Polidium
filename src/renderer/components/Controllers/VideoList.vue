@@ -1,20 +1,22 @@
 <template>
-  <div class="video-list" @dragover="onDragOver" @dragleave="onDragLeave">
+  <div class="video-list" @dragover="onDragOver">
     <ul class="list">
-      <ListItem class="list-item" v-for="(file, index) in fileList" :key="index" title="file.name"/>
+      <ListItem
+        class="list-item"
+        v-for="(file, index) in fileList.data"
+        :key="index"
+        :index="index"
+        :title="file.name"
+      />
     </ul>
-    <div class="droppable-frame" v-show="isDragOver">
-      <div class="dashed-frame" @drop="onDrop($event)">
-        <AddToListIcon class="add-item-icon"/>
-      </div>
-    </div>
+    <div class="droppable-frame" v-show="isDragOver" @drop="onDrop" @dragleave="onDragLeave"></div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import AddToListIcon from '../Icons/AddToList.vue';
-import ListItem from '../Atoms/AddToList.vue';
+import ListItem from '../Atoms/VideoListItem.vue';
 import * as types from '../../../shared/mutation-types';
 
 export default Vue.extend({
@@ -36,6 +38,7 @@ export default Vue.extend({
   methods: {
     onDrop(e: any) {
       const files = e.target.files as any[];
+      console.log(files);
       this.$store.commit(
         types.VIDEO_LIST_ADD_FILE,
         files.filter(file => {
@@ -47,9 +50,11 @@ export default Vue.extend({
     },
     onDragOver() {
       this.isDragOver = true;
+      console.log('over');
     },
     onDragLeave() {
       this.isDragOver = false;
+      console.log('leave');
     },
   },
 });

@@ -20,7 +20,14 @@ const state = {
     },
     fileList: {
       isVisible: true,
-      data: [],
+      data: [
+        {
+          name: 'hoge',
+        },
+        {
+          name: 'hgoe',
+        },
+      ],
     },
   },
   web: {
