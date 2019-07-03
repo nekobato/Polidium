@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  outputDir: 'dist/renderer',
+  outputDir: 'dist',
   pages: {
     index: {
       entry: 'src/renderer/main.ts',

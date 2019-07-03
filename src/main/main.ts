@@ -13,10 +13,9 @@ import logger from './log';
 import menuTemplate from './menu';
 // import widevine from 'electron-widevinecdm';
 import * as types from '../shared/mutation-types';
-import { DEBUG } from './env';
-const MAC = process.platform === 'darwin';
+import { DEBUG, isMac, assetPath } from './env';
 
-logger.debug('Debug Mode', { mac: MAC });
+logger.debug('Debug Mode', { DEBUG });
 
 // if (MAC) app.dock.hide();
 
@@ -53,7 +52,7 @@ function createWindow() {
     transparent: true,
     skipTaskbar: true,
     alwaysOnTop: false,
-    icon: path.join(__dirname, '../assets/', `app_icon_dark_off.png`),
+    icon: path.join(assetPath, `app_icon.png`),
   });
 
   screenWindow.loadURL(DEBUG ? 'http://localhost:8080' : './dist/renderer/index.html');
@@ -72,8 +71,8 @@ function createWindow() {
 function setIcon() {
   // https://electronjs.org/docs/tutorial/mojave-dark-mode-guide
   const darkOrLight = systemPreferences.isDarkMode() ? 'dark' : 'light';
-  const trayIconOn = path.join(__dirname, '../assets/', `app_icon_${darkOrLight}_on.png`);
-  const trayIconOff = path.join(__dirname, '../assets/', `app_icon_${darkOrLight}_off.png`);
+  const trayIconOn = path.join(assetPath, `tray_icon_${darkOrLight}_on.png`);
+  const trayIconOff = path.join(assetPath, `tray_icon_${darkOrLight}_off.png`);
   console.log(trayIconOff);
   tray = new Tray(trayIconOff);
 
@@ -131,7 +130,7 @@ app.on('will-quit', () => {
 });
 
 app.on('window-all-closed', () => {
-  if (MAC) {
+  if (isMac) {
     app.quit();
   }
 });
