@@ -1,8 +1,10 @@
 <template>
   <div class="screen-frame" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
-    <Header class="header" />
     <div class="screen">
       <slot />
+    </div>
+    <div class="header-container">
+      <Header class="header" v-show="onMouse || true" />
     </div>
     <VideoList class="video-list" v-show="videoFileList.isVisible" />
   </div>
@@ -19,7 +21,9 @@ export default Vue.extend({
     VideoList,
   },
   data() {
-    return this.$store.state.settings;
+    return {
+      settings: this.$store.state.settings,
+    };
   },
   computed: {
     onMouse(): boolean {
@@ -46,7 +50,7 @@ export default Vue.extend({
 <style scoped>
 .screen-frame {
   display: grid;
-  grid-template-rows: 48px 1fr;
+  grid-template-rows: 1fr 48px;
   width: 100%;
   height: 100%;
 }
@@ -70,9 +74,9 @@ export default Vue.extend({
 }
 .video-list {
   position: absolute;
-  top: 48px;
+  top: 0;
+  bottom: 48px;
   right: 0;
-  bottom: 0;
   width: 320px;
   height: auto;
 }

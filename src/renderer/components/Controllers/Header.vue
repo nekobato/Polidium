@@ -1,6 +1,9 @@
 <template>
   <div class="container">
     <div class="header-top">
+      <component :is="mode" />
+    </div>
+    <div class="header-bottom">
       <button class="btn mode web" :class="{ active: mode === 'Web' }" @click="onWebClicked">
         <WebIcon class="icon web" />
       </button>
@@ -11,9 +14,6 @@
       <div class="opacity-container">
         <Opacity />
       </div>
-    </div>
-    <div class="header-bottom">
-      <component :is="mode" />
     </div>
   </div>
 </template>
@@ -76,7 +76,7 @@ export default Vue.extend({
   position: relative;
   display: grid;
 }
-.header-top {
+.header-bottom {
   grid-template-columns: 64px 64px 1fr 160px;
   height: 22px;
   .grabbing-area {
@@ -111,7 +111,7 @@ export default Vue.extend({
     height: 100%;
   }
 }
-.header-bottom {
+.header-top {
   height: 26px;
   -webkit-app-region: no-drag;
 }

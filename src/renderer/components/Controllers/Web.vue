@@ -69,6 +69,9 @@ export default Vue.extend({
       this.$data.url = url;
     },
   },
+  mounted() {
+    this.$data.url = this.storeUrl;
+  },
 });
 </script>
 
@@ -101,7 +104,7 @@ $button-width: 32px;
 }
 .url-container {
   display: block;
-  padding: 4px 8px;
+  padding: 5px 8px;
 }
 .url {
   padding: 1px 8px;

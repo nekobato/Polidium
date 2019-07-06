@@ -1,11 +1,6 @@
 <template>
   <div class="video-controller">
-    <button class="button play">
-      <PlayIcon class="icon" />
-    </button>
-    <div class="seekbar-container">
-      <Seekbar />
-    </div>
+    <div class="empty-cell"></div>
     <button class="button list" @click="toggleList">
       <ListIcon class="icon" />
     </button>
@@ -46,7 +41,7 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .video-controller {
   display: grid;
-  grid-template-columns: 24px 1fr 24px;
+  grid-template-columns: 1fr 24px;
   padding: 0 4px;
   width: 100%;
   height: 100%;

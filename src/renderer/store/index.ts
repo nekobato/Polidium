@@ -45,6 +45,7 @@ const Store = new Vuex.Store({
     },
     changeModeToWeb(store) {
       store.mode = mode.web;
+      store.video.fileList.isVisible = false;
     },
     changeOpacity(store, { value }) {
       console.log('change', value);
@@ -70,6 +71,13 @@ const Store = new Vuex.Store({
     },
     [types.VIDEO_LIST_TOGGLE](store, flag) {
       store.video.fileList.isVisible = flag;
+    },
+    [types.VIDEO_LIST_ADD_FILES](store, files) {
+      store.video.fileList.data = store.video.fileList.data.concat(files);
+    },
+    [types.VIDEO_SELECT_FILE](store, index) {
+      store.video.source = store.video.fileList.data[index];
+      console.log(store.video.source);
     },
   },
 });

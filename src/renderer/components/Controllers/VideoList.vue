@@ -1,6 +1,6 @@
 <template>
-  <div class="video-list" @dragover="onDragOver">
-    <ul class="list">
+  <div class="video-list" @dragover.prevent="onDragOver" @drop.prevent="onDrop">
+    <ul class="list" v-show="!isDragOver">
       <ListItem
         class="list-item"
         v-for="(file, index) in fileList.data"
@@ -9,7 +9,11 @@
         :title="file.name"
       />
     </ul>
-    <div class="droppable-frame" v-show="isDragOver" @drop="onDrop" @dragleave="onDragLeave"></div>
+    <div
+      class="droppable-frame"
+      v-show="isDragOver || listIsEmpty"
+      @dragleave.prevent="onDragLeave"
+    ></div>
   </div>
 </template>
 
@@ -31,30 +35,37 @@ export default Vue.extend({
     };
   },
   computed: {
-    fileList(): any[] {
+    fileList(): any {
       return this.$store.state.video.fileList;
+    },
+    listIsEmpty(): boolean {
+      return this.fileList.data.length === 0;
     },
   },
   methods: {
     onDrop(e: any) {
-      const files = e.target.files as any[];
-      console.log(files);
-      this.$store.commit(
-        types.VIDEO_LIST_ADD_FILE,
-        files.filter(file => {
-          if (file.type.match('video.*')) {
-            return true;
-          }
-        }),
-      );
+      const files = e.dataTransfer.files as any[];
+      let filteredFiles = [];
+      for (let i = 0; i < files.length; i++) {
+        if (/^video*/.test(files[i].type)) {
+          filteredFiles.push({
+            name: files[i].name,
+            path: files[i].path,
+          });
+        }
+      }
+      this.$store.commit(types.VIDEO_LIST_ADD_FILES, filteredFiles);
+      this.isDragOver = false;
     },
     onDragOver() {
       this.isDragOver = true;
-      console.log('over');
     },
     onDragLeave() {
       this.isDragOver = false;
-      console.log('leave');
+    },
+    onDragEnd() {},
+    selectItem(index: number) {
+      console.log('click');
     },
   },
 });
@@ -67,7 +78,8 @@ export default Vue.extend({
     padding: 8px;
     width: 100%;
     height: 100%;
-    .dashed-frame {
+    &:before {
+      content: '';
       display: flex;
       justify-content: center;
       align-items: center;

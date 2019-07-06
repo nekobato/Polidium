@@ -12,22 +12,18 @@ const state = {
   },
   mode: mode.video,
   video: {
-    source: '',
+    source: {
+      path: '',
+      name: '',
+    },
     media: {
       index: 0,
       duration: 0,
       currentTime: 0,
     },
     fileList: {
-      isVisible: true,
-      data: [
-        {
-          name: 'hoge',
-        },
-        {
-          name: 'hgoe',
-        },
-      ],
+      isVisible: false,
+      data: [],
     },
   },
   web: {

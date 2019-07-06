@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <webview class="webview" :src="webURL" ref="webview" />
+    <webview class="webview" :src="src" ref="webview" plugins />
   </div>
 </template>
 
@@ -18,6 +18,7 @@ type Webview = Element & {
 
 export default Vue.extend({
   data: () => ({
+    src: '',
     controller: {
       show: true,
     },
@@ -35,6 +36,7 @@ export default Vue.extend({
   },
   methods: {
     setUrl(e: any) {
+      console.log(e);
       if (e.isMainFrame) {
         this.$store.commit('webSubmitUrl', { url: e.url });
       }
@@ -67,6 +69,7 @@ export default Vue.extend({
     },
   },
   mounted() {
+    this.src = this.webURL;
     this.webviewElement.addEventListener('load-commit', this.setUrl);
   },
 });
