@@ -1,19 +1,12 @@
-import electron from 'electron';
-import {
-  app,
-  BrowserWindow,
-  Tray,
-  globalShortcut,
-  ipcMain,
-  Menu,
-  systemPreferences,
-} from 'electron';
+import electron, { BrowserView } from 'electron';
+import { app, BrowserWindow, globalShortcut, ipcMain, Menu } from 'electron';
 import path from 'path';
 import logger from './log';
 import menuTemplate from './menu';
 // import widevine from 'electron-widevinecdm';
-import * as types from '../shared/mutation-types';
+import { setTrayIcon } from './tray-icon';
 import { DEBUG, isMac, assetPath } from './env';
+import * as types from '../shared/mutation-types';
 
 logger.debug('Debug Mode', { DEBUG });
 
@@ -29,7 +22,6 @@ logger.debug('Debug Mode', { DEBUG });
 // app.commandLine.appendSwitch('widevine-cdm-version', '4.10.1303.2');
 
 let screenWindow: BrowserWindow | null = null;
-let tray: Tray | null = null;
 
 function createWindow() {
   const { workAreaSize } = electron.screen.getPrimaryDisplay();
@@ -68,61 +60,61 @@ function createWindow() {
   return screenWindow;
 }
 
-function setIcon() {
-  // https://electronjs.org/docs/tutorial/mojave-dark-mode-guide
-  const darkOrLight = systemPreferences.isDarkMode() ? 'dark' : 'light';
-  const trayIconOn = path.join(assetPath, `tray_icon_${darkOrLight}_on.png`);
-  const trayIconOff = path.join(assetPath, `tray_icon_${darkOrLight}_off.png`);
-  console.log(trayIconOff);
-  tray = new Tray(trayIconOff);
-
-  tray.on('click', () => {
-    if (!screenWindow || !tray) {
-      return;
-    }
-    // Click through
-    const isOn = screenWindow.isAlwaysOnTop() ? true : false;
-    logger.debug('tray is clicked', { isOn: isOn });
-
-    screenWindow.webContents.send(
-      isOn ? types.WINDOW_TRANSPARENT_OFF : types.WINDOW_TRANSPARENT_ON,
-    );
-    screenWindow.setIgnoreMouseEvents(isOn ? false : true);
-    screenWindow.setVisibleOnAllWorkspaces(isOn ? false : true);
-    screenWindow.setAlwaysOnTop(isOn ? false : true);
-    tray.setImage(isOn ? trayIconOff : trayIconOn);
-  });
-}
-
 app.on('ready', () => {
-  createWindow();
+  const mainWindow = createWindow();
 
   const menu = Menu.buildFromTemplate(menuTemplate);
   Menu.setApplicationMenu(menu);
 
-  setIcon();
+  setTrayIcon(mainWindow);
+
+  let webView: BrowserView;
+
+  function createWebView(): void {
+    webView = new BrowserView();
+    mainWindow.setBrowserView(webView);
+    webView.setBounds({ x: 0, y: 0, width: 320, height: 240 });
+    webView.webContents.loadURL('https://google.com');
+  }
+
+  ipcMain.on('BROWSER_VIEW_EVENT', (_: string, payload: any) => {
+    switch (payload.action) {
+      case types.OPEN_URL:
+        webView.webContents.loadURL(payload.url);
+        break;
+      case types.RELOAD:
+        webView.webContents.reload();
+        break;
+      case types.RESIZE_PLAYER:
+        webView.setBounds({
+          width: payload.width,
+          height: payload.height,
+        } as electron.Rectangle);
+        break;
+      case types.SET_MODE:
+        if (payload.toggle) {
+          webView.destroy();
+        } else {
+          createWebView();
+        }
+        break;
+    }
+  });
 
   ipcMain.on('SET_OPACITY', (_: string, payload: string) => {
-    if (!screenWindow) return;
+    if (!mainWindow) return;
     const { value } = JSON.parse(payload);
-    screenWindow.setOpacity(parseInt(value, 10) / 100);
+    mainWindow.setOpacity(parseInt(value, 10) / 100);
     logger.debug('set Opacity', { value: value });
   });
 
   ipcMain.on('SET_HIDE_ON_TASKBAR', (_: string, value: string) => {
-    if (!screenWindow) return;
+    if (!mainWindow) return;
     const toggle = value === 'true';
-    screenWindow.setSkipTaskbar(toggle);
+    mainWindow.setSkipTaskbar(toggle);
     menu.getMenuItemById('switch_hide_taskbar').checked = toggle;
     logger.debug('hide of taskbar', { toggle: toggle });
   });
-
-  // ipcMain.on(types.CONNECT_COMMIT, (event: string, typeName: string, payload: any) => {
-  //   if (!screenWindow) return;
-  //   if (isDev) console.log(typeName, payload);
-  //   screenWindow.webContents.send(types.CONNECT_COMMIT, typeName, payload);
-  //   if (typeName === types.QUIT) app.quit();
-  // });
 });
 
 app.on('will-quit', () => {

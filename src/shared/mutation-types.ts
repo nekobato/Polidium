@@ -17,7 +17,7 @@ export const VIDEO_PLAYED = 'VIDEO_PLAYED';
 export const VIDEO_PAUSED = 'VIDEO_PAUSED';
 export const VIDEO_ENDED = 'VIDEO_ENDED';
 
-export const CHANGE_MODE = 'CHANGE_MODE';
+export const SET_MODE = 'SET_MODE';
 export const SET_OPACITY = 'SET_OPACITY';
 export const SET_HIDE_ON_TASKBAR = 'SET_HIDE_ON_TASKBAR';
 export const SET_CLICKTHROUGH = 'SET_CLICKTHROUGH';
