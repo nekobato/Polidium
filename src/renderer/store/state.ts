@@ -30,6 +30,8 @@ const state = {
     url: 'https://google.com',
     action: '',
     histories: [],
+    canGoBack: false,
+    canGoForward: false,
   },
   views: {
     window: false,

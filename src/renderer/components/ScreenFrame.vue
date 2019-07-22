@@ -56,7 +56,6 @@ export default Vue.extend({
 }
 .screen {
   position: relative;
-  border-radius: 4px;
   overflow: hidden;
 }
 .header {

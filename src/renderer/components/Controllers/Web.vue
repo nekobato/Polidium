@@ -19,6 +19,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import * as types from '../../../shared/mutation-types';
 import { mapMutations } from 'vuex';
 import { webviewAction } from '../../values';
 import PreviousIcon from '../Icons/Previous.vue';
@@ -38,39 +39,37 @@ export default Vue.extend({
     };
   },
   computed: {
-    storeUrl(): string {
-      return this.$store.state.web.url;
+    web(): any {
+      return this.$store.state.web;
+    },
+  },
+  watch: {
+    ['web.url'](url: string) {
+      this.url = url;
     },
   },
   methods: {
     onSubmitUrl() {
-      this.$store.commit('webSubmitUrl', {
-        url: this.$data.url,
+      this.$store.commit(types.BROWSER_VIEW_EVENT, {
+        action: types.SET_URL,
+        url: this.url,
       });
     },
     onClickPrevious() {
-      this.$store.commit('webAction', {
-        action: webviewAction.back,
+      this.$store.commit(types.BROWSER_VIEW_EVENT, {
+        action: types.BROWSER_BACK,
       });
     },
     onClickReload() {
-      this.$store.commit('webAction', {
-        action: webviewAction.reload,
+      this.$store.commit(types.BROWSER_VIEW_EVENT, {
+        action: types.BROWSER_RELOAD,
       });
     },
     onClickNext() {
-      this.$store.commit('webAction', {
-        action: webviewAction.forward,
+      this.$store.commit(types.BROWSER_VIEW_EVENT, {
+        action: types.BROWSER_FORWARD,
       });
     },
-  },
-  watch: {
-    storeUrl(url) {
-      this.$data.url = url;
-    },
-  },
-  mounted() {
-    this.$data.url = this.storeUrl;
   },
 });
 </script>

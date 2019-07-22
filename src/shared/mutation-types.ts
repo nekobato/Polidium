@@ -23,9 +23,13 @@ export const SET_HIDE_ON_TASKBAR = 'SET_HIDE_ON_TASKBAR';
 export const SET_CLICKTHROUGH = 'SET_CLICKTHROUGH';
 export const RESIZE_PLAYER = 'RESIZE_PLAYER';
 
-export const OPEN_URL = 'OPEN_URL';
+// Browser Actions
+export const BROWSER_VIEW_EVENT = 'BROWSER_VIEW_EVENT';
+export const SET_URL = 'SET_URL';
+export const BROWSER_RELOAD = 'BROWSER_RELOAD';
+export const BROWSER_BACK = 'BROWSER_BACK';
+export const BROWSER_FORWARD = 'BROWSER_FORWARD';
 
-export const RELOAD = 'RELOAD';
 export const RESET = 'RESET';
 export const QUIT = 'QUIT';
 
