@@ -6,17 +6,15 @@ import {
   ipcMain,
   Menu,
   Rectangle,
-  Size,
 } from 'electron';
-import path from 'path';
+import { createWindow } from './mainWindow';
+import { createWebView } from './webView';
 import * as types from '../shared/mutation-types';
-import { assetPath, DEBUG, isMac } from './env';
+import { DEBUG, isMac } from './env';
 import logger from './log';
 import menuTemplate from './menu';
 // import widevine from 'electron-widevinecdm';
 import { setTrayIcon } from './tray-icon';
-
-const electron = require('electron');
 
 logger.debug('Debug Mode', { DEBUG });
 
@@ -33,47 +31,19 @@ logger.debug('Debug Mode', { DEBUG });
 
 let mainWindow: BrowserWindow | null = null;
 
-function createWindow() {
-  const { workAreaSize } = electron.screen.getPrimaryDisplay();
+let webViewBounds: Rectangle = {
+  x: 0,
+  y: 0,
+  width: 480,
+  height: 320,
+};
 
-  mainWindow = new BrowserWindow({
-    x: 0,
-    y: 0,
-    width: DEBUG ? 480 : workAreaSize.width,
-    height: DEBUG ? 320 : workAreaSize.height - 24, // size of Mac tray size
-    minWidth: 320,
-    minHeight: 240,
-    show: true,
-    resizable: true,
-    webPreferences: {
-      webviewTag: true,
-      nodeIntegration: true,
-      plugins: true,
-      webSecurity: false,
-    },
-    frame: false,
-    transparent: true,
-    hasShadow: false,
-    skipTaskbar: true,
-    alwaysOnTop: false,
-    icon: path.join(assetPath, `app_icon.png`),
-  });
-
-  mainWindow.loadURL(DEBUG ? 'http://localhost:8080' : __dirname + '/../index.html');
+app.on('ready', () => {
+  mainWindow = createWindow();
 
   mainWindow.on('closed', function() {
     mainWindow = null;
   });
-
-  mainWindow.webContents.on('new-window', (event, url, frameName, disposition, options) => {
-    logger.debug('new window', [event, url, frameName, disposition, options]);
-  });
-
-  return mainWindow;
-}
-
-app.on('ready', () => {
-  mainWindow = createWindow();
 
   const menu = Menu.buildFromTemplate(menuTemplate);
   Menu.setApplicationMenu(menu);
@@ -82,64 +52,57 @@ app.on('ready', () => {
 
   let webView: BrowserView | null = null;
 
-  function setUrl(url: string): void {
-    if (!mainWindow || !webView) return;
-    mainWindow.webContents.send(types.SET_URL, {
-      url,
-      canGoBack: webView.webContents.canGoBack(),
-      canGoForward: webView.webContents.goForward(),
-    });
-  }
-
-  function createWebView(): void {
-    if (!mainWindow) return;
-
-    webView = new BrowserView();
-    mainWindow.setBrowserView(webView);
-    const { width, height } = mainWindow.getBounds();
-    webView.setBounds({ x: 0, y: 0, width, height: height - 48 });
-    webView.webContents.loadURL('https://google.com');
-    webView.webContents.on('did-navigate', (_, url) => {
-      setUrl(url);
-    });
-    webView.webContents.on('did-navigate-in-page', (_, url) => {
-      setUrl(url);
-    });
-  }
+  webView = createWebView(mainWindow);
 
   mainWindow.on('will-resize', (e: Event, { width, height }: Rectangle) => {
+    webViewBounds.width = width;
+    webViewBounds.height = height - 48;
+    if (webView) {
+      webView.setBounds(webViewBounds);
+    }
+  });
+
+  mainWindow.webContents.on('devtools-opened', () => {
     if (webView) {
       webView.setBounds({
         x: 0,
         y: 0,
-        width,
-        height: height - 48,
+        width: 0,
+        height: 0,
       } as Rectangle);
     }
   });
 
-  ipcMain.on(types.BROWSER_VIEW_EVENT, (_: string, payload: any) => {
+  mainWindow.webContents.on('devtools-closed', () => {
+    if (webView) {
+      webView.setBounds(webViewBounds);
+    }
+  });
+
+  ipcMain.on(types.BROWSER_VIEW_EVENT, (_, payload) => {
     if (!webView) return;
+    logger.debug(types.BROWSER_VIEW_EVENT, payload);
+    const contents = webView.webContents;
     const data = JSON.parse(payload);
     switch (data.action) {
       case types.SET_URL:
-        webView.webContents.loadURL(data.url);
+        contents.loadURL(data.url);
         break;
       case types.BROWSER_RELOAD:
-        webView.webContents.reload();
+        contents.reload();
         break;
       case types.BROWSER_BACK:
-        if (webView.webContents.canGoBack()) {
-          webView.webContents.goBack();
+        if (contents.canGoBack()) {
+          contents.goBack();
         }
       case types.BROWSER_FORWARD:
-        if (webView.webContents.canGoForward()) {
-          webView.webContents.goForward();
+        if (contents.canGoForward()) {
+          contents.goForward();
         }
     }
   });
 
-  // ipcMain.on('RESIZE_PLAYER', (_: string, payload: string) => {
+  // ipcMain.on('RESIZE_PLAYER', (_, payload) => {
   //   if (!mainWindow) return;
   //   const { width, height } = JSON.parse(payload);
   //   webView.setBounds({
@@ -148,35 +111,35 @@ app.on('ready', () => {
   //   } as Rectangle);
   // });
 
-  ipcMain.on('SET_OPACITY', (_: string, payload: string) => {
+  ipcMain.on('SET_OPACITY', (_, payload) => {
     if (!mainWindow) return;
     const { value } = JSON.parse(payload);
     mainWindow.setOpacity(parseInt(value, 10) / 100);
     logger.debug('set Opacity', { value: value });
   });
 
-  ipcMain.on('SET_HIDE_ON_TASKBAR', (_: string, payload: string) => {
+  ipcMain.on('SET_HIDE_ON_TASKBAR', (_, payload) => {
     if (!mainWindow) return;
     const { value } = JSON.parse(payload);
     const toggle = value === 'true';
     mainWindow.setSkipTaskbar(toggle);
-    menu.getMenuItemById('switch_hide_taskbar').checked = toggle;
+    // menu.getMenuItemById('switch_hide_taskbar').checked = toggle;
     logger.debug('hide of taskbar', { toggle: toggle });
   });
 
-  ipcMain.on(types.SET_MODE, (_: string, payload: string) => {
+  ipcMain.on(types.SET_MODE, (_, payload) => {
+    if (!mainWindow || !webView) {
+      return;
+    }
+
     const { value } = JSON.parse(payload);
     logger.debug(`${types.SET_MODE}`, { value });
     if (value === 'web') {
-      createWebView();
+      webView = createWebView(mainWindow);
     } else if (value === 'video') {
-      if (webView) {
-        if (mainWindow) {
-          mainWindow.removeBrowserView(webView);
-        }
-        webView.destroy();
-        webView = null;
-      }
+      mainWindow.removeBrowserView(webView);
+      webView.destroy();
+      webView = null;
     }
   });
 });

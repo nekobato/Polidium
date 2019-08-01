@@ -12,8 +12,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
-    "baseUrl": ".",
-    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+    "baseUrl": "."
   },
   "exclude": ["node_modules", "dist", "*.config.js"]
 }
