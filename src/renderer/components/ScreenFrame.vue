@@ -4,7 +4,7 @@
       <slot />
     </div>
     <div class="header-container">
-      <Header class="header" v-show="onMouse || true" />
+      <Header class="header" v-show="onMouse" />
     </div>
     <VideoList class="video-list" v-show="videoFileList.isVisible" />
   </div>
