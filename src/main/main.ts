@@ -52,8 +52,6 @@ app.on('ready', () => {
 
   let webView: BrowserView | null = null;
 
-  webView = createWebView(mainWindow);
-
   mainWindow.on('will-resize', (e: Event, { width, height }: Rectangle) => {
     webViewBounds.width = width;
     webViewBounds.height = height - 48;
@@ -128,7 +126,7 @@ app.on('ready', () => {
   });
 
   ipcMain.on(types.SET_MODE, (_, payload) => {
-    if (!mainWindow || !webView) {
+    if (!mainWindow) {
       return;
     }
 
@@ -137,6 +135,9 @@ app.on('ready', () => {
     if (value === 'web') {
       webView = createWebView(mainWindow);
     } else if (value === 'video') {
+      if (!webView) {
+        return;
+      }
       mainWindow.removeBrowserView(webView);
       webView.destroy();
       webView = null;

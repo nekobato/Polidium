@@ -11,8 +11,10 @@ export function createWindow() {
   const mainWindow = new BrowserWindow({
     x: 0,
     y: 0,
-    width: DEBUG ? 480 : workAreaSize.width,
-    height: DEBUG ? 320 : workAreaSize.height - 24, // size of Mac tray size
+    // width: DEBUG ? 480 : workAreaSize.width,
+    // height: DEBUG ? 320 : workAreaSize.height - 24, // size of Mac tray size
+    width: 480,
+    height: 320, // size of Mac tray size
     minWidth: 320,
     minHeight: 240,
     show: true,
@@ -22,6 +24,7 @@ export function createWindow() {
       nodeIntegration: true,
       plugins: true,
       webSecurity: false,
+      devTools: true,
     },
     frame: false,
     transparent: true,
@@ -31,7 +34,7 @@ export function createWindow() {
     icon: path.join(assetPath, `app_icon.png`),
   });
 
-  mainWindow.loadURL(DEBUG ? 'http://localhost:8080' : __dirname + '/../index.html');
+  mainWindow.loadURL(DEBUG ? 'http://localhost:8081' : 'file://' + __dirname + '/../index.html');
 
   mainWindow.webContents.on('new-window', (event, url, frameName, disposition, options) => {
     logger.debug('new window', [event, url, frameName, disposition, options]);
