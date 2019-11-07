@@ -6,16 +6,13 @@ import logger from './log';
 
 export function setTrayIcon(mainWindow: BrowserWindow): Tray {
   // https://electronjs.org/docs/tutorial/mojave-dark-mode-guide
-  const darkOrLight = systemPreferences.isDarkMode() ? 'dark' : 'light';
-  const trayIconOn = path.join(assetPath, `tray_icon_${darkOrLight}_on.png`);
-  const trayIconOff = path.join(assetPath, `tray_icon_${darkOrLight}_off.png`);
+  const mode = systemPreferences.isDarkMode() ? 'dark' : 'light';
+  const trayIconOn = path.join(assetPath, `tray_icon_${mode}_on.png`);
+  const trayIconOff = path.join(assetPath, `tray_icon_${mode}_off.png`);
 
   const tray = new Tray(trayIconOff);
 
   tray.on('click', () => {
-    if (!mainWindow || !tray) {
-      return;
-    }
     // Click through
     const isOn = mainWindow.isAlwaysOnTop() ? true : false;
     logger.debug('tray is clicked', { isOn: isOn });
