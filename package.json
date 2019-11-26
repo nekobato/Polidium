@@ -1,85 +1,36 @@
 {
-  "name": "polidium",
-  "productName": "Polidium",
-  "version": "2.0.2",
-  "description": "Polid Movie Screen",
-  "copyright": "© 2019, nekobato",
-  "main": "./dist/main/main.js",
+  "name": "polidium2",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "pack": "npm run build && electron-builder",
-    "start": "electron .",
-    "dev": "npm run build:main && DEBUG=true electron ./dist/main/main.js",
     "serve": "vue-cli-service serve",
-    "serve:browser": "NODE_ENV=browser vue-cli-service serve",
-    "build": "npm run build:renderer && npm run build:main",
-    "build:main": "tsc -p tsconfig.main.json",
-    "build:renderer": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit"
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "electron:build": "vue-cli-service electron:build",
+    "electron:serve": "vue-cli-service electron:serve",
+    "postinstall": "electron-builder install-app-deps",
+    "postuninstall": "electron-builder install-app-deps"
   },
-  "build": {
-    "appId": "net.nekobato.polidium",
-    "files": [
-      "dist/**/*",
-      "node_modules/**/*",
-      "package.json"
-    ],
-    "directories": {
-      "buildResources": "public"
-    },
-    "publish": null,
-    "linux": {
-      "arch": [
-        "ia32",
-        "x64"
-      ],
-      "target": [
-        "deb",
-        "AppImage",
-        "rpm"
-      ]
-    },
-    "win": {
-      "icon": "./public/icon.ico",
-      "target": [
-        "squirrel"
-      ]
-    },
-    "mac": {
-      "category": "public.app-category.video",
-      "icon": "./public/icon.icns",
-      "target": "default"
-    }
+  "main": "background.js",
+  "dependencies": {
+    "vue": "^2.6.10",
+    "vue-router": "^3.1.3",
+    "vuex": "^3.0.1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/nekobato/Polidium.git"
-  },
-  "keywords": [],
-  "author": "nekobato",
-  "bugs": {
-    "url": "https://github.com/nekobato/Polidium/issues"
-  },
-  "homepage": "https://github.com/nekobato/Polidium",
-  "dependencies": {},
   "devDependencies": {
-    "@types/jest": "24.0.16",
-    "@vue/cli-plugin-typescript": "3.9.0",
-    "@vue/cli-plugin-unit-jest": "3.9.0",
-    "@vue/cli-service": "3.9.3",
-    "@vue/test-utils": "1.0.0-beta.20",
-    "electron": "6.0.0",
-    "electron-builder": "^21.1.5",
-    "electron-ipc-mock": "0.0.3",
-    "electron-widevinecdm": "7.0.0",
-    "electron-widevinecdm-dev": "github:oscartbeaumont-ext/electron-widevinecdm-dev",
-    "sass": "1.22.9",
-    "sass-loader": "7.1.0",
-    "ts-jest": "24.0.2",
-    "typescript": "3.5.3",
-    "vue": "2.6.10",
-    "vue-router": "3.0.7",
-    "vue-svg-loader": "0.12.0",
-    "vue-template-compiler": "^2.6.10",
-    "vuex": "3.1.1"
+    "@vue/cli-plugin-eslint": "^4.0.0",
+    "@vue/cli-plugin-router": "^4.0.0",
+    "@vue/cli-plugin-typescript": "^4.0.0",
+    "@vue/cli-plugin-vuex": "^4.0.0",
+    "@vue/cli-service": "^4.0.0",
+    "@vue/eslint-config-standard": "^4.0.0",
+    "@vue/eslint-config-typescript": "^4.0.0",
+    "electron": "^6.0.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "postcss-nested": "^4.2.1",
+    "typescript": "~3.5.3",
+    "vue-cli-plugin-electron-builder": "^1.4.2",
+    "vue-template-compiler": "^2.6.10"
   }
 }

@@ -1,7 +1,8 @@
 import path from 'path';
 import { BrowserWindow } from 'electron';
 import logger from './log';
-import { assetPath, DEBUG } from './env';
+import { assetPath } from './env';
+import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 
 const electron = require('electron');
 
@@ -34,7 +35,15 @@ export function createWindow() {
     icon: path.join(assetPath, `app_icon.png`),
   });
 
-  mainWindow.loadURL(DEBUG ? 'http://localhost:8081' : 'file://' + __dirname + '/../index.html');
+  if (process.env.WEBPACK_DEV_SERVER_URL) {
+    // Load the url of the dev server if in development mode
+    mainWindow.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string);
+    if (!process.env.IS_TEST) mainWindow.webContents.openDevTools();
+  } else {
+    createProtocol('app');
+    // Load the index.html when not in development
+    mainWindow.loadURL('app://./index.html');
+  }
 
   mainWindow.webContents.on('new-window', (event, url, frameName, disposition, options) => {
     logger.debug('new window', [event, url, frameName, disposition, options]);

@@ -1,23 +1,26 @@
-const path = require('path');
-
 module.exports = {
-  publicPath: './',
-  outputDir: 'dist',
-  pages: {
-    index: {
-      entry: 'src/renderer/main.ts',
-      template: './public/index.html',
+  configureWebpack: {
+    // Configuration applied to all builds
+  },
+  pluginOptions: {
+    electronBuilder: {
+      builderOptions: {
+        extraResources: [
+          'public/tray_icon_dark_off.png',
+          'public/tray_icon_dark_on.png',
+          'public/tray_icon_light_off.png',
+          'public/tray_icon_light_on.png',
+        ],
+      },
+      chainWebpackMainProcess: config => {
+        // Chain webpack config for electron main process only
+      },
+      chainWebpackRendererProcess: config => {},
+      // Use this to change the entrypoint of your app's main process
+      mainProcessFile: 'src/main/app.ts',
+      // Provide an array of files that, when changed, will recompile the main process and restart Electron
+      // Your main process file will be added by default
+      mainProcessWatch: ['src/main/**/*.ts'],
     },
-  },
-  configureWebpack: config => {
-    const svgRule = config.module.rules.find(rule => rule.test.test('.svg'));
-    svgRule.test = /\.(png|jpe?g|gif|webp)$/;
-    config.module.rules.push({
-      test: /\.svg$/,
-      loader: 'vue-svg-loader',
-    });
-  },
-  chainWebpack: config => {
-    config.resolve.alias.set('@', path.join(__dirname, '/src/renderer'));
   },
 };

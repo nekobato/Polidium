@@ -1,5 +1,5 @@
 import { BrowserView, BrowserWindow } from 'electron';
-import * as types from '../shared/mutation-types';
+import * as types from '../mutation-types';
 
 export function createWebView(mainWindow: BrowserWindow): BrowserView {
   const webView = new BrowserView();

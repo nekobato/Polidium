@@ -1,14 +1,6 @@
-node_modules
 .DS_Store
-cache
-npm-debug.log
-*.map
-app/font
-app/js
-release/
-app/main.js
+node_modules
 /dist
-!dist/assets
 
 # local env files
 .env.local
@@ -26,4 +18,7 @@ yarn-error.log*
 *.ntvs*
 *.njsproj
 *.sln
-*.sw*
+*.sw?
+
+#Electron-builder output
+/dist_electron

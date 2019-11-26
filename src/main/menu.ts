@@ -1,5 +1,5 @@
 import electron from 'electron';
-import * as types from '../shared/mutation-types';
+import * as types from '../mutation-types';
 import logger from './log';
 
 const menuTemplate: (electron.MenuItemConstructorOptions | electron.MenuItem)[] = [
@@ -55,7 +55,7 @@ const menuTemplate: (electron.MenuItemConstructorOptions | electron.MenuItem)[] 
       { label: 'Cut', role: 'cut' },
       { label: 'Copy', role: 'copy' },
       { label: 'Paste', role: 'paste' },
-      { label: 'Select All', role: 'selectall' },
+      { label: 'Select All', role: 'selectAll' },
     ],
   },
   // @ts-ignore: viewMenu is not defined in d.ts

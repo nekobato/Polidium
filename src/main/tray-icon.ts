@@ -1,14 +1,14 @@
 import { BrowserWindow, systemPreferences, Tray } from 'electron';
 import path from 'path';
-import * as types from '../shared/mutation-types';
-import { assetPath } from './env';
+import * as types from '../mutation-types';
+// import { assetPath } from './env';
 import logger from './log';
 
 export function setTrayIcon(mainWindow: BrowserWindow): Tray {
   // https://electronjs.org/docs/tutorial/mojave-dark-mode-guide
-  const mode = systemPreferences.isDarkMode() ? 'dark' : 'light';
-  const trayIconOn = path.join(assetPath, `tray_icon_${mode}_on.png`);
-  const trayIconOff = path.join(assetPath, `tray_icon_${mode}_off.png`);
+  const darkOrLight = systemPreferences.isDarkMode() ? 'dark' : 'light';
+  const trayIconOn = path.join(__static, `tray_icon_${darkOrLight}_on.png`);
+  const trayIconOff = path.join(__static, `tray_icon_${darkOrLight}_off.png`);
 
   const tray = new Tray(trayIconOff);
 
