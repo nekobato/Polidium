@@ -1,6 +1,6 @@
 import { BrowserWindow, systemPreferences, Tray } from 'electron';
 import path from 'path';
-import * as types from '../shared/mutation-types';
+import * as types from '../mutation-types';
 import { assetPath } from './env';
 import logger from './log';
 

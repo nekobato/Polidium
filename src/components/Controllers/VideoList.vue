@@ -70,6 +70,9 @@ export default Vue.extend({
 <style lang="postcss" scoped>
 .video-list {
   background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  overflow-y: scroll;
   .droppable-frame {
     padding: 8px;
     width: 100%;

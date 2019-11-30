@@ -1,14 +1,20 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from '../views/Home.vue';
+import Monitor from '@/views/Monitor.vue';
+import Controller from '@/views/Controller.vue';
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/',
-    name: 'home',
-    component: Home,
+    path: '/monitor',
+    name: 'monitor',
+    component: Monitor,
+  },
+  {
+    path: '/controller',
+    name: 'controller',
+    component: Controller,
   },
 ];
 

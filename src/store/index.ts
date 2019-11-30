@@ -3,7 +3,9 @@ import * as Vuex from 'vuex';
 import * as types from '../mutation-types';
 import { mode } from '../values';
 import state from './state';
-const { ipcRenderer } = require('electron');
+const { ipcRenderer } = process.env.BROWSER
+  ? require('electron')
+  : { ipcRenderer: { on: () => {}, send: () => {} } };
 
 Vue.use(Vuex);
 

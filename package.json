@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "BROWSER=true vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "electron:build": "vue-cli-service electron:build",
@@ -27,6 +27,8 @@
     "@vue/eslint-config-typescript": "^4.0.0",
     "electron": "^6.0.0",
     "eslint": "^5.16.0",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-vue": "^5.0.0",
     "postcss-nested": "^4.2.1",
     "typescript": "~3.5.3",

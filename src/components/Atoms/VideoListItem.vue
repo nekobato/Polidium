@@ -22,7 +22,8 @@ export default Vue.extend({
 <style lang="postcss" scoped>
 .item {
   display: flex;
-  padding: 0 8px;
+  align-items: center;
+  padding: 0 4px;
   width: 100%;
   text-align: left;
   overflow: hidden;
@@ -30,13 +31,17 @@ export default Vue.extend({
   cursor: pointer;
 }
 .index {
-  font-size: 16px;
+  display: inline-block;
+  width: 24px;
+  font-size: 12px;
   line-height: 24px;
+  font-weight: bold;
+  text-align: right;
 }
 .file-name {
   margin-left: 8px;
-  font-size: 16px;
-  line-height: 24px;
+  font-size: 12px;
+  line-height: 16px;
   text-overflow: ellipsis;
 }
 </style>

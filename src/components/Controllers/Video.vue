@@ -1,9 +1,6 @@
 <template>
   <div class="video-controller">
-    <div class="empty-cell"></div>
-    <button class="button list" @click="toggleList">
-      <ListIcon class="icon" />
-    </button>
+    <VideoList />
   </div>
 </template>
 
@@ -12,12 +9,12 @@ import Vue from 'vue';
 import { mapMutations } from 'vuex';
 import { webviewAction } from '../../values';
 import * as types from '../../mutation-types';
-import ListIcon from '../Icons/List.vue';
+import VideoList from './VideoList.vue';
 
 export default Vue.extend({
   name: 'Web',
   components: {
-    ListIcon,
+    VideoList,
   },
   data() {
     return {};
@@ -34,12 +31,14 @@ export default Vue.extend({
 
 <style lang="postcss" scoped>
 .video-controller {
-  display: grid;
-  grid-template-columns: 1fr 24px;
   padding: 0 4px;
   width: 100%;
   height: 100%;
-  background: #888;
+  .video-list {
+    margin: 8px 0;
+    width: 100%;
+    height: 210px;
+  }
 }
 .seekbar-container {
   padding: 0 8px;
