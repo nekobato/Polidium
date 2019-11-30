@@ -3,23 +3,17 @@
     <div class="screen">
       <slot />
     </div>
-    <div class="header-container">
-      <Header class="header" v-show="onMouse" />
-      <img src="../assets/app_icon.png" />
-    </div>
-    <VideoList class="video-list" v-show="videoFileList.isVisible" />
+    <ScreenHandle class="handle" />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import Header from './Controllers/Header.vue';
-import VideoList from './Controllers/VideoList.vue';
+import ScreenHandle from '../Monitors/ScreenHandle.vue';
 
 export default Vue.extend({
   components: {
-    Header,
-    VideoList,
+    ScreenHandle,
   },
   data() {
     return {
@@ -48,36 +42,20 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .screen-frame {
-  display: grid;
-  grid-template-rows: 1fr 48px;
   width: 100%;
   height: 100%;
+  .handle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+  }
 }
 .screen {
   position: relative;
   overflow: hidden;
-}
-.header {
-  height: 48px;
-  background: #ccc;
-  overflow: hidden;
-}
-.controllers-container {
-  position: absolute;
-  top: 48px;
-  left: 0;
-  width: 320px;
-  height: 160px;
-  background: transparent;
-}
-.video-list {
-  position: absolute;
-  top: 0;
-  bottom: 48px;
-  right: 0;
-  width: 320px;
-  height: auto;
 }
 </style>
