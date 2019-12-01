@@ -37,7 +37,7 @@ export default Vue.extend({
   .video-list {
     margin: 8px 0;
     width: 100%;
-    height: 210px;
+    height: 200px;
   }
 }
 .seekbar-container {

@@ -9,14 +9,21 @@ const mode = systemPreferences.isDarkMode() ? 'dark' : 'light';
 const trayIconOn = path.join(assetPath, `tray_icon_${mode}_on.png`);
 const trayIconOff = path.join(assetPath, `tray_icon_${mode}_off.png`);
 
-export const toggleClickThrough = (window: BrowserWindow, tray: Tray) => {
-  const isOn = window.isAlwaysOnTop() ? true : false;
+export const toggleClickThrough = (
+  mainWindow: BrowserWindow,
+  controllerWindow: BrowserWindow,
+  tray: Tray,
+) => {
+  const isOn = mainWindow.isAlwaysOnTop() ? true : false;
   logger.debug('tray is clicked', { isOn: isOn });
 
-  window.webContents.send(isOn ? types.WINDOW_TRANSPARENT_OFF : types.WINDOW_TRANSPARENT_ON);
-  window.setIgnoreMouseEvents(isOn ? false : true);
-  window.setVisibleOnAllWorkspaces(isOn ? false : true);
-  window.setAlwaysOnTop(isOn ? false : true);
+  mainWindow.webContents.send(isOn ? types.WINDOW_TRANSPARENT_OFF : types.WINDOW_TRANSPARENT_ON);
+  controllerWindow.webContents.send(
+    isOn ? types.WINDOW_TRANSPARENT_OFF : types.WINDOW_TRANSPARENT_ON,
+  );
+  mainWindow.setIgnoreMouseEvents(isOn ? false : true);
+  mainWindow.setVisibleOnAllWorkspaces(isOn ? false : true);
+  mainWindow.setAlwaysOnTop(isOn ? false : true);
   tray.setImage(isOn ? trayIconOff : trayIconOn);
 };
 

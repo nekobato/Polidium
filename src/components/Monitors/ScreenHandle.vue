@@ -41,5 +41,6 @@ export default Vue.extend({
   background: hsla(0, 0%, 100%, 0.6);
   border-radius: 0 0 60% 60%;
   cursor: grab;
+  -webkit-app-region: drag;
 }
 </style>

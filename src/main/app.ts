@@ -7,8 +7,10 @@ import {
   Menu,
   Rectangle,
   protocol,
+  Tray,
 } from 'electron';
-import { createWindow } from './mainWindow';
+import { createWindow as createMainWindow } from './mainWindow';
+import { createWindow as createControllerWindow } from './controllerWindow';
 import { createWebView } from './webView';
 import * as types from '../mutation-types';
 import { DEBUG, isMac } from './env';
@@ -30,7 +32,9 @@ logger.debug('Debug Mode', { DEBUG });
 // // The version of plugin can be got from `chrome://plugins` page in Chrome.
 // app.commandLine.appendSwitch('widevine-cdm-version', '4.10.1303.2');
 
+let tray: Tray | null = null;
 let mainWindow: BrowserWindow | null = null;
+let controllerWindow: BrowserWindow | null = null;
 
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } },
@@ -44,18 +48,30 @@ let webViewBounds: Rectangle = {
 };
 
 app.on('ready', () => {
-  mainWindow = createWindow();
+  tray = setTrayIcon();
 
-  mainWindow.on('closed', function() {
-    mainWindow = null;
+  tray.on('click', (_, bounds) => {
+    if (controllerWindow) {
+      if (controllerWindow.isVisible()) {
+        controllerWindow.setPosition(bounds.x - 120, 32, true);
+        controllerWindow.show();
+      } else {
+        controllerWindow.hide();
+      }
+    }
   });
 
   const menu = Menu.buildFromTemplate(menuTemplate);
   Menu.setApplicationMenu(menu);
 
-  setTrayIcon(mainWindow);
+  mainWindow = createMainWindow();
+  controllerWindow = createControllerWindow();
 
   let webView: BrowserView | null = null;
+
+  mainWindow.on('closed', function() {
+    mainWindow = null;
+  });
 
   mainWindow.on('will-resize', (e: Event, { width, height }: Rectangle) => {
     webViewBounds.width = width;
@@ -162,7 +178,7 @@ app.on('window-all-closed', () => {
 
 app.on('activate', function() {
   if (mainWindow === null) {
-    createWindow();
+    createMainWindow();
   }
 });
 

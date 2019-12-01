@@ -44,8 +44,8 @@ export default Vue.extend({
     -webkit-appearance: none;
     background-color: #999;
     margin: auto 0;
-    height: 4px;
-    width: calc(var(--window-width) - 24px);
+    height: 3px;
+    width: calc(var(--window-width) - 32px);
     border-radius: 2px;
     opacity: 0.8;
     z-index: 1;
