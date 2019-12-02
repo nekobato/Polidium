@@ -6,10 +6,12 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
+import * as types from '@/mutation-types';
 export default Vue.extend({
   methods: {
     selectTab(name: string) {
       this.$emit('selectTab', name);
+      this.$store.commit(types.SET_MODE, name);
     },
   },
 });

@@ -52,8 +52,8 @@ app.on('ready', () => {
 
   tray.on('click', (_, bounds) => {
     if (controllerWindow) {
-      if (controllerWindow.isVisible()) {
-        controllerWindow.setPosition(bounds.x - 120, 32, true);
+      if (!controllerWindow.isVisible()) {
+        controllerWindow.setPosition(bounds.x - 109, 32, true);
         controllerWindow.show();
       } else {
         controllerWindow.hide();
@@ -99,7 +99,7 @@ app.on('ready', () => {
   });
 
   ipcMain.on(types.BROWSER_VIEW_EVENT, (_, payload) => {
-    if (!webView) return;
+    if (!webView || !controllerWindow) return;
     logger.debug(types.BROWSER_VIEW_EVENT, payload);
     const contents = webView.webContents;
     const data = JSON.parse(payload);
@@ -113,24 +113,23 @@ app.on('ready', () => {
       case types.BROWSER_BACK:
         if (contents.canGoBack()) {
           contents.goBack();
+          if (contents.canGoForward()) {
+            controllerWindow.webContents.send(types.BROWSER_CAN_GO_BACK);
+          }
         }
+        break;
       case types.BROWSER_FORWARD:
         if (contents.canGoForward()) {
           contents.goForward();
+          if (contents.canGoForward()) {
+            controllerWindow.webContents.send(types.BROWSER_CAN_GO_FORWARD);
+          }
         }
+        break;
     }
   });
 
-  // ipcMain.on('RESIZE_PLAYER', (_, payload) => {
-  //   if (!mainWindow) return;
-  //   const { width, height } = JSON.parse(payload);
-  //   webView.setBounds({
-  //     width,
-  //     height,
-  //   } as Rectangle);
-  // });
-
-  ipcMain.on('SET_OPACITY', (_, payload) => {
+  ipcMain.on(types.SET_OPACITY, (_, payload) => {
     if (!mainWindow) return;
     const { value } = JSON.parse(payload);
     mainWindow.setOpacity(parseInt(value, 10) / 100);

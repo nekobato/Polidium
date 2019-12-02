@@ -12,10 +12,8 @@ export function createWindow() {
   const mainWindow = new BrowserWindow({
     x: 0,
     y: 0,
-    // width: DEBUG ? 480 : workAreaSize.width,
-    // height: DEBUG ? 320 : workAreaSize.height - 24, // size of Mac tray size
-    width: 480,
-    height: 320, // size of Mac tray size
+    width: process.env.NODE_ENV === 'development' ? 480 : workAreaSize.width,
+    height: process.env.NODE_ENV === 'development' ? 320 : workAreaSize.height - 24, // size of Mac tray size
     minWidth: 320,
     minHeight: 240,
     show: true,
@@ -25,7 +23,7 @@ export function createWindow() {
       nodeIntegration: true,
       plugins: true,
       webSecurity: false,
-      devTools: true,
+      devTools: process.env.NODE_ENV === 'development' ? true : false,
     },
     frame: false,
     transparent: true,
@@ -36,13 +34,11 @@ export function createWindow() {
   });
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
-    // Load the url of the dev server if in development mode
-    mainWindow.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string);
-    if (!process.env.IS_TEST) mainWindow.webContents.openDevTools();
+    mainWindow.loadURL((process.env.WEBPACK_DEV_SERVER_URL as string) + '#monitor');
   } else {
     createProtocol('app');
     // Load the index.html when not in development
-    mainWindow.loadURL('app://./index.html');
+    mainWindow.loadURL('app://./index.html#monitor');
   }
 
   mainWindow.webContents.on('new-window', (event, url, frameName, disposition, options) => {

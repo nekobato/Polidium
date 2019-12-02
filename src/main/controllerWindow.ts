@@ -10,12 +10,10 @@ export function createWindow() {
   controllerWindow = new BrowserWindow({
     x: 0,
     y: 32,
-    // width: DEBUG ? 480 : workAreaSize.width,
-    // height: DEBUG ? 320 : workAreaSize.height - 24, // size of Mac tray size
     width: 240,
     height: 320, // size of Mac tray size
     show: false,
-    resizable: false,
+    resizable: process.env.NODE_ENV === 'development' ? true : false,
     webPreferences: {
       nodeIntegration: true,
       plugins: true,
@@ -29,6 +27,8 @@ export function createWindow() {
     alwaysOnTop: false,
   });
 
+  controllerWindow.setVisibleOnAllWorkspaces(true);
+
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     controllerWindow.loadURL((process.env.WEBPACK_DEV_SERVER_URL as string) + '/#controller');
@@ -41,7 +41,7 @@ export function createWindow() {
 
   controllerWindow.on('blur', () => {
     if (controllerWindow) {
-      controllerWindow.setEnabled(false);
+      controllerWindow.hide();
     }
   });
 

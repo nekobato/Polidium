@@ -3,7 +3,7 @@ import * as Vuex from 'vuex';
 import * as types from '../mutation-types';
 import { mode } from '../values';
 import state from './state';
-const { ipcRenderer } = process.env.BROWSER
+const { ipcRenderer } = process.env.IS_ELECTRON
   ? require('electron')
   : { ipcRenderer: { on: () => {}, send: () => {} } };
 
@@ -44,19 +44,10 @@ const Store = new Vuex.Store({
     onMouseLeave(store) {
       store.window.onMouse = false;
     },
-    changeModeToVideo(store) {
-      ipcSend(types.SET_MODE, { value: 'video' });
-      store.mode = mode.video;
-    },
-    changeModeToWeb(store) {
-      ipcSend(types.SET_MODE, { value: 'web' });
-      store.mode = mode.web;
-      store.video.fileList.isVisible = false;
-    },
     changeOpacity(store, { value }) {
       console.log('change', value);
       store.settings.opacity = value;
-      ipcSend('SET_OPACITY', { value });
+      ipcSend(types.SET_OPACITY, { value });
     },
     hideOnLauncher(store, payload) {
       store.settings.hideOnLauncher = payload.value;
@@ -75,6 +66,10 @@ const Store = new Vuex.Store({
       store.video.media.currentTime = store.video.media.duration * parcentage;
       console.log(parcentage);
     },
+    [types.SET_MODE](store, modeName: 'web' | 'video') {
+      ipcSend(types.SET_MODE, { value: modeName });
+      store.mode = mode[modeName];
+    },
     [types.VIDEO_LIST_TOGGLE](store, flag) {
       store.video.fileList.isVisible = flag;
     },
@@ -92,6 +87,12 @@ const Store = new Vuex.Store({
       store.web.url = url;
       store.web.canGoBack = canGoBack;
       store.web.canGoForward = canGoForward;
+    },
+    [types.BROWSER_CAN_GO_BACK](store) {
+      store.web.canGoBack = true;
+    },
+    [types.BROWSER_CAN_GO_FORWARD](store) {
+      store.web.canGoForward = true;
     },
   },
 });

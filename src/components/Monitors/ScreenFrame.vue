@@ -56,6 +56,7 @@ export default Vue.extend({
 }
 .screen {
   position: relative;
+  height: 100%;
   overflow: hidden;
 }
 </style>

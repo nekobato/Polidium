@@ -29,6 +29,8 @@ export const SET_URL = 'SET_URL';
 export const BROWSER_RELOAD = 'BROWSER_RELOAD';
 export const BROWSER_BACK = 'BROWSER_BACK';
 export const BROWSER_FORWARD = 'BROWSER_FORWARD';
+export const BROWSER_CAN_GO_BACK = 'BROWSER_FORWARD';
+export const BROWSER_CAN_GO_FORWARD = 'BROWSER_FORWARD';
 
 export const RESET = 'RESET';
 export const QUIT = 'QUIT';

@@ -5,7 +5,7 @@ export function createWebView(mainWindow: BrowserWindow): BrowserView {
   const webView = new BrowserView();
   mainWindow.setBrowserView(webView);
   const { width, height } = mainWindow.getBounds();
-  webView.setBounds({ x: 0, y: 0, width, height: height - 48 });
+  webView.setBounds({ x: 0, y: 0, width, height });
   webView.webContents.loadURL('https://google.com');
   webView.webContents.on('did-navigate', (_, url) => {
     setUrl(url);
