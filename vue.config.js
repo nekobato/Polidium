@@ -5,12 +5,12 @@ module.exports = {
   pluginOptions: {
     electronBuilder: {
       builderOptions: {
-        extraResources: [
-          'public/tray_icon_dark_off.png',
-          'public/tray_icon_dark_on.png',
-          'public/tray_icon_light_off.png',
-          'public/tray_icon_light_on.png',
-        ],
+        appId: 'net.netkobato.polidium',
+        mac: {
+          category: 'public.app-category.video',
+          icon: './public/app.icns',
+          target: 'default',
+        },
       },
       chainWebpackMainProcess: config => {
         // Chain webpack config for electron main process only

@@ -1,6 +1,12 @@
 {
-  "name": "polidium2",
+  "name": "polidium",
   "version": "0.1.0",
+  "description": "Watching transparent Browser or Media Player while working.",
+  "author": {
+    "email": "nekobato@gmail.com",
+    "name": "nekobato",
+    "url": "https://nekobato.net"
+  },
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
