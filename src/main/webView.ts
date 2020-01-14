@@ -1,7 +1,10 @@
 import { BrowserView, BrowserWindow } from 'electron';
 import * as types from '../mutation-types';
 
-export function createWebView(mainWindow: BrowserWindow): BrowserView {
+export function createWebView(
+  mainWindow: BrowserWindow,
+  controllerWindow: BrowserWindow,
+): BrowserView {
   const webView = new BrowserView();
   mainWindow.setBrowserView(webView);
   const { width, height } = mainWindow.getBounds();
@@ -19,7 +22,12 @@ export function createWebView(mainWindow: BrowserWindow): BrowserView {
     mainWindow.webContents.send(types.SET_URL, {
       url,
       canGoBack: webView.webContents.canGoBack(),
-      canGoForward: webView.webContents.goForward(),
+      canGoForward: webView.webContents.canGoForward(),
+    });
+    controllerWindow.webContents.send(types.SET_URL, {
+      url,
+      canGoBack: webView.webContents.canGoBack(),
+      canGoForward: webView.webContents.canGoForward(),
     });
   }
 

@@ -13,14 +13,24 @@ function ipcSend(event: string, payload: any): void {
   ipcRenderer.send(event, JSON.stringify(payload));
 }
 
-ipcRenderer.on('SET_OPACITY', (_: any, payload: string) => {
+ipcRenderer.on(types.SET_OPACITY, (_: any, payload: string) => {
   console.log('set opacity');
   Store.commit('changeOpacity', { value: parseInt(payload, 10) });
 });
 
-ipcRenderer.on('SET_URL', (_: any, payload: string) => {
+ipcRenderer.on(types.SET_URL, (_: any, payload: any) => {
   console.log('set URL', payload);
   Store.commit(types.SET_URL, payload);
+});
+
+ipcRenderer.on(types.BROWSER_CAN_GO_BACK, (_: any, payload: string) => {
+  console.log('Browser can go back status', payload);
+  Store.commit(types.BROWSER_CAN_GO_BACK, payload);
+});
+
+ipcRenderer.on(types.BROWSER_CAN_GO_FORWARD, (_: any, payload: string) => {
+  console.log('Browser can go forward status', payload);
+  Store.commit(types.BROWSER_CAN_GO_FORWARD, payload);
 });
 
 // Hide On Taskbar
@@ -67,6 +77,7 @@ const Store = new Vuex.Store({
       console.log(parcentage);
     },
     [types.SET_MODE](store, modeName: 'web' | 'video') {
+      console.log(types.SET_MODE);
       ipcSend(types.SET_MODE, { value: modeName });
       store.mode = mode[modeName];
     },
@@ -84,15 +95,16 @@ const Store = new Vuex.Store({
       ipcSend(types.BROWSER_VIEW_EVENT, data);
     },
     [types.SET_URL](store, { url, canGoBack, canGoForward }) {
+      console.log(types.SET_URL, { url, canGoBack, canGoForward });
       store.web.url = url;
       store.web.canGoBack = canGoBack;
       store.web.canGoForward = canGoForward;
     },
-    [types.BROWSER_CAN_GO_BACK](store) {
-      store.web.canGoBack = true;
+    [types.BROWSER_CAN_GO_BACK](store, payload) {
+      store.web.canGoBack = payload.status;
     },
-    [types.BROWSER_CAN_GO_FORWARD](store) {
-      store.web.canGoForward = true;
+    [types.BROWSER_CAN_GO_FORWARD](store, payload) {
+      store.web.canGoForward = payload.status;
     },
   },
 });

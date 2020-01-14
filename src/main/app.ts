@@ -48,6 +48,15 @@ let webViewBounds: Rectangle = {
 };
 
 app.on('ready', () => {
+  const reflectBrowserHistriesPosition = () => {
+    if (!webView || !controllerWindow) return;
+    const contents = webView.webContents;
+    controllerWindow.webContents.send(types.BROWSER_CAN_GO_BACK, { status: contents.canGoBack() });
+    controllerWindow.webContents.send(types.BROWSER_CAN_GO_FORWARD, {
+      status: contents.canGoForward(),
+    });
+  };
+
   tray = setTrayIcon();
 
   tray.on('click', (_, bounds) => {
@@ -113,17 +122,13 @@ app.on('ready', () => {
       case types.BROWSER_BACK:
         if (contents.canGoBack()) {
           contents.goBack();
-          if (contents.canGoForward()) {
-            controllerWindow.webContents.send(types.BROWSER_CAN_GO_BACK);
-          }
+          reflectBrowserHistriesPosition();
         }
         break;
       case types.BROWSER_FORWARD:
         if (contents.canGoForward()) {
           contents.goForward();
-          if (contents.canGoForward()) {
-            controllerWindow.webContents.send(types.BROWSER_CAN_GO_FORWARD);
-          }
+          reflectBrowserHistriesPosition();
         }
         break;
     }
@@ -136,24 +141,24 @@ app.on('ready', () => {
     logger.debug('set Opacity', { value: value });
   });
 
-  ipcMain.on('SET_HIDE_ON_TASKBAR', (_, payload) => {
+  ipcMain.on(types.SET_HIDE_ON_TASKBAR, (_, payload) => {
     if (!mainWindow) return;
     const { value } = JSON.parse(payload);
     const toggle = value === 'true';
     mainWindow.setSkipTaskbar(toggle);
     // menu.getMenuItemById('switch_hide_taskbar').checked = toggle;
-    logger.debug('hide of taskbar', { toggle: toggle });
+    logger.debug(types.SET_HIDE_ON_TASKBAR, { toggle: toggle });
   });
 
   ipcMain.on(types.SET_MODE, (_, payload) => {
-    if (!mainWindow) {
+    if (!mainWindow || !controllerWindow) {
       return;
     }
 
     const { value } = JSON.parse(payload);
     logger.debug(`${types.SET_MODE}`, { value });
     if (value === 'web') {
-      webView = createWebView(mainWindow);
+      webView = createWebView(mainWindow, controllerWindow);
     } else if (value === 'video') {
       if (!webView) {
         return;

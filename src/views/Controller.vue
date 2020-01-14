@@ -1,11 +1,13 @@
 <template>
   <div class="controller">
     <div class="settings-container">
-      <button class="settings"><Power class="icon" /></button>
+      <button class="settings">
+        <Power class="icon" />
+      </button>
       <ClickthroughSwitch :status="clichthrough" @toggle="toggleClickThrough" />
     </div>
     <Opacity />
-    <ModeTab @selectTab="switchTab" />
+    <ModeTab :mode="mode" @selectTab="switchTab" />
     <div class="mode-container">
       <Web v-show="mode === 'web'" />
       <Video v-show="mode === 'video'" />
@@ -68,23 +70,24 @@ export default Vue.extend({
     position: relative;
     height: 32px;
     padding: 4px 0;
-    .settings {
-      position: absolute;
-      left: 4px;
-      top: 4px;
-      padding: 0 8px;
-      height: 20px;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-    }
-    .icon {
-      width: 12px;
-      height: 12px;
-      fill: hsl(0, 0%, 20%);
-      transition: fill 0.16s;
-      &:hover {
-        fill: hsl(0, 0%, 50%);
-      }
+  }
+  .settings {
+    position: absolute;
+    left: 4px;
+    top: 4px;
+    width: 32px;
+    height: 20px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    cursor: pointer;
+  }
+  .icon {
+    width: 12px;
+    height: 12px;
+    fill: hsl(0, 0%, 20%);
+    transition: fill 0.16s;
+    &:hover {
+      fill: hsl(0, 0%, 50%);
     }
   }
 }

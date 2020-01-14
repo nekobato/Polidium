@@ -1,13 +1,14 @@
 <template>
   <div class="mode-tab">
-    <div class="item" @click="selectTab('web')">WEB</div>
-    <div class="item" @click="selectTab('video')">VIDEO</div>
+    <div class="item" :class="{ on: mode === 'web' }" @click="selectTab('web')">WEB</div>
+    <div class="item" :class="{ on: mode === 'video' }" @click="selectTab('video')">VIDEO</div>
   </div>
 </template>
 <script lang="ts">
 import Vue from 'vue';
 import * as types from '@/mutation-types';
 export default Vue.extend({
+  props: ['mode'],
   methods: {
     selectTab(name: string) {
       this.$emit('selectTab', name);
@@ -32,6 +33,9 @@ export default Vue.extend({
     border: 1px solid rgba(0, 0, 0, 0.32);
     border-radius: 12px;
     cursor: pointer;
+    &.on {
+      background: #eee;
+    }
   }
 }
 </style>

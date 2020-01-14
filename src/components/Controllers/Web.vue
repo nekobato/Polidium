@@ -2,19 +2,29 @@
   <div class="web-controller">
     <div class="buttons-container">
       <div class="buttons">
-        <button class="button prev" @click="onClickPrevious">
+        <button
+          class="button prev"
+          :class="{ disable: !web.canGoBack }"
+          @click="onClickPrevious"
+          :disabled="!web.canGoForward"
+        >
           <PreviousIcon class="icon" />
         </button>
         <button class="button refresh" @click="onClickReload">
           <ReloadIcon class="icon" />
         </button>
-        <button class="button next" @click="onClickNext">
+        <button
+          class="button next"
+          :class="{ disable: !web.canGoForward }"
+          @click="onClickNext"
+          :disabled="!web.canGoForward"
+        >
           <NextIcon class="icon" />
         </button>
       </div>
     </div>
     <div class="url">
-      <form @submit.prevent="onSubmitUrl">
+      <form @submit.prevent="submitUrl" @keydown.prevent.enter="submitUrl">
         <textarea class="url-field" placeholder="https://..." v-model="url" />
       </form>
     </div>
@@ -48,7 +58,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    onSubmitUrl() {
+    submitUrl() {
       this.$store.commit(types.BROWSER_VIEW_EVENT, {
         action: types.SET_URL,
         url: this.url,
@@ -68,6 +78,11 @@ export default Vue.extend({
       this.$store.commit(types.BROWSER_VIEW_EVENT, {
         action: types.BROWSER_FORWARD,
       });
+    },
+  },
+  watch: {
+    'web.url'(url) {
+      this.url = url;
     },
   },
 });
@@ -95,18 +110,20 @@ export default Vue.extend({
     flex-grow: 1;
     &:hover {
       .icon {
-        fill: hsl(0, 0%, 50%);
+        fill: hsl(0, 0%, 60%);
+      }
+    }
+    &.disable {
+      .icon {
+        fill: hsl(0, 0%, 80%);
       }
     }
   }
   .icon {
     width: 16px;
     height: 16px;
-    fill: hsl(0, 0%, 20%);
+    fill: hsl(0, 0%, 40%);
     transition: fill 0.16s;
-    &:active {
-      fill: hsl(0, 0%, 50%);
-    }
   }
   .url {
     display: block;
@@ -120,10 +137,12 @@ export default Vue.extend({
     border-radius: 16px;
     font-size: 12px;
     line-height: 18px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-weight: bold;
-    color: hsl(0, 0%, 30%);
+    color: hsl(0, 0%, 40%);
     outline: 0;
     resize: none;
+    word-break: break-all;
   }
 }
 </style>

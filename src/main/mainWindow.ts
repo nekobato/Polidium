@@ -18,6 +18,7 @@ export function createWindow() {
     minHeight: 240,
     show: true,
     resizable: true,
+    center: true,
     webPreferences: {
       webviewTag: true,
       nodeIntegration: true,

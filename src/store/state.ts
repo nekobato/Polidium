@@ -7,7 +7,7 @@ const state = {
   window: {
     onMouse: false,
   },
-  mode: mode.video,
+  mode: mode.web,
   video: {
     source: {
       path: '',
