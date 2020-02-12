@@ -24,7 +24,7 @@ export function createWindow() {
       nodeIntegration: true,
       plugins: true,
       webSecurity: false,
-      devTools: process.env.NODE_ENV === 'development' ? true : false,
+      devTools: process.env.NODE_ENV === 'development',
     },
     frame: false,
     transparent: true,
