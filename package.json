@@ -33,6 +33,7 @@
     "@vue/eslint-config-standard": "^5.1.1",
     "@vue/eslint-config-typescript": "^5.0.1",
     "electron": "^8.0.0",
+    "about-window": "^1.13.2",
     "postcss-nested": "^4.2.1",
     "typescript": "~3.7.5",
     "vue-cli-plugin-electron-builder": "^1.4.5",

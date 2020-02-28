@@ -13,13 +13,11 @@ function ipcSend(event: string, payload: any): void {
   ipcRenderer.send(event, JSON.stringify(payload));
 }
 
-ipcRenderer.on(types.SET_OPACITY, (_: any, payload: string) => {
-  console.log('set opacity');
+ipcRenderer.on('SET_OPACITY', (_: any, payload: string) => {
   Store.commit('changeOpacity', { value: parseInt(payload, 10) });
 });
 
-ipcRenderer.on(types.SET_URL, (_: any, payload: any) => {
-  console.log('set URL', payload);
+ipcRenderer.on('SET_URL', (_: any, payload: string) => {
   Store.commit(types.SET_URL, payload);
 });
 
@@ -35,7 +33,6 @@ ipcRenderer.on(types.BROWSER_CAN_GO_FORWARD, (_: any, payload: string) => {
 
 // Hide On Taskbar
 ipcRenderer.on(types.SET_HIDE_ON_TASKBAR, (_: any, toggle: string) => {
-  console.log(types.SET_HIDE_ON_TASKBAR);
   window.localStorage.setItem('Settings.hideOnTaskBar', toggle);
 });
 
@@ -55,7 +52,6 @@ const Store = new Vuex.Store({
       store.window.onMouse = false;
     },
     changeOpacity(store, { value }) {
-      console.log('change', value);
       store.settings.opacity = value;
       ipcSend(types.SET_OPACITY, { value });
     },
@@ -74,7 +70,6 @@ const Store = new Vuex.Store({
     },
     seekMedia(store, parcentage) {
       store.video.media.currentTime = store.video.media.duration * parcentage;
-      console.log(parcentage);
     },
     [types.SET_MODE](store, modeName: 'web' | 'video') {
       console.log(types.SET_MODE);
@@ -89,7 +84,6 @@ const Store = new Vuex.Store({
     },
     [types.VIDEO_SELECT_FILE](store, index) {
       store.video.source = store.video.fileList.data[index];
-      console.log(store.video.source);
     },
     [types.BROWSER_VIEW_EVENT](store, data) {
       ipcSend(types.BROWSER_VIEW_EVENT, data);
