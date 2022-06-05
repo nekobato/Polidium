@@ -9,34 +9,31 @@
   },
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "electron:build": "vue-cli-service electron:build",
-    "electron:serve": "vue-cli-service electron:serve",
-    "postinstall": "electron-builder install-app-deps",
-    "postuninstall": "electron-builder install-app-deps"
+    "dev:pre": "NODE_ENV=development-pre node scripts/watch.mjs",
+    "dev": "NODE_ENV=development node scripts/watch.mjs",
+    "prebuild": "NODE_ENV=production vue-tsc --project packages/renderer/tsconfig.json --noEmit && node scripts/build.mjs",
+    "build": "NODE_ENV=production electron-builder --config ./electron-builder.config.js",
+    "debug": "npm run prebuild && vite ./packages/renderer",
+    "electron:generate-icons": "electron-icon-builder --input=./public/icon.png --output=build --flatten"
   },
-  "main": "background.js",
-  "dependencies": {
-    "vue": "^2.6.11",
-    "vue-router": "^3.1.5",
-    "vuex": "^3.1.2"
-  },
+  "main": "dist/main/index.cjs",
+  "dependencies": {},
   "devDependencies": {
-    "@electron/typescript-definitions": "^8.6.6",
-    "@types/node": "^12.12.27",
-    "@vue/cli-plugin-router": "^4.2.2",
-    "@vue/cli-plugin-typescript": "^4.2.2",
-    "@vue/cli-plugin-vuex": "^4.2.2",
-    "@vue/cli-service": "^4.2.2",
-    "@vue/eslint-config-standard": "^5.1.1",
-    "@vue/eslint-config-typescript": "^5.0.1",
-    "electron": "^8.0.0",
-    "about-window": "^1.13.2",
-    "postcss-nested": "^4.2.1",
-    "typescript": "~3.7.5",
-    "vue-cli-plugin-electron-builder": "^1.4.5",
-    "vue-template-compiler": "^2.6.11"
+    "@vitejs/plugin-vue": "^2.3.3",
+    "electron": "19.0.1",
+    "electron-builder": "^23.0.3",
+    "electron-icon-builder": "^2.0.1",
+    "postcss-nested": "^5.0.6",
+    "prettier": "^2.6.2",
+    "typescript": "^4.7.2",
+    "vite": "^2.9.9",
+    "vite-plugin-resolve": "^2.1.2",
+    "vue": "^3.2.36",
+    "vue-router": "^4.0.15",
+    "vue-tsc": "^0.35.2",
+    "vuex": "^4.0.2"
+  },
+  "env": {
+    "PORT": 3000
   }
 }
