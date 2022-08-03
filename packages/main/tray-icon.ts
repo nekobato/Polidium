@@ -4,7 +4,7 @@ import path from 'path';
 export function setTrayIcon(): Tray {
   // https://electronjs.org/docs/tutorial/mojave-dark-mode-guide
   const darkOrLight = nativeTheme.shouldUseDarkColors ? 'dark' : 'light';
-  const trayIconOff = path.join(`tray_icon_${darkOrLight}_off.png`);
+  const trayIconOff = path.join('build', `tray_icon_${darkOrLight}_off.png`);
 
   const tray = new Tray(trayIconOff);
   return tray;

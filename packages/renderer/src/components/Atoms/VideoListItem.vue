@@ -1,21 +1,12 @@
 <template>
-  <li class="item" @click="onClick">
+  <li class="item">
     <span class="index">{{ index + 1 }}</span>
     <span class="file-name">{{ title }}</span>
   </li>
 </template>
 
 <script lang="ts" setup>
-import { useStore } from '@/store';
-import * as types from '../../../../mutation-types';
-
-const store = useStore();
-
-const props = defineProps(['title', 'index']);
-
-const onClick = () => {
-  store.commit(types.VIDEO_SELECT_FILE, props.index);
-};
+defineProps(['title', 'index']);
 </script>
 
 <style lang="postcss" scoped>

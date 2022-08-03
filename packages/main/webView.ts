@@ -1,10 +1,7 @@
 import { BrowserView, BrowserWindow } from 'electron';
 import * as types from '../mutation-types';
 
-export function createWebView(
-  mainWindow: BrowserWindow,
-  controllerWindow: BrowserWindow
-): BrowserView {
+export function createWebView(mainWindow: BrowserWindow, controllerWindow: BrowserWindow): BrowserView {
   const webView = new BrowserView();
   mainWindow.setBrowserView(webView);
   const { width, height } = mainWindow.getBounds();

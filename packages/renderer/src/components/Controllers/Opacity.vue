@@ -30,11 +30,11 @@ const opacity = computed({
   height: var(--height);
   .background-text {
     position: absolute;
-    top: 0;
+    top: -6px;
     left: 0;
     right: 0;
     margin: auto;
-    font-size: 24px;
+    font-size: 20px;
     line-height: var(--height);
     color: hsl(0, 0%, 60%);
   }
@@ -76,13 +76,15 @@ const opacity = computed({
   }
   .opacity-value {
     position: absolute;
-    right: 4px;
-    bottom: 2px;
-    text-align: right;
-    font-size: 12px;
+    left: 0;
+    right: 0;
+    bottom: 5px;
+    margin: auto;
+    text-align: center;
+    font-size: 14px;
     line-height: 1;
     font-weight: bold;
-    color: rgba(0, 0, 0, 0.5);
+    color: rgba(0, 0, 0, 0.4);
   }
 }
 </style>

@@ -1,0 +1,22 @@
+input.nn-text-field,
+textarea.nn-text-field {
+  display: inline-flex;
+  margin: 0;
+  padding: 4px 8px;
+  height: 40px;
+  background: #f9f9ff;
+  border: 2px solid #dddddd;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: normal;
+  color: #222222;
+  -webkit-appearance: textfield;
+
+  &:focus {
+    border-color: #0095ee;
+  }
+  &.type-small {
+    font-size: 14px;
+    height: 32px;
+  }
+}

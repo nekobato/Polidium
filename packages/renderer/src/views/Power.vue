@@ -1,16 +1,15 @@
 <template>
   <div class="controller nn-glass-box">
-    <button class="power-button"><Icon icon="mdi:power" class="nn-icon size-xsmall" /></button>
+    <button class="power"><Icon icon="mdi:power" class="nn-icon size-xsmall" /></button>
     <ModeTab :mode="mode" @selectTab="switchTab" />
-    <button class="settings-button" @click="openSettings">
+    <button class="settings">
       <Icon icon="mdi:settings" class="nn-icon size-xsmall" />
     </button>
     <div class="mode-container">
       <Web v-show="mode === 'web'" />
       <Video v-show="mode === 'video'" />
     </div>
-    <Opacity class="opacity" />
-    <Settings v-show="settingsView" />
+    <Opacity classs="opacity" />
   </div>
 </template>
 <script lang="ts" setup>
@@ -18,19 +17,11 @@ import Opacity from '@/components/Controllers/Opacity.vue';
 import ModeTab from '@/components/Controllers/ModeTab.vue';
 import Web from '@/components/Controllers/Web.vue';
 import Video from '@/components/Controllers/Video.vue';
-import Settings from '@/components/Controllers/Settings.vue';
 import { Icon } from '@iconify/vue';
-import { computed, ref } from 'vue';
-import { useStore } from '@/store';
-import * as types from '@/../../mutation-types';
+import { ref } from 'vue';
 
 const mode = ref('web');
 const clichthrough = ref(true);
-const store = useStore();
-
-const settingsView = computed(() => {
-  return store.state.settingsView;
-});
 
 const switchTab = (name: string) => {
   if (name === mode.value) return;
@@ -42,11 +33,6 @@ const switchTab = (name: string) => {
       mode.value = 'video';
   }
 };
-
-const openSettings = () => {
-  store.commit(types.TOGGLE_SETTINGS);
-};
-
 const toggleClickThrough = () => {
   clichthrough.value = !clichthrough.value;
 };
@@ -67,8 +53,13 @@ const toggleClickThrough = () => {
   display: flex;
   flex-direction: column;
   background: rgba(255, 255, 255, 0.6);
-  .power-button,
-  .settings-button {
+  .settings-container {
+    position: relative;
+    height: 32px;
+    padding: 4px 0;
+  }
+  .power,
+  .settings {
     position: absolute;
     top: 14px;
     width: 32px;
@@ -77,10 +68,10 @@ const toggleClickThrough = () => {
     border-radius: 12px;
     cursor: pointer;
   }
-  .power-button {
+  .power {
     left: 8px;
   }
-  .settings-button {
+  .settings {
     right: 8px;
   }
   .icon {

@@ -1,0 +1,10 @@
+label.nn-label {
+  display: block;
+  text-align: left;
+  color: #666666;
+  font-size: 14px;
+  font-weight: bold;
+  & + .nn-text-field {
+    margin-top: 8px;
+  }
+}

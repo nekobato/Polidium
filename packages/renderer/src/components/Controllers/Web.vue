@@ -28,6 +28,16 @@
         <textarea class="url-field" placeholder="https://..." v-model="url" />
       </form>
     </div>
+    <div class="clickthrough-switcher mt-40">
+      <div>
+        <span v-if="clickthrough">Browser is <span class="nn-text positive bold">Controllable</span></span>
+        <span v-else>Browser is <span class="nn-text negative bold">Transparent</span></span>
+      </div>
+      <label class="nn-toggle">
+        <input type="checkbox" v-model="clickthrough" />
+        <div class="nn-toggle-ui"></div>
+      </label>
+    </div>
   </div>
 </template>
 
@@ -44,6 +54,7 @@ const store = useStore();
 const { web } = store.state;
 
 const url = ref('');
+const clickthrough = ref(true);
 
 const submitUrl = () => {
   store.commit(types.SET_URL, { url });
@@ -89,6 +100,8 @@ watch(
     width: 160px;
     border: 1px solid #ddd;
     border-radius: 32px;
+    background: rgba(255, 255, 255, 0.8);
+    overflow: hidden;
   }
   .button {
     padding: 8px 0;
@@ -114,14 +127,23 @@ watch(
     display: block;
     padding: 0 4px;
   }
+  .clickthrough-switcher {
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    .nn-toggle {
+      margin: auto 0 auto auto;
+    }
+  }
   .url-field {
-    padding: 8px;
+    box-sizing: border-box;
+    padding: 4px 8px;
     width: 100%;
-    height: 120px;
     border: 1px solid #ddd;
-    border-radius: 16px;
+    border-radius: 8px;
     font-size: 12px;
     line-height: 18px;
+    height: 64px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-weight: bold;
     color: hsl(0, 0%, 40%);

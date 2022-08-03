@@ -1,4 +1,4 @@
-import {
+import electron, {
   app,
   BrowserView,
   BrowserWindow,
@@ -8,6 +8,7 @@ import {
   Rectangle,
   protocol,
   Tray,
+  webContents,
 } from 'electron';
 import { createWindow as createMainWindow } from './mainWindow';
 import { createWindow as createControllerWindow } from './controllerWindow';
@@ -45,9 +46,7 @@ let tray: Tray | null = null;
 let mainWindow: BrowserWindow | null = null;
 let controllerWindow: BrowserWindow | null = null;
 
-protocol.registerSchemesAsPrivileged([
-  { scheme: 'app', privileges: { secure: true, standard: true } },
-]);
+protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }]);
 
 let webViewBounds: Rectangle = {
   x: 0,
@@ -56,7 +55,7 @@ let webViewBounds: Rectangle = {
   height: 320,
 };
 
-app.on('ready', () => {
+app.on('ready', async () => {
   const reflectBrowserHistriesPosition = () => {
     if (!webView || !controllerWindow) return;
     const contents = webView.webContents;
@@ -93,82 +92,97 @@ app.on('ready', () => {
 
   mainWindow.on('will-resize', (e: Event, { width, height }: Rectangle) => {
     webViewBounds.width = width;
-    webViewBounds.height = height - 48;
+    webViewBounds.height = height;
     if (webView) {
       webView.setBounds(webViewBounds);
     }
   });
 
-  mainWindow.webContents.on('devtools-opened', () => {
-    if (webView) {
-      webView.setBounds({
-        x: 0,
-        y: 0,
-        width: 0,
-        height: 0,
-      } as Rectangle);
-    }
-  });
-
-  mainWindow.webContents.on('devtools-closed', () => {
-    if (webView) {
-      webView.setBounds(webViewBounds);
-    }
-  });
-
-  ipcMain.on(types.BROWSER_VIEW_EVENT, (_, payload) => {
-    if (!webView || !controllerWindow) return;
-    const contents = webView.webContents;
-    const data = JSON.parse(payload);
-    switch (data.action) {
-      case types.SET_URL:
-        contents.loadURL(data.url);
-        break;
-      case types.BROWSER_RELOAD:
-        contents.reload();
-        break;
-      case types.BROWSER_BACK:
-        if (contents.canGoBack()) {
-          contents.goBack();
-          reflectBrowserHistriesPosition();
+  ipcMain.on('renderer-event', (_, event: string, payload: any) => {
+    switch (event) {
+      case types.BROWSER_VIEW_EVENT:
+        if (!webView || !controllerWindow) return;
+        const contents = webView.webContents;
+        const data = JSON.parse(payload);
+        switch (data.action) {
+          case types.SET_URL:
+            contents.loadURL(data.url);
+            break;
+          case types.BROWSER_RELOAD:
+            contents.reload();
+            break;
+          case types.BROWSER_BACK:
+            if (contents.canGoBack()) {
+              contents.goBack();
+              reflectBrowserHistriesPosition();
+            }
+            break;
+          case types.BROWSER_FORWARD:
+            if (contents.canGoForward()) {
+              contents.goForward();
+              reflectBrowserHistriesPosition();
+            }
+            break;
         }
         break;
-      case types.BROWSER_FORWARD:
-        if (contents.canGoForward()) {
-          contents.goForward();
-          reflectBrowserHistriesPosition();
+      case types.VIDEO_VIEW_EVENT:
+        mainWindow?.webContents.send(payload.action, payload.payload);
+        break;
+      case types.TOGGLE_RESIZE:
+        mainWindow?.webContents.send(event);
+        break;
+      case types.SET_OPACITY:
+        if (!mainWindow) return;
+        mainWindow.setOpacity(Number(payload.value) / 100);
+        break;
+      case types.SET_FULLSCREEN:
+        const { workAreaSize } = electron.screen.getPrimaryDisplay();
+        mainWindow?.setBounds({ width: workAreaSize.width, height: workAreaSize.height - 24 });
+        break;
+
+      case types.SET_HIDE_ON_TASKBAR:
+        if (!mainWindow) return;
+        const toggle = payload.value === 'true';
+        mainWindow.setSkipTaskbar(toggle);
+        break;
+      case types.OPEN_WEBVIEW:
+        if (!mainWindow) return;
+        const { width, height } = mainWindow.getBounds();
+        webView?.setBounds({ x: 0, y: 0, width, height });
+        break;
+      case types.CLOSE_WEBVIEW:
+        if (!mainWindow) return;
+        webView?.setBounds({ x: 0, y: 0, width: 0, height: 0 });
+        break;
+      case types.SET_MODE:
+        if (!mainWindow || !controllerWindow) {
+          return;
+        }
+
+        const { value } = payload;
+
+        if (value === 'web') {
+          webView = createWebView(mainWindow, controllerWindow);
+        } else if (value === 'video') {
+          if (!webView) {
+            return;
+          }
+          mainWindow.removeBrowserView(webView);
+          webView = null;
+          if (process.env.NODE_ENV === 'development') {
+            mainWindow.loadURL('http://localhost:3000/index.html#/monitor/video');
+            mainWindow.webContents.openDevTools();
+          } else {
+            mainWindow.loadURL(
+              require('url').format({
+                protocol: 'app',
+                slashes: true,
+                pathname: require('path').join(__dirname, '../renderer/index.html#/monitor/video'),
+              })
+            );
+          }
         }
         break;
-    }
-  });
-
-  ipcMain.on(types.SET_OPACITY, (_, payload) => {
-    if (!mainWindow) return;
-    const { value } = JSON.parse(payload);
-    mainWindow.setOpacity(parseInt(value, 10) / 100);
-  });
-
-  ipcMain.on(types.SET_HIDE_ON_TASKBAR, (_, payload) => {
-    if (!mainWindow) return;
-    const { value } = JSON.parse(payload);
-    const toggle = value === 'true';
-    mainWindow.setSkipTaskbar(toggle);
-  });
-
-  ipcMain.on(types.SET_MODE, (_, payload) => {
-    if (!mainWindow || !controllerWindow) {
-      return;
-    }
-
-    const { value } = JSON.parse(payload);
-    if (value === 'web') {
-      webView = createWebView(mainWindow, controllerWindow);
-    } else if (value === 'video') {
-      if (!webView) {
-        return;
-      }
-      mainWindow.removeBrowserView(webView);
-      webView = null;
     }
   });
 });

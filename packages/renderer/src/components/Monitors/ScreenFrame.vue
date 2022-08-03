@@ -3,20 +3,17 @@
     <div class="screen">
       <slot />
     </div>
-    <ScreenHandle class="handle" />
+    <ScreenHandle v-if="resizing" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { useStore } from '@/store';
-import ScreenHandle from '../Monitors/ScreenHandle.vue';
+import ScreenHandle from '@/components/Monitors/ScreenHandle.vue';
 
 const store = useStore();
 
-const settings = store.state.settings;
-const onMouse = store.state.window.onMouse;
-
-const videoFileList = store.state.video.fileList;
+const { resizing } = store;
 
 const onMouseEnter = (): void => {
   store.commit('onMouseEnter');

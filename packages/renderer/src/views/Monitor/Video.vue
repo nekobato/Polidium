@@ -10,7 +10,6 @@
       @pause="onVideoPause"
       @ended="onVideoEnded"
       @loadstart="onVideoLoadStart"
-      controls
       autoplay
     />
   </div>
@@ -18,15 +17,19 @@
 
 <script lang="ts" setup>
 import { useStore } from '@/store';
+import { computed, onMounted, ref } from 'vue';
+import * as types from '@/../../mutation-types';
 
 const store = useStore();
 
-const videoSource = (): string => {
+const video = ref<HTMLAudioElement>();
+
+const videoSource = computed((): string => {
   if (!store.state.video.source.path) {
     return '';
   }
   return 'file://' + store.state.video.source.path;
-};
+});
 
 const onVideoCanplay = () => {};
 const onVideoTimeupdate = () => {};
@@ -34,6 +37,18 @@ const onVideoPlay = () => {};
 const onVideoPause = () => {};
 const onVideoEnded = () => {};
 const onVideoLoadStart = () => {};
+
+onMounted(() => {
+  window.ipc.on(types.VIDEO_PLAY, () => {
+    video.value?.play();
+  });
+  window.ipc.on(types.VIDEO_PAUSE, () => {
+    video.value?.pause();
+  });
+  window.ipc.on(types.VIDEO_SELECT, (_, file: { name: string; path: string }) => {
+    store.commit(types.SET_VIDEO_SOURCE, file);
+  });
+});
 </script>
 
 <style scoped>

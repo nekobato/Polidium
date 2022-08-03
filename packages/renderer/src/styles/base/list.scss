@@ -1,0 +1,44 @@
+.nn-list {
+  margin: 0;
+  padding: 0;
+
+  & > li {
+    margin: 0;
+    padding: 4px 8px;
+    border-top: 1px solid #ddd;
+    &:first-child {
+      border-top: none;
+    }
+  }
+}
+
+.nn-table-list {
+  display: table;
+  & > li {
+    display: table-row;
+  }
+}
+
+.nn-dlist {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+
+  & > dt {
+    margin: 0;
+    padding: 8px 0 0;
+    border-top: 1px solid #ddd;
+    line-height: 1.5em;
+    font-weight: bold;
+    &:first-child {
+      border-top: none;
+    }
+  }
+  & > dd {
+    margin: -1.5em 0 0 auto;
+    padding: 0 0 8px;
+    line-height: 1.5em;
+  }
+}

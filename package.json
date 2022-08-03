@@ -17,14 +17,15 @@
     "electron:generate-icons": "electron-icon-builder --input=./public/icon.png --output=build --flatten"
   },
   "main": "dist/main/index.cjs",
-  "dependencies": {},
   "devDependencies": {
+    "@iconify/vue": "^3.2.1",
     "@vitejs/plugin-vue": "^2.3.3",
     "electron": "19.0.1",
     "electron-builder": "^23.0.3",
     "electron-icon-builder": "^2.0.1",
     "postcss-nested": "^5.0.6",
     "prettier": "^2.6.2",
+    "sass": "^1.52.3",
     "typescript": "^4.7.2",
     "vite": "^2.9.9",
     "vite-plugin-resolve": "^2.1.2",

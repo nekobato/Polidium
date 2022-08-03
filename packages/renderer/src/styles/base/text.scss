@@ -1,0 +1,21 @@
+@import 'variables';
+
+a.nn-link {
+  text-decoration: none;
+  &::hover {
+    text-decoration: underline;
+  }
+}
+
+.nn-text {
+  &.positive {
+    color: $palette-green-d2;
+  }
+  &.negative {
+    color: $palette-red;
+  }
+
+  &.bold {
+    font-weight: bold;
+  }
+}

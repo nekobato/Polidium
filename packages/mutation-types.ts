@@ -17,11 +17,18 @@ export const VIDEO_PLAYED = 'VIDEO_PLAYED';
 export const VIDEO_PAUSED = 'VIDEO_PAUSED';
 export const VIDEO_ENDED = 'VIDEO_ENDED';
 
+// Settings
 export const SET_MODE = 'SET_MODE';
 export const SET_OPACITY = 'SET_OPACITY';
 export const SET_HIDE_ON_TASKBAR = 'SET_HIDE_ON_TASKBAR';
 export const SET_CLICKTHROUGH = 'SET_CLICKTHROUGH';
-export const RESIZE_PLAYER = 'RESIZE_PLAYER';
+export const TOGGLE_RESIZE = 'TOGGLE_RESIZE';
+export const START_RESIZE = 'START_RESIZE';
+export const END_RESIZE = 'END_RESIZE';
+export const SET_FULLSCREEN = 'SET_FULLSCREEN';
+export const TOGGLE_SETTINGS = 'TOGGLE_SETTINGS';
+export const OPEN_WEBVIEW = 'OPEN_WEBVIEW';
+export const CLOSE_WEBVIEW = 'CLOSE_WEBVIEW';
 
 // Browser Actions
 export const BROWSER_VIEW_EVENT = 'BROWSER_VIEW_EVENT';
@@ -41,4 +48,11 @@ export const WINDOW_TRANSPARENT_OFF = 'WINDOW_TRANSPARENT_OFF';
 // VideoList
 export const VIDEO_LIST_TOGGLE = 'VIDEO_LIST_TOGGLE';
 export const VIDEO_LIST_ADD_FILES = 'VIDEO_LIST_ADD_FILE';
-export const VIDEO_SELECT_FILE = 'VIDEO_SELECT_FILE';
+export const VIDEO_VIEW_EVENT = 'VIDEO_VIEW_EVENT';
+export const VIDEO_BACK = 'VIDEO_BACK';
+export const VIDEO_PLAY = 'VIDEO_PLAY';
+export const VIDEO_PAUSE = 'VIDEO_PAUSE';
+export const VIDEO_FORWARD = 'VIDEO_FORWARD';
+
+// Video Monitor
+export const SET_VIDEO_SOURCE = 'SET_VIDEO_SOURCE';

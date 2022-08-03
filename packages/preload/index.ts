@@ -18,10 +18,7 @@ contextBridge.exposeInMainWorld('ipc', {
   send(event: string, payload: any) {
     ipcRenderer.send('renderer-event', event, payload);
   },
-  on(
-    event: string,
-    callback: (event: IpcRendererEvent, ...args: any[]) => void
-  ) {
+  on(event: string, callback: (event: IpcRendererEvent, ...args: any[]) => void) {
     ipcRenderer.on(event, callback);
   },
 });

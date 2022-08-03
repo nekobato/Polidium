@@ -9,7 +9,7 @@
     "jsx": "preserve",
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "lib": ["esnext", "dom", "WebWorker"],
+    "lib": ["esnext", "dom"],
     "baseUrl": ".",
     "allowJs": true,
     "paths": {

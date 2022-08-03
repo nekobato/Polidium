@@ -1,0 +1,39 @@
+$directions: (t: "top", b: "bottom", l: "left", r: "right");
+$list-directions: (tl: top, bl: bottom, ll: left, rl: right);
+
+$spacings: (
+  2: 2px,
+  4: 4px,
+  8: 8px,
+  12: 12px,
+  16: 16px,
+  24: 24px,
+  32: 32px,
+  40: 20px,
+  48: 48px,
+  64: 64px,
+  80: 80px
+);
+
+@each $dk, $direction in $directions {
+  @each $sk, $size in $spacings {
+    .m#{$dk}-#{$sk} {
+      margin-#{$direction}: $size;
+    }
+  }
+}
+
+@each $dk, $direction in $list-directions {
+  @each $sk, $size in $spacings {
+    .m#{$dk}-#{$sk} {
+      margin-#{$direction}: $size;
+      &:first-of-type {
+        margin-top: 0;
+      }
+    }
+  }
+}
+
+.hoge {
+  margin-top: 1px;
+}

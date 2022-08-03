@@ -20,24 +20,25 @@ export function createWindow() {
     webPreferences: {
       nodeIntegration: true,
       preload: join(__dirname, '../preload/index.cjs'),
+      webSecurity: false,
     },
     frame: false,
     transparent: true,
     hasShadow: false,
     skipTaskbar: true,
-    alwaysOnTop: true,
-    icon: join(assetPath, `app_icon.png`),
+    alwaysOnTop: process.env.NODE_ENV !== 'development',
+    icon: join('build', `app_icon.png`),
   });
 
   if (process.env.NODE_ENV === 'development') {
-    mainWindow.loadURL('http://localhost:3000/index.html#monitor');
+    mainWindow.loadURL('http://localhost:3000/index.html#/monitor/web');
     mainWindow.webContents.openDevTools();
   } else {
     mainWindow.loadURL(
       require('url').format({
-        protocol: 'file',
+        protocol: 'app',
         slashes: true,
-        pathname: require('path').join(__dirname, '../renderer/index.html#monitor'),
+        pathname: require('path').join(__dirname, '../renderer/index.html#/monitor/web'),
       })
     );
   }

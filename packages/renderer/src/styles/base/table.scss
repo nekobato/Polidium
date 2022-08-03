@@ -1,0 +1,32 @@
+.nn-table {
+  margin: 0;
+  padding: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
+
+  thead {
+    td {
+      font-weight: bold;
+    }
+  }
+
+  tbody {
+    tr {
+      border-top: 1px solid #ddd;
+    }
+    td {
+    }
+  }
+
+  thead,
+  tfoot {
+    tr {
+      border-top: none;
+    }
+  }
+
+  td {
+    margin: 0 auto;
+    padding: 8px 16px;
+  }
+}

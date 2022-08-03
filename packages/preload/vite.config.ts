@@ -1,6 +1,6 @@
-import { builtinModules } from 'module'
-import { defineConfig } from 'vite'
-import pkg from '../../package.json'
+import { builtinModules } from 'module';
+import { defineConfig } from 'vite';
+import pkg from '../../package.json';
 
 export default defineConfig({
   root: __dirname,
@@ -12,14 +12,10 @@ export default defineConfig({
       fileName: () => '[name].cjs',
     },
     sourcemap: true,
-    minify: process.env./* from mode option */NODE_ENV === 'production',
+    minify: process.env./* from mode option */ NODE_ENV === 'production',
     emptyOutDir: true,
     rollupOptions: {
-      external: [
-        'electron',
-        ...builtinModules,
-        ...Object.keys(pkg.dependencies || {}),
-      ],
+      external: ['electron', ...builtinModules, ...Object.keys(pkg.dependencies || {})],
     },
   },
-})
+});

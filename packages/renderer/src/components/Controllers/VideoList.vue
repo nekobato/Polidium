@@ -3,17 +3,14 @@
     <ul class="list" v-show="!data.isDragOver">
       <ListItem
         class="list-item"
-        v-for="(file, index) in fileList.data"
+        v-for="(file, index) in fileList"
         :key="index"
         :index="index"
         :title="file.name"
+        @click="selectFile(file)"
       />
     </ul>
-    <div
-      class="droppable-frame"
-      v-show="data.isDragOver || listIsEmpty"
-      @dragleave.prevent="onDragLeave"
-    ></div>
+    <div class="droppable-frame" v-show="data.isDragOver || listIsEmpty" @dragleave.prevent="onDragLeave"></div>
   </div>
 </template>
 
@@ -29,10 +26,12 @@ const data = reactive({
   isDragOver: false,
 });
 
-const fileList: { isVisible: boolean; data: { name: string }[] } = store.state.video.fileList;
+type videoFile = { name: string; path: string };
+
+const fileList: videoFile[] = store.state.video.fileList;
 
 const listIsEmpty = computed((): boolean => {
-  return fileList.data.length === 0;
+  return fileList.length === 0;
 });
 
 const onDrop = (e: any) => {
@@ -56,7 +55,9 @@ const onDragLeave = () => {
   data.isDragOver = false;
 };
 const onDragEnd = () => {};
-const selectItem = (index: number) => {};
+const selectFile = (file: videoFile) => {
+  store.commit(types.VIDEO_SELECT, file);
+};
 </script>
 
 <style lang="postcss" scoped>
