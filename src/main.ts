@@ -9,7 +9,19 @@ const router = VueRouter.createRouter({
   routes: [
     {
       path: "/viewer",
-      component: () => import("./pages/viewer.vue"),
+      component: () => import("./pages/viewer/index.vue"),
+    },
+    {
+      path: "/viewer/browser",
+      component: () => import("./pages/viewer/browser.vue"),
+    },
+    {
+      path: "/viewer/video",
+      component: () => import("./pages/viewer/video.vue"),
+    },
+    {
+      path: "/viewer/resize",
+      component: () => import("./pages/viewer/resize.vue"),
     },
     {
       path: "/controller",
