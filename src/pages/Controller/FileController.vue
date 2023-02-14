@@ -1,94 +1,89 @@
-<template lang="jade">
-div.playlist
-  div.empty-queue(v-show="queueIsEmpty")
-    span.grey-text Drop Movie files? Here
-  ul.collection(ref="queue-list", v-show="!queueIsEmpty")
-    li.collection-item(v-for="(queue, index) in queues",
-      :class="{ selected: index === playPointer }",
-      @click.prevent='play(index)')
-      i.material-icons.playlist-deleter(
-        @click.prevent='remove(index)') close
-      span.truncate {{ queue.name }}
-    li.clear-all
-      div.clear-btn(@click="clear")
-        i.material-icons clear
-        span.clear-text Clear Playlist
+<template>
+  div.playlist div.empty-queue(v-show="queueIsEmpty") span.grey-text Drop Movie
+  files? Here ul.collection(ref="queue-list", v-show="!queueIsEmpty")
+  li.collection-item(v-for="(queue, index) in queues", :class="{ selected: index
+  === playPointer }", @click.prevent='play(index)')
+  i.material-icons.playlist-deleter( @click.prevent='remove(index)') close
+  span.truncate {{ queue.name }} li.clear-all div.clear-btn(@click="clear")
+  i.material-icons clear span.clear-text Clear Playlist
   div.blue-grey.darken-2.center.video-controller
-    button.btn.pause-btn(v-if="isPlaying", @click="pause")
-      i.material-icons.white-text pause
-    button.btn.play-btn(v-if="!isPlaying", @click="resume")
-      i.material-icons.white-text play_arrow
-    div.seekbar-container
-      input.seekbar(type="range", id="seekbar", min="0", max="100",
-        :value="currentTime", @input="inputCurrentTime")
-    div.duration
-      span.duration-text {{ videoRemaining }}
+  button.btn.pause-btn(v-if="isPlaying", @click="pause")
+  i.material-icons.white-text pause button.btn.play-btn(v-if="!isPlaying",
+  @click="resume") i.material-icons.white-text play_arrow div.seekbar-container
+  input.seekbar(type="range", id="seekbar", min="0", max="100",
+  :value="currentTime", @input="inputCurrentTime") div.duration
+  span.duration-text {{ videoRemaining }}
 </template>
-<script>
-const ipc = require('renderer/ipc')
-const types = require('root/mutation-types')
-const Sortable = require('sortablejs')
+<script lang="ts">
+const ipc = require("renderer/ipc");
+const types = require("root/mutation-types");
+const Sortable = require("sortablejs");
 
 module.exports = {
-  name: 'FileController',
+  name: "FileController",
   computed: {
-    queues () {
-      return this.$store.state.video.queues
+    queues() {
+      return this.$store.state.video.queues;
     },
-    playPointer () {
-      return this.$store.state.video.playPointer
+    playPointer() {
+      return this.$store.state.video.playPointer;
     },
-    queueIsEmpty () {
-      return this.queues.length > 0 ? false : true
+    queueIsEmpty() {
+      return this.queues.length > 0 ? false : true;
     },
-    video () {
-      return this.$store.state.video.video
+    video() {
+      return this.$store.state.video.video;
     },
-    isPlaying () {
-      return this.video.isPlaying
+    isPlaying() {
+      return this.video.isPlaying;
     },
-    videoRemaining () {
-      var remainSeconds = Math.floor(this.video.duration - this.video.currentTime)
-      return `${Math.floor(remainSeconds / 60)}:${('0' + (remainSeconds % 60)).slice(-2)}`
+    videoRemaining() {
+      var remainSeconds = Math.floor(
+        this.video.duration - this.video.currentTime
+      );
+      return `${Math.floor(remainSeconds / 60)}:${(
+        "0" +
+        (remainSeconds % 60)
+      ).slice(-2)}`;
     },
-    currentTime () {
-      const percentage = this.video.currentTime / this.video.duration * 100
-      return isNaN(percentage) ? 0 : percentage
+    currentTime() {
+      const percentage = (this.video.currentTime / this.video.duration) * 100;
+      return isNaN(percentage) ? 0 : percentage;
     },
   },
   methods: {
-    play (index) {
-      ipc.commit(types.VIDEO_SELECT, { index: index })
+    play(index) {
+      ipc.commit(types.VIDEO_SELECT, { index: index });
     },
-    resume () {
-      ipc.commit(types.RESUME_FILE)
+    resume() {
+      ipc.commit(types.RESUME_FILE);
     },
-    pause () {
-      ipc.commit(types.PAUSE_FILE)
+    pause() {
+      ipc.commit(types.PAUSE_FILE);
     },
-    remove (index) {
-      ipc.commit(types.REMOVE_QUEUE, { index: index })
+    remove(index) {
+      ipc.commit(types.REMOVE_QUEUE, { index: index });
     },
-    clear () {
-      ipc.commit(types.CLEAR_QUEUES)
+    clear() {
+      ipc.commit(types.CLEAR_QUEUES);
     },
-    inputCurrentTime (e) {
-      ipc.commit(types.VIDEO_SEEK, { percentage: e.target.value })
-    }
+    inputCurrentTime(e) {
+      ipc.commit(types.VIDEO_SEEK, { percentage: e.target.value });
+    },
   },
-  mounted () {
-    Sortable.create(this.$refs['queue-list'], {
+  mounted() {
+    Sortable.create(this.$refs["queue-list"], {
       onUpdate: function (e) {
         ipc.commit(types.SORT_QUEUE, {
           oldIndex: e.oldIndex,
-          newIndex: e.newIndex
-        })
-      }
-    })
-  }
-}
+          newIndex: e.newIndex,
+        });
+      },
+    });
+  },
+};
 </script>
-<style lang="stylus" scoped>
+<style lang="scss" scoped>
 
 .play-controller
   text-align: center

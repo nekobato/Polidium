@@ -1,28 +1,26 @@
-<template lang="jade">
-div.resize
-  div.restore(@click="onRestore")
-    i.material-icons settings_backup_restore
-    span.text Restore
+<template>
+  div.resize div.restore(@click="onRestore") i.material-icons
+  settings_backup_restore span.text Restore
 </template>
-<script>
-const ipc = require('renderer/ipc')
-const types = require('root/mutation-types')
+<script lang="ts">
+const ipc = require("renderer/ipc");
+const types = require("root/mutation-types");
 
 module.exports = {
-  name: 'resize-mode',
+  name: "resize-mode",
   computed: {
-    resizeMode () {
-      return this.$store.state.settings.player.resizeMode
-    }
+    resizeMode() {
+      return this.$store.state.settings.player.resizeMode;
+    },
   },
   methods: {
-    onRestore () {
-      ipc.commit(types.RESIZE_PLAYER, { mode: false })
-    }
-  }
-}
+    onRestore() {
+      ipc.commit(types.RESIZE_PLAYER, { mode: false });
+    },
+  },
+};
 </script>
-<style lang="stylus" scoped>
+<style lang="scss" scoped>
 .resize
   -webkit-app-region: drag
   position: absolute
@@ -47,5 +45,4 @@ module.exports = {
     font-size: 48px
   .text
     font-soze: 14px
-
 </style>

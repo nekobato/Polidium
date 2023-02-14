@@ -1,17 +1,17 @@
-<template lang="jade">
-webview.web-player(nodeintegration v-bind="{ src: web.src }")
+<template>
+  webview.web-player(nodeintegration v-bind="{ src: web.src }")
 </template>
-<script>
+<script lang="ts">
 module.exports = {
-  name: 'web-player',
+  name: "web-player",
   computed: {
-    web () {
-      return this.$store.state.web
-    }
-  }
-}
+    web() {
+      return this.$store.state.web;
+    },
+  },
+};
 </script>
-<style lang="stylus" scoped>
+<style lang="scss" scoped>
 .web-player
   width: 100%
   height: 100%

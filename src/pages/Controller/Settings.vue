@@ -1,68 +1,56 @@
-<template lang="jade">
-div.white.settings
-  div.row
-    div.input-field.center.opacity
-      input#opacity_range.range.validate(type="range", :value="opacity", @input="inputOpacity")
-      label(for="opacity_range").label Opacity is {{ opacityFloor }}
-      div.min-max.grey-text
-        span.min 0
-        span.max 100
-  div.row.center.resize
-    div.btn(@click="resizePlayer")
-      i.material-icons.left transform
-      span resize player
-  div.row.center.disruptive
-    div.btn.blue(@click="reload")
-      i.material-icons.left refresh
-      span reload
-    div.btn.blue(@click="reset")
-      i.material-icons.left settings_applications
-      span reset settings
-  div.row.center.disruptive
-    div.btn.red(@click="quit")
-      i.material-icons.left close
-      span quit
+<template>
+  div.white.settings div.row div.input-field.center.opacity
+  input#opacity_range.range.validate(type="range", :value="opacity",
+  @input="inputOpacity") label(for="opacity_range").label Opacity is
+  {{ opacityFloor }}
+  div.min-max.grey-text span.min 0 span.max 100 div.row.center.resize
+  div.btn(@click="resizePlayer") i.material-icons.left transform span resize
+  player div.row.center.disruptive div.btn.blue(@click="reload")
+  i.material-icons.left refresh span reload div.btn.blue(@click="reset")
+  i.material-icons.left settings_applications span reset settings
+  div.row.center.disruptive div.btn.red(@click="quit") i.material-icons.left
+  close span quit
 </template>
-<script>
-const ipc = require('renderer/ipc')
-const types = require('root/mutation-types')
+<script lang="ts">
+const ipc = require("renderer/ipc");
+const types = require("root/mutation-types");
 
 module.exports = {
-  name: 'settings',
+  name: "settings",
   computed: {
-    settings () {
-      return this.$store.state.settings
+    settings() {
+      return this.$store.state.settings;
     },
-    opacity () {
-      return this.settings.player.opacity * 100
+    opacity() {
+      return this.settings.player.opacity * 100;
     },
-    opacityFloor () {
-      return Math.floor(this.settings.player.opacity * 100)
-    }
+    opacityFloor() {
+      return Math.floor(this.settings.player.opacity * 100);
+    },
   },
   methods: {
-    quit () {
-      ipc.commit(types.QUIT)
+    quit() {
+      ipc.commit(types.QUIT);
     },
-    reload () {
-      ipc.commit(types.RELOAD)
+    reload() {
+      ipc.commit(types.RELOAD);
     },
-    reset () {
-      ipc.commit(types.RESET)
+    reset() {
+      ipc.commit(types.RESET);
     },
-    selectDisplay (display) {
-      ipc.commit(types.SELECT_DISPLAY, { display: display })
+    selectDisplay(display) {
+      ipc.commit(types.SELECT_DISPLAY, { display: display });
     },
-    resizePlayer () {
-      ipc.commit(types.RESIZE_PLAYER, { mode: true })
+    resizePlayer() {
+      ipc.commit(types.RESIZE_PLAYER, { mode: true });
     },
-    inputOpacity (e) {
-      ipc.commit(types.CHANGE_OPACITY, e.target.value / 100)
-    }
-  }
-}
+    inputOpacity(e) {
+      ipc.commit(types.CHANGE_OPACITY, e.target.value / 100);
+    },
+  },
+};
 </script>
-<style lang="stylus">
+<style lang="scss">
 .settings
   padding: 20px
 .opacity
