@@ -1,7 +1,7 @@
-import { app, BrowserWindow, shell, ipcMain } from 'electron';
-import { release } from 'node:os';
+import electron, { app, BrowserWindow, ipcMain } from 'electron';
+import os, { release } from 'node:os';
 import { join } from 'node:path';
-import { createControllerWindow } from './controllerWIndow';
+import { createControllerWindow } from './controllerWindow';
 import { createViewerWindow } from './viewerWindow';
 
 process.env.DIST_ELECTRON = join(__dirname, '..');
@@ -18,6 +18,8 @@ if (!app.requestSingleInstanceLock()) {
   app.quit();
   process.exit(0);
 }
+
+const MAC = os.type() === 'Darwin' ? true : false;
 
 // Remove electron security warnings
 // This warning only shows in development mode
@@ -56,20 +58,37 @@ app
       if (process.env.NODE_ENV === 'development') console.log('ipcMain', payload);
       switch (event) {
         case 'viewer:fit-to-screen':
+          var screen = electron.screen;
+          var size = screen.getPrimaryDisplay().workAreaSize;
+          viewerWindow.setSize(size.width, size.height - 24);
           break;
         case 'viewer:resize':
+          viewerWindow.setIgnoreMouseEvents(!payload.mode);
+          viewerWindow.setResizable(payload.mode);
+          viewerWindow.setMovable(payload.mode);
+          if (MAC) viewerWindow.setVisibleOnAllWorkspaces(!payload.mode);
+          if (payload.mode) {
+            viewerWindow.focus();
+          } else {
+            viewerWindow.blur();
+          }
           break;
-        case 'viewer:close':
+        case 'viewer:hide':
+          viewerWindow.hide();
           break;
-        case 'viewer:open':
+        case 'viewer:show':
+          viewerWindow.show();
           break;
         // Viewer側でpayload解釈
+        case 'viewer:settings':
         case 'viewer:web':
         case 'viewer:video':
           viewerWindow?.webContents.send('main-process-message', payload);
           break;
         default:
           break;
+        case 'quit':
+          app.quit();
       }
     });
   });

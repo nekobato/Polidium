@@ -1,10 +1,20 @@
-import { BrowserWindow } from 'electron';
+import electron, { BrowserWindow } from 'electron';
 import { join } from 'node:path';
+import { DEBUG } from './env';
 const preload = join(__dirname, '../preload/index.js');
 
 export const createViewerWindow = (url: string) => {
+  var screen = electron.screen;
+  var size = screen.getPrimaryDisplay().workAreaSize;
   const win = new BrowserWindow({
     icon: join(process.env.PUBLIC, 'favicon.ico'),
+    skipTaskbar: true,
+    width: DEBUG ? 400 : size.width,
+    height: DEBUG ? 300 : size.height - 24, // Macの上のトレイ分短く
+    center: true,
+    show: false,
+    resizable: false,
+    frame: false,
     webPreferences: {
       preload,
       nodeIntegration: false,
