@@ -16,6 +16,7 @@ import {
   NIcon,
   NSpace,
 } from 'naive-ui';
+import { Icon } from '@iconify/vue';
 
 const state = reactive({
   web: {
@@ -47,6 +48,9 @@ const webForward = () => {
 };
 const webReload = () => {
   ipc.send('viewer:web', { action: 'reload' });
+};
+const webOpenUrl = () => {
+  ipc.send('viewer:web', { action: 'open-url', url: state.web.url });
 };
 
 // Video
@@ -81,26 +85,58 @@ watch(
 </script>
 <template>
   <NTabs default-value="settings" justify-content="space-evenly" type="line">
+    <!-- Web -->
     <NTabPane name="web" tab="Web">
       <NSpace>
-        <NButton :disabled="canWebBack" @click="webBack">Back</NButton>
-        <NButton @click="webReload">Reload</NButton>
-        <NButton :disabled="canWebForward" @click="webForward">Forward</NButton>
+        <NButton :disabled="canWebBack" @click="webBack">
+          <NIcon>
+            <Icon icon="ic:round-arrow-back" />
+          </NIcon>
+        </NButton>
+        <NButton @click="webReload">
+          <NIcon>
+            <Icon icon="ic:round-refresh" />
+          </NIcon>
+        </NButton>
+        <NButton :disabled="canWebForward" @click="webForward">
+          <NIcon>
+            <Icon icon="ic:round-arrow-forward" />
+          </NIcon>
+        </NButton>
       </NSpace>
       <NCard>
-        <NInput v-model:value="state.web.url" placeholder="https://" />
+        <NForm @submit.prevent="webOpenUrl">
+          <NInput v-model:value="state.web.url" placeholder="https://" />
+        </NForm>
         <NList title="History">
           <NListItem></NListItem>
         </NList>
       </NCard>
     </NTabPane>
+    <!-- Video -->
     <NTabPane name="video" tab="Video">
       <NSpace vertical v-if="state.video.files.length">
         <NSpace>
-          <NButton :disabled="canVideoPrevious" @click="videoPrevious">Prev</NButton>
-          <NButton v-if="state.video.isPlaying" @click="videoPlayPause(false)">Pause</NButton>
-          <NButton v-else :disabled="canVideoPlay" @click="videoPlayPause(true)">Play</NButton>
-          <NButton :disabled="canVideoNext" @click="videoNext">Next</NButton>
+          <NButton :disabled="canVideoPrevious" @click="videoPrevious">
+            <NIcon>
+              <Icon icon="ic:round-skip-previous" />
+            </NIcon>
+          </NButton>
+          <NButton v-if="state.video.isPlaying" @click="videoPlayPause(false)">
+            <NIcon>
+              <Icon icon="ic:round-pause" />
+            </NIcon>
+          </NButton>
+          <NButton v-else :disabled="canVideoPlay" @click="videoPlayPause(true)">
+            <NIcon>
+              <Icon icon="ic:round-play-arrow" />
+            </NIcon>
+          </NButton>
+          <NButton :disabled="canVideoNext" @click="videoNext">
+            <NIcon>
+              <Icon icon="ic:round-skip-next" />
+            </NIcon>
+          </NButton>
         </NSpace>
         <NList>
           <NListItem v-for="file in state.video.files" :key="file">
@@ -115,13 +151,11 @@ watch(
               <archive-icon />
             </NIcon>
           </div>
-          <n-text style="font-size: 16px"> Click or drag a file to this area to upload </n-text>
-          <n-p depth="3" style="margin: 8px 0 0 0">
-            Strictly prohibit from uploading sensitive information. For example, your bank card PIN or your credit card expiry date.
-          </n-p>
+          <n-text style="font-size: 16px">Drop Video File</n-text>
         </NUploadDragger>
       </NUpload>
     </NTabPane>
+    <!-- Settings -->
     <NTabPane name="settings" tab="Settings">
       <NFormItem title="Opacity">
         <NSlider v-model:value="state.settings.player.opacity" />

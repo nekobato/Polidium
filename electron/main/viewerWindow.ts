@@ -7,7 +7,6 @@ export const createViewerWindow = (url: string) => {
   var screen = electron.screen;
   var size = screen.getPrimaryDisplay().workAreaSize;
   const win = new BrowserWindow({
-    icon: join(process.env.PUBLIC, 'favicon.ico'),
     skipTaskbar: true,
     width: DEBUG ? 400 : size.width,
     height: DEBUG ? 300 : size.height - 24, // Macの上のトレイ分短く
