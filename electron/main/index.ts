@@ -69,6 +69,7 @@ app
           if (MAC) viewerWindow.setVisibleOnAllWorkspaces(!payload.mode);
           if (payload.mode) {
             viewerWindow.focus();
+            viewerWindow?.webContents.send('main-process-message', payload);
           } else {
             viewerWindow.blur();
           }
