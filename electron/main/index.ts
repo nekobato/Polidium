@@ -1,5 +1,5 @@
 import electron, { app, ipcMain } from 'electron';
-import os, { release } from 'node:os';
+import { release } from 'node:os';
 import { join } from 'node:path';
 import { createControllerWindow, Controller } from './controller';
 import { createViewerWindow, Viewer } from './viewer';
@@ -18,8 +18,6 @@ if (!app.requestSingleInstanceLock()) {
   app.quit();
   process.exit(0);
 }
-
-const MAC = os.type() === 'Darwin' ? true : false;
 
 let viewer: Viewer = null;
 let controller: Controller = null;
