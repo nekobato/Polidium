@@ -1,8 +1,8 @@
-import electron, { app, BrowserWindow, ipcMain } from 'electron';
+import electron, { app, ipcMain } from 'electron';
 import os, { release } from 'node:os';
 import { join } from 'node:path';
-import { createControllerWindow } from './controllerWindow';
-import { createViewerWindow } from './viewerWindow';
+import { createControllerWindow, Controller } from './controller';
+import { createViewerWindow, Viewer } from './viewer';
 
 process.env.DIST_ELECTRON = join(__dirname, '..');
 process.env.DIST = join(process.env.DIST_ELECTRON, '../dist');
@@ -21,70 +21,50 @@ if (!app.requestSingleInstanceLock()) {
 
 const MAC = os.type() === 'Darwin' ? true : false;
 
-// Remove electron security warnings
-// This warning only shows in development mode
-// Read more on https://www.electronjs.org/docs/latest/tutorial/security
-// process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
-
-let viewerWindow: BrowserWindow | null = null;
-let controllerWindow: BrowserWindow | null = null;
-// Here, you can also use other preload
-const preload = join(__dirname, '../preload/index.js');
-const url = process.env.VITE_DEV_SERVER_URL;
-const indexHtml = join(process.env.DIST, 'index.html');
+let viewer: Viewer = null;
+let controller: Controller = null;
 
 app.on('window-all-closed', () => {
-  viewerWindow = null;
+  viewer = null;
+  controller = null;
   if (process.platform !== 'darwin') app.quit();
 });
 
-// app.on('activate', () => {
-//   const allWindows = BrowserWindow.getAllWindows();
-//   if (allWindows.length) {
-//     // allWindows[0].focus();
-//   } else {
-//     createViewerWindow('/viewer');
-//   }
-// });
-
 app
   .whenReady()
-  .then(async () => {
-    viewerWindow = await createViewerWindow('/viewer');
-    controllerWindow = await createControllerWindow('/controller');
+  .then(() => {
+    viewer = createViewerWindow('/viewer');
+    controller = createControllerWindow('/controller');
   })
   .then(() => {
     ipcMain.on('renderer-envet', (_, event, payload) => {
       if (process.env.NODE_ENV === 'development') console.log('ipcMain', payload);
       switch (event) {
+        case 'mode:web':
+          viewer.setWebView(true);
+          break;
+        case 'mode:video':
+          viewer.setWebView(false);
+          break;
+        case 'mode:resize':
+          viewer.resizeMode(payload);
+          break;
         case 'viewer:fit-to-screen':
           var screen = electron.screen;
           var size = screen.getPrimaryDisplay().workAreaSize;
-          viewerWindow.setSize(size.width, size.height - 24);
-          break;
-        case 'viewer:resize':
-          viewerWindow.setIgnoreMouseEvents(!payload.mode);
-          viewerWindow.setResizable(payload.mode);
-          viewerWindow.setMovable(payload.mode);
-          if (MAC) viewerWindow.setVisibleOnAllWorkspaces(!payload.mode);
-          if (payload.mode) {
-            viewerWindow.focus();
-            viewerWindow?.webContents.send('main-process-message', payload);
-          } else {
-            viewerWindow.blur();
-          }
+          viewer.win.setSize(size.width, size.height - 24);
           break;
         case 'viewer:hide':
-          viewerWindow.hide();
+          viewer.win.hide();
           break;
         case 'viewer:show':
-          viewerWindow.show();
+          viewer.win.show();
           break;
         // Viewer側でpayload解釈
         case 'viewer:settings':
         case 'viewer:web':
         case 'viewer:video':
-          viewerWindow?.webContents.send('main-process-message', payload);
+          viewer.win.webContents.send('main-process-message', payload);
           break;
         default:
           break;

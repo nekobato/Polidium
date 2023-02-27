@@ -4,7 +4,9 @@ import { DEBUG } from './env';
 
 const preload = path.join(__dirname, '../preload/index.js');
 
-export async function createControllerWindow(url: string) {
+export type Controller = { win: BrowserWindow };
+
+export const createControllerWindow = (url: string): Controller => {
   const win = new BrowserWindow({
     icon: path.join(process.env.PUBLIC, 'favicon.ico'),
     width: 400,
@@ -47,5 +49,5 @@ export async function createControllerWindow(url: string) {
     return { action: 'deny' };
   });
 
-  return win;
-}
+  return { win };
+};
