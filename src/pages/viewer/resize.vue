@@ -1,48 +1,24 @@
-<template>
-  div.resize div.restore(@click="onRestore") i.material-icons
-  settings_backup_restore span.text Restore
-</template>
-<script lang="ts">
-const ipc = require("renderer/ipc");
-const types = require("root/mutation-types");
+<script lang="ts" setup>
+import { Icon } from '@iconify/vue';
+import { NSpace } from 'naive-ui';
 
-module.exports = {
-  name: "resize-mode",
-  computed: {
-    resizeMode() {
-      return this.$store.state.settings.player.resizeMode;
-    },
-  },
-  methods: {
-    onRestore() {
-      ipc.commit(types.RESIZE_PLAYER, { mode: false });
-    },
-  },
+const finishResizeMode = () => {
+  window.ipc.send('viewer:resize', false);
 };
 </script>
+<template>
+  <NSpace>
+    <NButton @click="finishResizeMode">
+      <template #icon>
+        <Icon icon="ic:round-done" />
+      </template>
+    </NButton>
+  </NSpace>
+</template>
 <style lang="scss" scoped>
-.resize
-  -webkit-app-region: drag
-  position: absolute
-  top: 0
-  left: 0
-  display: flex
-  justify-content: center
-  align-items: center
-  margin: 0
-  width: 100%
-  height: 100%
-  background: #fff
-  cursor: move
-.restore
-  display: flex
-  flex-direction: column
-  color: #b2b2b2
-  cursor: pointer
-  &:hover
-    color: #888
-  .material-icons
-    font-size: 48px
-  .text
-    font-soze: 14px
+.container {
+  width: 100%;
+  height: 100%;
+  background: red;
+}
 </style>

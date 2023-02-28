@@ -14,12 +14,10 @@ import {
   NFormItem,
   NSlider,
   NInputNumber,
-  NIcon,
   NSpace,
   NLayout,
   NLayoutHeader,
   NLayoutContent,
-  NRow,
 } from 'naive-ui';
 import { Icon } from '@iconify/vue';
 
@@ -46,16 +44,16 @@ const state = reactive({
 const canWebBack = computed(() => state.web.canBack);
 const canWebForward = computed(() => state.web.canForward);
 const webBack = () => {
-  ipc.send('viewer:web', { action: 'back' });
+  window.ipc.send('viewer:web', { action: 'back' });
 };
 const webForward = () => {
-  ipc.send('viewer:web', { action: 'forward' });
+  window.ipc.send('viewer:web', { action: 'forward' });
 };
 const webReload = () => {
-  ipc.send('viewer:web', { action: 'reload' });
+  window.ipc.send('viewer:web', { action: 'reload' });
 };
 const webOpenUrl = () => {
-  ipc.send('viewer:web', { action: 'open-url', url: state.web.url });
+  window.ipc.send('viewer:web', { action: 'open-url', url: state.web.url });
 };
 
 // Video
@@ -63,22 +61,22 @@ const canVideoPrevious = computed(() => state.video.currentFileIndex > 0);
 const canVideoNext = computed(() => state.video.currentFileIndex < state.video.files.length - 1);
 const canVideoPlay = computed(() => state.video.files.length > 0);
 const videoPlayPause = (isPlaying: boolean) => {
-  ipc.send('viewer:video', { action: 'play-pause', isPlaying });
+  window.ipc.send('viewer:video', { action: 'play-pause', isPlaying });
 };
 const videoPrevious = () => {
-  ipc.send('viewer:video', { action: 'previous' });
+  window.ipc.send('viewer:video', { action: 'previous' });
 };
 const videoNext = () => {
-  ipc.send('viewer:video', { action: 'next' });
+  window.ipc.send('viewer:video', { action: 'next' });
 };
 
 // Settings
 const resizeViewer = () => {
-  ipc.send('viewer:resize', { mode: true });
+  window.ipc.send('viewer:resize', { mode: true });
 };
 
 const changeViewerOpacity = (value: number) => {
-  ipc.send('viewer:settings', { key: 'opacity', value });
+  window.ipc.send('viewer:settings', { key: 'opacity', value });
 };
 
 watch(
@@ -100,19 +98,19 @@ watch(
           <NTabPane name="web" tab="Web" class="tab-panel">
             <NSpace>
               <NButton :disabled="canWebBack" @click="webBack">
-                <NIcon>
+                <template #icon>
                   <Icon icon="ic:round-arrow-back" />
-                </NIcon>
+                </template>
               </NButton>
               <NButton @click="webReload">
-                <NIcon>
+                <template #icon>
                   <Icon icon="ic:round-refresh" />
-                </NIcon>
+                </template>
               </NButton>
               <NButton :disabled="canWebForward" @click="webForward">
-                <NIcon>
+                <template #icon>
                   <Icon icon="ic:round-arrow-forward" />
-                </NIcon>
+                </template>
               </NButton>
             </NSpace>
             <NCard>
@@ -129,24 +127,24 @@ watch(
             <NSpace vertical v-if="state.video.files.length">
               <NSpace>
                 <NButton :disabled="canVideoPrevious" @click="videoPrevious">
-                  <NIcon>
+                  <template #icon>
                     <Icon icon="ic:round-skip-previous" />
-                  </NIcon>
+                  </template>
                 </NButton>
                 <NButton v-if="state.video.isPlaying" @click="videoPlayPause(false)">
-                  <NIcon>
+                  <template #icon>
                     <Icon icon="ic:round-pause" />
-                  </NIcon>
+                  </template>
                 </NButton>
                 <NButton v-else :disabled="canVideoPlay" @click="videoPlayPause(true)">
-                  <NIcon>
+                  <template #icon>
                     <Icon icon="ic:round-play-arrow" />
-                  </NIcon>
+                  </template>
                 </NButton>
                 <NButton :disabled="canVideoNext" @click="videoNext">
-                  <NIcon>
+                  <template #icon>
                     <Icon icon="ic:round-skip-next" />
-                  </NIcon>
+                  </template>
                 </NButton>
               </NSpace>
               <NList>
@@ -158,9 +156,9 @@ watch(
             <NUpload multiple directory-dnd @change="" :max="5" v-if="!state.video.files.length">
               <NUploadDragger>
                 <div style="margin-bottom: 12px">
-                  <NIcon size="48" :depth="3">
+                  <template size="48" :depth="3">
                     <archive-icon />
-                  </NIcon>
+                  </template>
                 </div>
                 <n-text style="font-size: 16px">Drop Video File</n-text>
               </NUploadDragger>

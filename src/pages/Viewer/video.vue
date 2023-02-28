@@ -1,81 +1,61 @@
-<script lang="ts">
-const ipc = require("renderer/ipc");
-const types = require("root/mutation-types");
+<script lang="ts" setup>
+import { onMounted, reactive, ref } from 'vue';
 
-module.exports = {
-  name: "video-player",
-  watch: {
-    ["video.seekPercentage"](value) {
-      this.$refs["video"].currentTime = (this.video.duration / 100) * value;
-    },
-    ["video.switch"](value) {
-      if (value === true) {
-        this.$refs["video"].play();
-      } else {
-        this.$refs["video"].pause();
-      }
-    },
-  },
-  computed: {
-    queues() {
-      return this.$store.state.video.queues;
-    },
-    playPointer() {
-      return this.$store.state.video.playPointer;
-    },
-    videoSource() {
-      return this.queues[this.playPointer]
-        ? this.queues[this.playPointer].path
-        : "";
-    },
-    video() {
-      return this.$store.state.video.video;
-    },
-  },
-  methods: {
-    onVideoCanplay() {
-      ipc.commit(types.VIDEO_CANPLAY, {
-        duration: this.$refs["video"].duration,
-      });
-    },
-    onVideoTimeupdate() {
-      ipc.commit(types.VIDEO_TIMEUPDATE, {
-        currentTime: this.$refs["video"].currentTime,
-      });
-    },
-    onVideoPlay() {
-      ipc.commit(types.VIDEO_PLAYED);
-    },
-    onVideoPause() {
-      ipc.commit(types.VIDEO_PAUSED);
-    },
-    onVideoEnded() {
-      ipc.commit(types.VIDEO_ENDED);
-    },
-    onVideoLoadStart() {
-      ipc.commit(types.VIDEO_PAUSED);
-    },
-  },
+const videoRef = ref<HTMLVideoElement>();
+
+const state = reactive({
+  src: '',
+});
+
+const onVideoCanplay = () => {
+  window.ipc.send('viewer:video', { action: 'canplay' });
 };
+const onVideoTimeupdate = (event: Event) => {
+  window.ipc.send('viewer:video', { action: 'timeupdate', currentTime: (event.target as HTMLVideoElement).currentTime });
+};
+const onVideoEnded = () => {
+  window.ipc.send('viewer:video', { action: 'ended' });
+};
+const onVideoLoadStart = () => {
+  window.ipc.send('viewer:video', { action: 'loadstart' });
+};
+
+onMounted(() => {
+  window.ipc.on('viewer:video', (event: Event, data: any) => {
+    if (!videoRef.value) {
+      return;
+    }
+    switch (data.action) {
+      case 'play':
+        videoRef.value.play();
+        break;
+      case 'pause':
+        videoRef.value.pause();
+        break;
+      case 'seek':
+        videoRef.value.currentTime = data.currentTime;
+        break;
+      case 'set-src':
+        state.src = data.src;
+        break;
+    }
+  });
+});
 </script>
 <template>
   <video
     class="video"
-    ref="video"
-    v-bind="{ src: videoSource }"
+    ref="videoRef"
+    :src="state.src"
     @canplay="onVideoCanplay"
     @timeupdate="onVideoTimeupdate"
-    @play="onVideoPlay"
-    @pause="onVideoPause"
     @ended="onVideoEnded"
     @loadstart="onVideoLoadStart"
   />
 </template>
 <style lang="scss" scoped>
 .video {
-  margin: 0;
   width: 100%;
   height: 100%;
-  background: transparent;
 }
 </style>

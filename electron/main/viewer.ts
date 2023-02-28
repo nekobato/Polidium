@@ -1,9 +1,16 @@
-import electron, { BrowserWindow } from 'electron';
+import electron, { BrowserView, BrowserWindow } from 'electron';
 import { join } from 'node:path';
 import { DEBUG, MAC } from './env';
 const preload = join(__dirname, '../preload/index.js');
 
-export type Viewer = { win: BrowserWindow; setWebView: (activate: boolean) => void; resizeMode: (active: boolean) => void };
+export type Viewer = {
+  win: BrowserWindow;
+  view: BrowserView;
+  setWebView: (activate: boolean) => void;
+  viewGoBack: () => boolean;
+  viewGoForward: () => boolean;
+  resizeMode: (active: boolean) => void;
+};
 
 export const createViewerWindow = (url: string): Viewer => {
   var screen = electron.screen;
@@ -33,9 +40,10 @@ export const createViewerWindow = (url: string): Viewer => {
     win.loadFile(join(process.env.DIST, `index.html#${url}`));
   }
 
+  const view = new electron.BrowserView();
+
   const setWebView = (activate: boolean) => {
     if (activate) {
-      const view = new electron.BrowserView();
       win.setBrowserView(view);
       view.setBounds({ x: 0, y: 0, width: 0, height: 0 });
       view.setAutoResize({ width: true, height: true });
@@ -51,6 +59,16 @@ export const createViewerWindow = (url: string): Viewer => {
     }
   };
 
+  const viewGoBack = () => {
+    view.webContents.goBack();
+    return view.webContents.canGoBack();
+  };
+
+  const viewGoForward = () => {
+    view.webContents.goForward();
+    return view.webContents.canGoForward();
+  };
+
   const resizeMode = (active: boolean) => {
     win.setIgnoreMouseEvents(!active);
     win.setResizable(active);
@@ -61,8 +79,8 @@ export const createViewerWindow = (url: string): Viewer => {
     } else {
       win.blur();
     }
-    win.webContents.send('main-process-message', active);
+    win.webContents.send('main-process-message', 'mode:resize', active);
   };
 
-  return { win, setWebView, resizeMode };
+  return { win, view, viewGoBack, viewGoForward, setWebView, resizeMode };
 };

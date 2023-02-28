@@ -62,12 +62,15 @@ app
         case 'viewer:settings':
         case 'viewer:web':
         case 'viewer:video':
-          viewer.win.webContents.send('main-process-message', payload);
+          viewer.win.webContents.send('main-process-message', event, payload);
           break;
         default:
           break;
         case 'quit':
           app.quit();
       }
+    });
+    viewer.view.webContents.on('did-navigate', (event, url) => {
+      controller.win.webContents.send('main-process-message', 'viewer:navigate', { url });
     });
   });
