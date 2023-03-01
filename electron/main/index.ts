@@ -59,7 +59,9 @@ app
           viewer.win.show();
           break;
         // Viewer側でpayload解釈
-        case 'viewer:settings':
+        case 'viewer:opacity':
+          viewer.win.setOpacity(Number(payload) / 100);
+          break;
         case 'viewer:video':
           viewer.win.webContents.send(event, payload);
           break;

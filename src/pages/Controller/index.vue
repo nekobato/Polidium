@@ -76,7 +76,7 @@ const resizeViewer = () => {
 };
 
 const changeViewerOpacity = (value: number) => {
-  window.ipc.send('viewer:settings', { key: 'opacity', value });
+  window.ipc.send('viewer:opacity', value);
 };
 
 watch(
