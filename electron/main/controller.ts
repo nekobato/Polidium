@@ -34,11 +34,6 @@ export const createControllerWindow = (url: string): Controller => {
     win.loadFile(path.join(process.env.DIST, 'index.html#', url));
   }
 
-  // Test actively push message to the Electron-Renderer
-  win.webContents.on('did-finish-load', () => {
-    win?.webContents.send('main-process-message', new Date().toLocaleString());
-  });
-
   win.on('blur', () => {
     if (!DEBUG) win.hide();
   });

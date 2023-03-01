@@ -6,9 +6,8 @@ const preload = join(__dirname, '../preload/index.js');
 export type Viewer = {
   win: BrowserWindow;
   view: BrowserView;
+  viewAction: (payload?: any) => void;
   setWebView: (activate: boolean) => void;
-  viewGoBack: () => boolean;
-  viewGoForward: () => boolean;
   resizeMode: (active: boolean) => void;
 };
 
@@ -79,8 +78,31 @@ export const createViewerWindow = (url: string): Viewer => {
     } else {
       win.blur();
     }
-    win.webContents.send('main-process-message', 'mode:resize', active);
+    win.webContents.send('mode:resize', active);
   };
 
-  return { win, view, viewGoBack, viewGoForward, setWebView, resizeMode };
+  const viewAction = (payload: { action: string } & any) => {
+    const { action, ...args } = payload;
+    switch (action) {
+      case 'open-url':
+        view.webContents.loadURL(args.url);
+      case 'goBack':
+        return viewGoBack();
+      case 'goForward':
+        return viewGoForward();
+      case 'reload':
+        view.webContents.reload();
+        break;
+      case 'resizeMode':
+        resizeMode(args.active);
+        break;
+      case 'setWebView':
+        setWebView(args.active);
+        break;
+      default:
+        break;
+    }
+  };
+
+  return { win, view, viewAction, setWebView, resizeMode };
 };

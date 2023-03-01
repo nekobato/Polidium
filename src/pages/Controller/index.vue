@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, reactive, watch } from 'vue';
+import { computed, onMounted, reactive, watch } from 'vue';
 import {
   NCard,
   NTabs,
@@ -85,6 +85,20 @@ watch(
     changeViewerOpacity(value);
   }
 );
+
+onMounted(() => {
+  window.ipc.on('viewer:web', (event, data) => {
+    switch (data.action) {
+      case 'did-navigate':
+        state.web.url = data.url;
+        state.web.canBack = data.canBack;
+        state.web.canForward = data.canForward;
+        break;
+      default:
+        break;
+    }
+  });
+});
 </script>
 <template>
   <NLayout vertical>

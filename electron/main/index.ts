@@ -35,7 +35,7 @@ app
     controller = createControllerWindow('/controller');
   })
   .then(() => {
-    ipcMain.on('renderer-envet', (_, event, payload) => {
+    ipcMain.on('renderer-event', (_, event, payload) => {
       if (process.env.NODE_ENV === 'development') console.log('ipcMain', payload);
       switch (event) {
         case 'mode:web':
@@ -60,10 +60,11 @@ app
           break;
         // Viewer側でpayload解釈
         case 'viewer:settings':
-        case 'viewer:web':
         case 'viewer:video':
-          viewer.win.webContents.send('main-process-message', event, payload);
+          viewer.win.webContents.send(event, payload);
           break;
+        case 'viewer:web':
+          viewer.viewAction(payload);
         default:
           break;
         case 'quit':
@@ -71,6 +72,11 @@ app
       }
     });
     viewer.view.webContents.on('did-navigate', (event, url) => {
-      controller.win.webContents.send('main-process-message', 'viewer:navigate', { url });
+      controller.win.webContents.send('viewer:web', {
+        action: 'did-navigate',
+        url,
+        canGoBack: viewer.view.webContents.canGoBack(),
+        canGoForward: viewer.view.webContents.canGoForward(),
+      });
     });
   });
