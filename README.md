@@ -2,7 +2,13 @@
 
 # Polidium
 
-Polidiumは半透明ウィンドウとカーソル操作の透過を備えたメディアプレイヤーおよびブラウザです。
+Polidium は透明なウィンドウとカーソル操作の透過を備えたデスクトップ用のメディアプレイヤーおよびブラウザです。
+
+これは動画を視聴するためのメディアプレイヤーとしても使えるし、特殊なプラグインが必要なものを除いた動画サイトをサポートしています。もちろんシンプルなブラウザとしても使えます。
+
+あなたがパソコンの脇に置いた小さな画面で動画を流しながら作業をしている時、あなたの視野は動画を見られるような作りにはなっていません。
+
+Polidium は動画を擬似的に作業画面の手前に設置し、２つの画面を同時に中心視野で見るためのアプリケーションです。
 
 ![](https://github.com/nekobato/Polidium/blob/master/imageSource/screenshot0.jpg?raw=true)
 
@@ -19,19 +25,18 @@ Polidiumは半透明ウィンドウとカーソル操作の透過を備えたメ
 
 ### メディアプレイヤー
 
-- D&D操作による動画プレイリスト
+- D&D 操作による動画プレイリスト
 - コントローラーからのファイルの再生・停止・再生位置操作
 - 動画終了時の自動次送り
 
 <img src="https://github.com/nekobato/Polidium/blob/master/imageSource/screenshot1.jpg?raw=true" width="363" height="343" />
 
-### Webブラウザ
+### Web ブラウザ
 
-- URL入力からのブラウザ表示
-- ポインター操作透過のON/OFFスイッチ
+- URL 入力からのブラウザ表示
+- ポインター操作透過の ON/OFF スイッチ
 
 <img src="https://github.com/nekobato/Polidium/blob/master/imageSource/screenshot2.jpg?raw=true" width="352" height="342" />
-
 
 ### 操作パネル
 
