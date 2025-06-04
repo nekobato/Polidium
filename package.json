@@ -3,20 +3,15 @@
   "productName": "Polidium",
   "version": "2.0.3",
   "description": "Polid Movie Screen",
-  "main": "./app/main.js",
+  "main": "./dist-electron/main.js",
   "scripts": {
-    "start": "DEBUG=true electron ./app",
-    "test": "npm run test:unit && npm run test:e2e",
-    "dev": "NODE_ENV=development npm run watch & npm start",
-    "watch": "npm run watch:renderer & npm run watch:main",
-    "watch:renderer": "vite build --watch",
-    "watch:main": "webpack --watch --watch-poll --config ./webpack.main.config.js",
-    "build": "npm run build:renderer & npm run build:main",
-    "build:renderer": "vite build",
-    "build:main": "webpack --progress --hide-modules --config ./webpack.main.config.js",
+    "start": "electron .",
+    "test": "pnpm run test:unit && pnpm run test:e2e",
+    "dev": "vite",
+    "build": "vite build",
     "test:unit": "karma start test/unit/karma.conf.js",
-    "test:e2e": "npm run pack && mocha test/e2e",
-    "pack": "npm run build && build --dir ./"
+    "test:e2e": "pnpm run pack && mocha test/e2e",
+    "pack": "pnpm run build && build --dir ./"
   },
   "build": {
     "appId": "net.nekobato.polidium",
@@ -80,11 +75,14 @@
     "webpack": "^5.99.9",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.2",
-    "webpack-merge": "^6.0.1"
+    "webpack-merge": "^6.0.1",
+    "vite-plugin-electron": "^0.29.0",
+    "vite-plugin-electron-renderer": "^0.14.6"
   },
   "dependencies": {
     "@sentry/electron": "^3.0.8",
     "electron-updater": "^2.23.3",
     "xss": "^1.0.15"
-  }
+  },
+  "packageManager": "pnpm@10.5.2"
 }

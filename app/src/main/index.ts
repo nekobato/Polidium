@@ -68,6 +68,14 @@ app.on("ready", () => {
 
   player.show();
 
+  process.on('message', (msg) => {
+    if (msg === 'electron-vite&type=hot-reload') {
+      for (const win of BrowserWindow.getAllWindows()) {
+        win.webContents.reload();
+      }
+    }
+  });
+
   ipcMain.on(types.CONNECT_STATE, (event) => {
     event.returnValue = store.state;
   });
