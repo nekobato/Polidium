@@ -43,30 +43,31 @@ import Settings from './Settings.vue'
 
 const currentView = ref('FileController')
 
-function switchView (viewName) {
+function switchView (viewName: 'FileController' | 'WebController' | 'Settings') {
   currentView.value = viewName
 }
 
-function onDragOver () {
+function onDragOver (_e: DragEvent) {
   return false
 }
 
-function onDragLeave () {
+function onDragLeave (_e: DragEvent) {
   return false
 }
 
-function onDragEnd () {
+function onDragEnd (_e: DragEvent) {
   return false
 }
 
-function onDrop (e) {
+function onDrop (e: DragEvent) {
+  if (!e.dataTransfer) return false
   const files = e.dataTransfer.files
   for (const file of files) {
     if (file.type === 'video/mp4') {
       ipc.commit(types.DROP_FILE, {
         file: {
           name: file.name,
-          path: file.path
+          path: (file as any).path
         }
       })
     }

@@ -17,7 +17,7 @@ const store = useStore()
 const settings = computed(() => store.state.settings.player)
 const playerStyle = computed(() => ({
   opacity: settings.value.resizeMode ? 1 : settings.value.opacity,
-  'pointer-events': settings.value.clickThrough ? 'none' : 'auto'
+  pointerEvents: settings.value.clickThrough ? 'none' : 'auto'
 }))
 </script>
 

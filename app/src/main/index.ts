@@ -24,7 +24,7 @@ if (process.env.SENTRY_DSN) {
   Sentry.init({ dsn: process.env.SENTRY_DSN });
 }
 
-if (MAC) app.dock.hide();
+if (MAC) app.dock?.hide();
 
 function createWindows() {
   const menuTemplate: Electron.MenuItemConstructorOptions[] = [
@@ -83,34 +83,34 @@ function createWindows() {
     types.CONNECT_COMMIT,
     (_event, typeName: string, payload: string) => {
       if (DEBUG) console.log(typeName, payload);
-      player.win.webContents.send(types.CONNECT_COMMIT, typeName, payload);
+      player.win!.webContents.send(types.CONNECT_COMMIT, typeName, payload);
       controller.win.webContents.send(types.CONNECT_COMMIT, typeName, payload);
 
       if (typeName === types.QUIT) app.quit();
 
       if (typeName === types.SET_CLICKTHROUGH) {
         const parsedPayload = JSON.parse(payload);
-        player.win.setIgnoreMouseEvents(parsedPayload.clickThrough);
-        player.win.setAlwaysOnTop(parsedPayload.clickThrough);
+        player.win!.setIgnoreMouseEvents(parsedPayload.clickThrough);
+        player.win!.setAlwaysOnTop(parsedPayload.clickThrough);
         if (MAC)
-          player.win.setVisibleOnAllWorkspaces(parsedPayload.clickThrough);
+          player.win!.setVisibleOnAllWorkspaces(parsedPayload.clickThrough);
       }
 
       if (typeName === types.RESIZE_PLAYER) {
         const parsedPayload = JSON.parse(payload);
 
         if (parsedPayload.mode) {
-          player.win.focus();
+          player.win!.focus();
         } else {
-          player.win.blur();
+          player.win!.blur();
         }
 
-        player.win.setIgnoreMouseEvents(!parsedPayload.mode);
-        player.win.setAlwaysOnTop(true);
-        if (MAC) player.win.setVisibleOnAllWorkspaces(true);
-        player.win.setResizable(parsedPayload.mode);
-        player.win.setMovable(parsedPayload.mode);
-        if (MAC) player.win.setHasShadow(parsedPayload.mode);
+        player.win!.setIgnoreMouseEvents(!parsedPayload.mode);
+        player.win!.setAlwaysOnTop(true);
+        if (MAC) player.win!.setVisibleOnAllWorkspaces(true);
+        player.win!.setResizable(parsedPayload.mode);
+        player.win!.setMovable(parsedPayload.mode);
+        if (MAC) player.win!.setHasShadow(parsedPayload.mode);
       }
     }
   );

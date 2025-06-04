@@ -18,6 +18,12 @@ importers:
         specifier: ^1.0.15
         version: 1.0.15
     devDependencies:
+      '@types/node':
+        specifier: ^22.15.29
+        version: 22.15.29
+      '@types/sortablejs':
+        specifier: ^1.15.8
+        version: 1.15.8
       '@vitejs/plugin-vue':
         specifier: ^5.0.4
         version: 5.2.4(vite@5.4.19(@types/node@22.15.29)(sass-embedded@1.89.1)(stylus@0.64.0)(terser@5.40.0))(vue@3.5.16(typescript@5.8.3))
@@ -502,6 +508,9 @@ packages:
 
   '@types/responselike@1.0.3':
     resolution: {integrity: sha512-H/+L+UkTV33uf49PH5pCAUBVPNj2nDBXTN+qS1dOwyyg24l3CcicicCA7ca+HMvJBZcFgl5r8e+RR6elsb4Lyw==}
+
+  '@types/sortablejs@1.15.8':
+    resolution: {integrity: sha512-b79830lW+RZfwaztgs1aVPgbasJ8e7AXtZYHTELNXZPsERt4ymJdjV4OccDbHQAvHrCcFpbF78jkm0R6h/pZVg==}
 
   '@types/verror@1.10.11':
     resolution: {integrity: sha512-RlDm9K7+o5stv0Co8i8ZRGxDbrTxhJtgjqjFyVh/tXQyl/rYtTKlnTvZ88oSTeYREWurwx20Js4kTuKCsFkUtg==}
@@ -2502,6 +2511,8 @@ snapshots:
   '@types/responselike@1.0.3':
     dependencies:
       '@types/node': 22.15.29
+
+  '@types/sortablejs@1.15.8': {}
 
   '@types/verror@1.10.11':
     optional: true
