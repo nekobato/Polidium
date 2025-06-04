@@ -12,7 +12,7 @@
   ></video>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, watch, computed } from 'vue'
 import { useStore } from 'vuex'
 import ipc from 'renderer/ipc'
