@@ -29,7 +29,12 @@ module.exports = class {
     this.win.setIgnoreMouseEvents(true)
     this.win.setVisibleOnAllWorkspaces(true)
 
-    this.win.loadURL('file://' + __dirname + '/player.html')
+    const devUrl = process.env.VITE_DEV_SERVER_URL
+    if (devUrl) {
+      this.win.loadURL(devUrl + '/player.html')
+    } else {
+      this.win.loadURL('file://' + __dirname + '/player.html')
+    }
 
     this.win.on('closed', () => {
       this.win = null
