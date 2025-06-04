@@ -15,6 +15,7 @@ import * as os from "os";
 import * as types from "root/mutation-types";
 import PlayerWindow from "./player";
 import ControllerWindow from "./controller";
+import { join } from "path";
 
 const DEBUG = process.env.DEBUG ? true : false;
 const MAC = os.type() === "Darwin";
@@ -25,7 +26,7 @@ if (process.env.SENTRY_DSN) {
 
 if (MAC) app.dock.hide();
 
-app.on("ready", () => {
+function createWindows() {
   const menuTemplate: Electron.MenuItemConstructorOptions[] = [
     {
       label: "Polidium",
@@ -59,7 +60,9 @@ app.on("ready", () => {
   const player = new PlayerWindow();
   const controller = new ControllerWindow();
 
-  const trayIcon = nativeImage.createFromPath(__dirname + "/img/tray_icon.png");
+  const trayIcon = nativeImage.createFromPath(
+    join(__dirname, 'img', 'tray_icon.png')
+  );
   const tray = new Tray(trayIcon);
 
   tray.on("click", (_event, bounds) => {
@@ -74,10 +77,6 @@ app.on("ready", () => {
         win.webContents.reload();
       }
     }
-  });
-
-  ipcMain.on(types.CONNECT_STATE, (event) => {
-    event.returnValue = store.state;
   });
 
   ipcMain.on(
@@ -115,6 +114,13 @@ app.on("ready", () => {
       }
     }
   );
+}
+
+app.whenReady().then(() => {
+  createWindows();
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) createWindows();
+  });
 });
 
 app.on("will-quit", () => {

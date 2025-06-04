@@ -1,4 +1,3 @@
-import { ipcRenderer } from 'electron'
 import * as types from 'root/mutation-types'
 
 function getSettingsFromLocalStrage () {

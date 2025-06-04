@@ -1,10 +1,11 @@
-import { ipcRenderer } from 'electron'
 import { createStore } from 'vuex'
 import * as types from 'root/mutation-types'
 import * as Sentry from '@sentry/electron'
 import video from './modules/video'
 import web from './modules/web'
 import settings from './modules/settings'
+
+const ipc = (window as any).electronAPI
 
 const DEBUG = process.env.NODE_ENV !== 'production'
 
@@ -21,7 +22,7 @@ const store = createStore({
   strict: DEBUG
 })
 
-ipcRenderer.on(types.CONNECT_COMMIT, (_event, typeName: string, payload: string) => {
+ipc.on(types.CONNECT_COMMIT, (typeName: string, payload: string) => {
   store.commit(typeName, JSON.parse(payload))
 })
 

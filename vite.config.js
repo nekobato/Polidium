@@ -11,6 +11,9 @@ export default defineConfig({
     electron({
       main: {
         entry: 'app/src/main/index.ts'
+      },
+      preload: {
+        input: 'app/src/preload.ts'
       }
     }),
     renderer()
