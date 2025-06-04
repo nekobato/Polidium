@@ -20,6 +20,11 @@ module.exports = {
         loader: 'vue-loader'
       },
       {
+        test: /\.ts$/,
+        loader: 'ts-loader',
+        exclude: /node_modules/
+      },
+      {
         test: /\.(png|jpe?g|gif|svg|woff2?|eot|ttf|otf)(\?.*)?$/,
         loader: 'url-loader',
         options: {
@@ -38,6 +43,7 @@ module.exports = {
     })
   ],
   resolve: {
+    extensions: ['.ts', '.js', '.json', '.node'],
     alias: {
       'vue$': 'vue/dist/vue.common.js',
       'renderer': path.join(__dirname, 'app/src/renderer'),

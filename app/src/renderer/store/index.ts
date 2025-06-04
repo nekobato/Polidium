@@ -21,7 +21,7 @@ const store = createStore({
   strict: DEBUG
 })
 
-ipcRenderer.on(types.CONNECT_COMMIT, (_event, typeName, payload) => {
+ipcRenderer.on(types.CONNECT_COMMIT, (_event, typeName: string, payload: string) => {
   store.commit(typeName, JSON.parse(payload))
 })
 
