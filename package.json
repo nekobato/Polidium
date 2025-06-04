@@ -96,5 +96,6 @@
   },
   "dependencies": {
     "xss": "^1.0.15"
+    "electron-updater": "^2.23.3"
   }
 }
