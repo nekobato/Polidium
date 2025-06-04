@@ -1,8 +1,9 @@
 "use strict"
 
 const electron = require('electron')
-const { app, Tray, nativeImage, globalShortcut, ipcMain } = electron
 const Sentry = require('@sentry/electron')
+const { app, Tray, nativeImage, globalShortcut, ipcMain, Menu, dialog } = electron
+const { autoUpdater } = require('electron-updater')
 const os = require('os')
 const DEBUG = process.env.DEBUG ? true : false
 const MAC = os.type() === 'Darwin' ? true : false
@@ -19,6 +20,34 @@ if (MAC) app.dock.hide()
 app.on('ready', () => {
 
   var screen = electron.screen
+
+  const menuTemplate = [
+    {
+      label: 'Polidium',
+      submenu: [
+        {
+          label: 'Check for Updates...',
+          click () {
+            autoUpdater.checkForUpdates()
+          }
+        },
+        { type: 'separator' },
+        { role: 'quit' }
+      ]
+    }
+  ]
+  Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
+
+  autoUpdater.on('update-downloaded', () => {
+    dialog.showMessageBox({
+      type: 'info',
+      buttons: ['Restart', 'Later'],
+      title: 'Update ready',
+      message: 'Update downloaded. Restart now?'
+    }).then(result => {
+      if (result.response === 0) autoUpdater.quitAndInstall()
+    })
+  })
 
   var player = new PlayerWindow()
   var controller = new ControllerWindow()
