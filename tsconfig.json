@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "outDir": "./app",
+    "strict": true,
+    "esModuleInterop": true,
+    "baseUrl": "./app/src",
+    "paths": {
+      "root/*": ["*"],
+      "main/*": ["main/*"],
+      "renderer/*": ["renderer/*"]
+    }
+  },
+  "include": ["app/src/**/*.ts"],
+  "exclude": ["node_modules"]
+}

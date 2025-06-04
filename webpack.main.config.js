@@ -11,6 +11,11 @@ module.exports = {
       {
         test: /\.node$/,
         loader: 'node-loader'
+      },
+      {
+        test: /\.ts$/,
+        use: 'ts-loader',
+        exclude: /node_modules/
       }
     ]
   },
@@ -29,7 +34,7 @@ module.exports = {
     })
   ],
   resolve: {
-    extensions: ['.js', '.json', '.node'],
+    extensions: ['.ts', '.js', '.json', '.node'],
     modules: [
       path.join(__dirname, 'app/node_modules')
     ],
