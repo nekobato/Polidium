@@ -1,71 +1,80 @@
-<template lang="jade">
-div.web
-  form(@submit.prevent='submitURL')
-    div.input-field
-      input#url_input(type='text' placeholder="URL" v-model='url' @keydown.86="tryPasteClipboard")
-      label(for="url_input") {{encodedURL}}
-  div.row.click-through
-    div.col.s6.no-padding
-      span.grey-text Player ClickThrough is
-    div.col.s6.no-padding
-      div.switch
-        label
-          span Off
-          input(type="checkbox", :checked="clickThrough", @change="inputClickThrough")
-          span.lever
-          span On
+<template>
+  <div class="web">
+    <form @submit.prevent="submitURL">
+      <div class="input-field">
+        <input id="url_input" type="text" placeholder="URL" v-model="url" @keydown.86="tryPasteClipboard" />
+        <label for="url_input">{{ encodedURL }}</label>
+      </div>
+    </form>
+    <div class="row click-through">
+      <div class="col s6 no-padding">
+        <span class="grey-text">Player ClickThrough is</span>
+      </div>
+      <div class="col s6 no-padding">
+        <div class="switch">
+          <label>
+            <span>Off</span>
+            <input type="checkbox" :checked="clickThrough" @change="inputClickThrough" />
+            <span class="lever"></span>
+            <span>On</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
-<script>
-const ipc = require('renderer/ipc')
-const { clipboard } = require('electron')
-const xss = require('xss')
-const types = require('root/mutation-types')
 
-module.exports = {
-  name: 'WebController',
-  data () {
-    return {
-      url: ''
-    }
-  },
-  computed: {
-    encodedURL () {
-      const encodedURL = this.$data.url.match(/^https?\:\/\//g) ? this.$data.url : 'http://' + this.$data.url
-      return xss(encodedURL)
-    },
-    clickThrough () {
-      return this.$store.state.settings.player.clickThrough
-    }
-  },
-  methods: {
-    submitURL () {
-      if (! this.encodedURL.match(/^https?(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)$/) ) {
-        return false
-      }
-      ipc.commit('OPEN_URL', { src: this.encodedURL })
-    },
-    tryPasteClipboard (e) { // for Mac
-      if (e.metaKey !== true) return
-      this.url = clipboard.readText()
-    },
-    inputClickThrough (e) {
-      ipc.commit(types.SET_CLICKTHROUGH, { clickThrough: e.target.checked })
-    }
+<script setup>
+import { ref, computed } from 'vue'
+import ipc from 'renderer/ipc'
+import { clipboard } from 'electron'
+import xss from 'xss'
+import * as types from 'root/mutation-types'
+import { useStore } from 'vuex'
+
+const store = useStore()
+const url = ref('')
+
+const encodedURL = computed(() => {
+  const encoded = url.value.match(/^https?:\/\//g) ? url.value : 'http://' + url.value
+  return xss(encoded)
+})
+
+const clickThrough = computed(() => store.state.settings.player.clickThrough)
+
+function submitURL () {
+  if (!encodedURL.value.match(/^https?:\/\/[-_.!~*'()a-zA-Z0-9;\/?:@&=+\$,%#]+$/)) {
+    return false
   }
+  ipc.commit('OPEN_URL', { src: encodedURL.value })
+}
+
+function tryPasteClipboard (e) {
+  if (e.metaKey !== true) return
+  url.value = clipboard.readText()
+}
+
+function inputClickThrough (e) {
+  ipc.commit(types.SET_CLICKTHROUGH, { clickThrough: e.target.checked })
 }
 </script>
-<style lang="stylus" scoped>
-.web
-  padding: 20px
-.input-field
-  label
-    display: inline-block
-    top: 3.5rem
-    word-break: break-all
-    max-height: 4.5rem
-    overflow: hidden
-.click-through
-  padding-top: 4rem
-.switch
-  text-align: center
+
+<style lang="scss" scoped>
+.web {
+  padding: 20px;
+}
+.input-field label {
+  display: inline-block;
+  top: 3.5rem;
+  word-break: break-all;
+  max-height: 4.5rem;
+  overflow: hidden;
+}
+.click-through {
+  padding-top: 4rem;
+}
+.switch {
+  text-align: center;
+}
 </style>
+

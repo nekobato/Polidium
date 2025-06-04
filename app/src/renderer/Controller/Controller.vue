@@ -1,99 +1,114 @@
-<template lang="jade">
-div.my-controller(
-  @dragover.prevent="onDragOver",
-  @dragleave.prevent="onDragLeave",
-  @dragend.prevent="onDragEnd",
-  @drop.prevent="onDrop")
-  div.blue-grey.my-tabs
-    button.waves-effect.waves-teal.btn-flat.my-tab(
-      @click="switchView('FileController')",
-      :class="{ 'my-on': currentView === 'FileController' }") file
-    button.waves-effect.waves-teal.btn-flat.my-tab(
-      @click="switchView('WebController')",
-      :class="{ 'my-on': currentView === 'WebController' }") Web
-    button.waves-effect.waves-teal.btn-flat.my-tab.my-settings(
-      @click="switchView('Settings')",
-      :class="{ 'my-on': currentView === 'Settings' }")
-      i.material-icons settings
-  component(:is="currentView")
+<template>
+  <div
+    class="my-controller"
+    @dragover.prevent="onDragOver"
+    @dragleave.prevent="onDragLeave"
+    @dragend.prevent="onDragEnd"
+    @drop.prevent="onDrop"
+  >
+    <div class="blue-grey my-tabs">
+      <button
+        class="waves-effect waves-teal btn-flat my-tab"
+        @click="switchView('FileController')"
+        :class="{ 'my-on': currentView === 'FileController' }"
+      >
+        file
+      </button>
+      <button
+        class="waves-effect waves-teal btn-flat my-tab"
+        @click="switchView('WebController')"
+        :class="{ 'my-on': currentView === 'WebController' }"
+      >
+        Web
+      </button>
+      <button
+        class="waves-effect waves-teal btn-flat my-tab my-settings"
+        @click="switchView('Settings')"
+        :class="{ 'my-on': currentView === 'Settings' }"
+      >
+        <i class="material-icons">settings</i>
+      </button>
+    </div>
+    <component :is="currentView" />
+  </div>
 </template>
-<script>
-const ipc = require('renderer/ipc')
-const types = require('root/mutation-types')
-const FileController = require('./FileController.vue')
-const WebController = require('./WebController.vue')
-const Settings = require('./Settings.vue')
 
-module.exports = {
-  data () {
-    return {
-      currentView: 'FileController'
-    }
-  },
-  components: {
-    FileController,
-    WebController,
-    Settings
-  },
-  methods: {
-    switchView (viewName) {
-      this.currentView = viewName
-    },
-    onDragOver () {
-      return false
-    },
-    onDragLeave () {
-      return false
-    },
-    onDragEnd () {
-      return false
-    },
-    onDrop (e) {
-      var files = e.dataTransfer.files
-      for (file of files) {
-        if (file.type === 'video/mp4') {
-          console.log(file)
-          ipc.commit(types.DROP_FILE, {
-            file: {
-              name: file.name,
-              path: file.path
-            }
-          })
+<script setup>
+import { ref } from 'vue'
+import ipc from 'renderer/ipc'
+import * as types from 'root/mutation-types'
+import FileController from './FileController.vue'
+import WebController from './WebController.vue'
+import Settings from './Settings.vue'
+
+const currentView = ref('FileController')
+
+function switchView (viewName) {
+  currentView.value = viewName
+}
+
+function onDragOver () {
+  return false
+}
+
+function onDragLeave () {
+  return false
+}
+
+function onDragEnd () {
+  return false
+}
+
+function onDrop (e) {
+  const files = e.dataTransfer.files
+  for (const file of files) {
+    if (file.type === 'video/mp4') {
+      ipc.commit(types.DROP_FILE, {
+        file: {
+          name: file.name,
+          path: file.path
         }
-      }
-      return false
+      })
     }
   }
+  return false
 }
 </script>
-<style lang="stylus">
-body,
-html
-  margin: 0
-  width: 100%
-  height: 100%
-  overflow: hidden
-</style>
-<style lang="stylus" scoped>
-.my-controller
-  display: flex
-  flex-direction: column
-  margin: 0
-  width: 100%
-  height: 100%
-  border-radius: 5px
-.my-tabs
-  display: flex
-  flex-shrink: 0
-  height: 36px
-.my-tab
-  color: #fff
-  &.my-on
-    background-color: rgba(0, 0, 0, 0.2)
-.my-settings
-  position: absolute
-  right: 0
-  top: 0
-  padding: 0 1rem
 
+<style lang="scss">
+body,
+html {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
 </style>
+<style lang="scss" scoped>
+.my-controller {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+}
+.my-tabs {
+  display: flex;
+  flex-shrink: 0;
+  height: 36px;
+}
+.my-tab {
+  color: #fff;
+}
+.my-tab.my-on {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.my-settings {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 0 1rem;
+}
+</style>
+

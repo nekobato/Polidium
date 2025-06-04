@@ -1,30 +1,28 @@
-const { ipcRenderer } = require('electron')
-const Vue = require('vue')
-const Vuex = require('vuex')
-const types = require('root/mutation-types')
-const Sentry = require('@sentry/electron')
-
-Vue.use(Vuex)
+import { ipcRenderer } from 'electron'
+import { createStore } from 'vuex'
+import * as types from 'root/mutation-types'
+import * as Sentry from '@sentry/electron'
+import video from './modules/video'
+import web from './modules/web'
+import settings from './modules/settings'
 
 const DEBUG = process.env.NODE_ENV !== 'production'
-
-Vue.config.debug = DEBUG ? true : false
 
 if (process.env.SENTRY_DSN) {
   Sentry.init({ dsn: process.env.SENTRY_DSN })
 }
 
-const store = new Vuex.Store({
+const store = createStore({
   modules: {
-    'video': require('./modules/video'),
-    'web': require('./modules/web'),
-    'settings': require('./modules/settings')
+    video,
+    web,
+    settings
   },
   strict: DEBUG
 })
 
-ipcRenderer.on(types.CONNECT_COMMIT, (event, typeName, payload) => {
+ipcRenderer.on(types.CONNECT_COMMIT, (_event, typeName, payload) => {
   store.commit(typeName, JSON.parse(payload))
 })
 
-module.exports = store
+export default store

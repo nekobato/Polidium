@@ -1,4 +1,4 @@
-const types = require('root/mutation-types')
+import * as types from 'root/mutation-types'
 
 function getQeueusFromLocalStrage () {
   return localStorage.queues ? JSON.parse(localStorage.queues) : []
@@ -20,8 +20,8 @@ const state = {
   }
 }
 
-module.exports = {
-  state: state,
+export default {
+  state,
   mutations: {
     [types.DROP_FILE] (state, payload) {
       state.queues.push(payload.file)

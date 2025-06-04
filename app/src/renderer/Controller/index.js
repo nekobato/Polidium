@@ -1,12 +1,7 @@
-const Vue = require('vue')
-const store = require('../store')
-const Controller = require('./Controller.vue')
+import { createApp } from 'vue'
+import store from '../store'
+import Controller from './Controller.vue'
+import 'materialize-css/dist/css/materialize.min.css'
+import 'material-design-icons/iconfont/material-icons.css'
 
-const materializeCss = require('materialize-css/dist/css/materialize.min.css')
-const materialIcons = require('material-design-icons/iconfont/material-icons.css')
-
-new Vue({
-  el: '#controller',
-  store,
-  render: h => h(Controller)
-})
+createApp(Controller).use(store).mount('#controller')

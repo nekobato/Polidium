@@ -12,7 +12,7 @@ import {
 import * as Sentry from "@sentry/electron";
 import { autoUpdater } from "electron-updater";
 import * as os from "os";
-import types from "root/mutation-types";
+import * as types from "root/mutation-types";
 import PlayerWindow from "./player";
 import ControllerWindow from "./controller";
 
