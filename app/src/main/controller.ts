@@ -1,16 +1,13 @@
-"use strict"
+import { BrowserWindow } from 'electron'
 
-const electron = require('electron')
-const BrowserWindow = electron.BrowserWindow
-
-const DEBUG = process.env.DEBUG ? true : false
+const DEBUG = !!process.env.DEBUG
 
 const WINDOW_WIDTH = 320
 
-module.exports = class {
+export default class ControllerWindow {
+  win: BrowserWindow
 
   constructor () {
-
     this.win = new BrowserWindow({
       width      : WINDOW_WIDTH,
       height     : 310,
@@ -36,13 +33,13 @@ module.exports = class {
     }
   }
 
-  showWindow (x) {
+  showWindow (x: number) {
     this.win.setPosition(x - WINDOW_WIDTH/2, 40)
     this.win.show()
     this.win.focus()
   }
 
-  toggle (x) {
+  toggle (x: number) {
     if (this.win.isVisible()) {
       this.win.hide()
     } else {

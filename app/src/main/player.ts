@@ -1,16 +1,12 @@
-"use strict"
+import { BrowserWindow, screen } from 'electron'
 
-const electron = require('electron')
-const BrowserWindow = electron.BrowserWindow
+const DEBUG = !!process.env.DEBUG
 
-const DEBUG = process.env.DEBUG ? true : false
-
-module.exports = class {
+export default class PlayerWindow {
+  win: BrowserWindow | null
 
   constructor () {
-
-    var screen = electron.screen
-    var size = screen.getPrimaryDisplay().workAreaSize
+    const size = screen.getPrimaryDisplay().workAreaSize
 
     this.win = new BrowserWindow({
       x          : 0,
@@ -42,6 +38,6 @@ module.exports = class {
   }
 
   show () {
-    this.win.show()
+    this.win?.show()
   }
 }

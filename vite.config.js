@@ -20,8 +20,8 @@ export default defineConfig({
     emptyOutDir: false,
     rollupOptions: {
       input: {
-        controller: resolve(__dirname, 'app/src/renderer/Controller/index.js'),
-        player: resolve(__dirname, 'app/src/renderer/Player/index.js')
+        controller: resolve(__dirname, 'app/src/renderer/Controller/index.ts'),
+        player: resolve(__dirname, 'app/src/renderer/Player/index.ts')
       },
       output: {
         entryFileNames: '[name].js',

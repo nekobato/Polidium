@@ -2,7 +2,7 @@ import { ipcRenderer } from 'electron'
 import * as types from 'root/mutation-types'
 
 function getSettingsFromLocalStrage () {
-  return settings = localStorage.settings ? JSON.parse(localStorage.settings) : {
+  return localStorage.settings ? JSON.parse(localStorage.settings) : {
     player: {
       mode: 'video-player',
       opacity: 0.05,
