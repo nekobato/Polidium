@@ -51,10 +51,10 @@ import { computed, onMounted, ref } from 'vue'
 import { useStore } from 'vuex'
 import ipc from 'renderer/ipc'
 import * as types from 'root/mutation-types'
-import Sortable from 'sortablejs'
+import Sortable, { type SortableEvent } from 'sortablejs'
 
 const store = useStore()
-const queueList = ref(null)
+const queueList = ref<HTMLElement | null>(null)
 
 const queues = computed(() => store.state.video.queues)
 const playPointer = computed(() => store.state.video.playPointer)
@@ -70,33 +70,33 @@ const currentTime = computed(() => {
   return isNaN(percentage) ? 0 : percentage
 })
 
-function play (index) {
+function play (index: number) {
   ipc.commit(types.VIDEO_SELECT, { index })
 }
 
 function resume () {
-  ipc.commit(types.RESUME_FILE)
+  ipc.commit(types.RESUME_FILE, {})
 }
 
 function pause () {
-  ipc.commit(types.PAUSE_FILE)
+  ipc.commit(types.PAUSE_FILE, {})
 }
 
-function remove (index) {
+function remove (index: number) {
   ipc.commit(types.REMOVE_QUEUE, { index })
 }
 
 function clear () {
-  ipc.commit(types.CLEAR_QUEUES)
+  ipc.commit(types.CLEAR_QUEUES, {})
 }
 
-function inputCurrentTime (e) {
-  ipc.commit(types.VIDEO_SEEK, { percentage: e.target.value })
+function inputCurrentTime (e: Event) {
+  ipc.commit(types.VIDEO_SEEK, { percentage: (e.target as HTMLInputElement).value })
 }
 
 onMounted(() => {
-  Sortable.create(queueList.value, {
-    onUpdate: (e) => {
+  Sortable.create(queueList.value!, {
+    onUpdate: (e: SortableEvent) => {
       ipc.commit(types.SORT_QUEUE, {
         oldIndex: e.oldIndex,
         newIndex: e.newIndex

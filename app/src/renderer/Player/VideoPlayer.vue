@@ -19,7 +19,7 @@ import ipc from 'renderer/ipc'
 import * as types from 'root/mutation-types'
 
 const store = useStore()
-const videoEl = ref(null)
+const videoEl = ref<HTMLVideoElement | null>(null)
 
 const queues = computed(() => store.state.video.queues)
 const playPointer = computed(() => store.state.video.playPointer)
@@ -44,27 +44,27 @@ watch(() => video.value.switch, (value) => {
 })
 
 function onVideoCanplay () {
-  ipc.commit(types.VIDEO_CANPLAY, { duration: videoEl.value.duration })
+  ipc.commit(types.VIDEO_CANPLAY, { duration: videoEl.value!.duration })
 }
 
 function onVideoTimeupdate () {
-  ipc.commit(types.VIDEO_TIMEUPDATE, { currentTime: videoEl.value.currentTime })
+  ipc.commit(types.VIDEO_TIMEUPDATE, { currentTime: videoEl.value!.currentTime })
 }
 
 function onVideoPlay () {
-  ipc.commit(types.VIDEO_PLAYED)
+  ipc.commit(types.VIDEO_PLAYED, {})
 }
 
 function onVideoPause () {
-  ipc.commit(types.VIDEO_PAUSED)
+  ipc.commit(types.VIDEO_PAUSED, {})
 }
 
 function onVideoEnded () {
-  ipc.commit(types.VIDEO_ENDED)
+  ipc.commit(types.VIDEO_ENDED, {})
 }
 
 function onVideoLoadStart () {
-  ipc.commit(types.VIDEO_PAUSED)
+  ipc.commit(types.VIDEO_PAUSED, {})
 }
 </script>
 

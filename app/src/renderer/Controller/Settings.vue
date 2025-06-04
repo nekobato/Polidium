@@ -54,15 +54,15 @@ const opacity = computed(() => settings.value.player.opacity * 100)
 const opacityFloor = computed(() => Math.floor(settings.value.player.opacity * 100))
 
 function quit () {
-  ipc.commit(types.QUIT)
+  ipc.commit(types.QUIT, {})
 }
 
 function reload () {
-  ipc.commit(types.RELOAD)
+  ipc.commit(types.RELOAD, {})
 }
 
 function reset () {
-  ipc.commit(types.RESET)
+  ipc.commit(types.RESET, {})
 }
 
 
@@ -70,8 +70,8 @@ function resizePlayer () {
   ipc.commit(types.RESIZE_PLAYER, { mode: true })
 }
 
-function inputOpacity (e) {
-  ipc.commit(types.CHANGE_OPACITY, e.target.value / 100)
+function inputOpacity (e: Event) {
+  ipc.commit(types.CHANGE_OPACITY, (e.target as HTMLInputElement).value / 100)
 }
 </script>
 

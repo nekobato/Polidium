@@ -49,13 +49,13 @@ function submitURL () {
   ipc.commit('OPEN_URL', { src: encodedURL.value })
 }
 
-function tryPasteClipboard (e) {
+function tryPasteClipboard (e: KeyboardEvent) {
   if (e.metaKey !== true) return
   url.value = clipboard.readText()
 }
 
-function inputClickThrough (e) {
-  ipc.commit(types.SET_CLICKTHROUGH, { clickThrough: e.target.checked })
+function inputClickThrough (e: Event) {
+  ipc.commit(types.SET_CLICKTHROUGH, { clickThrough: (e.target as HTMLInputElement).checked })
 }
 </script>
 
