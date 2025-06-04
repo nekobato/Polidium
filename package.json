@@ -96,6 +96,7 @@
   },
   "dependencies": {
     "xss": "^1.0.15"
-    "electron-updater": "^2.23.3"
+    "electron-updater": "^2.23.3",
+    "@sentry/electron": "^3.0.8"
   }
 }

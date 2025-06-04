@@ -1,6 +1,7 @@
 "use strict"
 
 const electron = require('electron')
+const Sentry = require('@sentry/electron')
 const { app, Tray, nativeImage, globalShortcut, ipcMain, Menu, dialog } = electron
 const { autoUpdater } = require('electron-updater')
 const os = require('os')
@@ -9,6 +10,10 @@ const MAC = os.type() === 'Darwin' ? true : false
 const types = require('root/mutation-types')
 const PlayerWindow = require('./player')
 const ControllerWindow = require('./controller')
+
+if (process.env.SENTRY_DSN) {
+  Sentry.init({ dsn: process.env.SENTRY_DSN })
+}
 
 if (MAC) app.dock.hide()
 
