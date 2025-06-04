@@ -9,6 +9,7 @@
     "prepare": "rm -rf node_modules/electron/dist && node node_modules/electron/install.js",
     "dev": "vite",
     "build": "pnpm prepare && vue-tsc && vite build && electron-builder --config electron-builder.config.cjs",
+    "lint": "vue-tsc --noEmit",
     "release": "pnpm build && electron-builder --publish always -c --config electron-builder.config.cjs",
     "build:icon": "electron-icon-builder --input=./public/images/logo/icon.png --output=./public",
     "test:e2e": "pnpm run pack && mocha test/e2e",
@@ -38,7 +39,8 @@
     "vite": "^5.2.8",
     "@vitejs/plugin-vue": "^5.0.4",
     "vite-plugin-electron": "^0.29.0",
-    "vite-plugin-electron-renderer": "^0.14.6"
+    "vite-plugin-electron-renderer": "^0.14.6",
+    "vue-tsc": "^2.2.10"
   },
   "dependencies": {
     "@sentry/electron": "^3.0.8",
