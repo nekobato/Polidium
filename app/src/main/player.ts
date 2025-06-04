@@ -1,4 +1,5 @@
 import { BrowserWindow, screen } from 'electron'
+import { join } from 'path'
 
 const DEBUG = !!process.env.DEBUG
 
@@ -19,7 +20,12 @@ export default class PlayerWindow {
       frame      : false,
       transparent: true,
       skipTaskbar: true,
-      alwaysOnTop: true
+      alwaysOnTop: true,
+      webPreferences: {
+        preload: join(__dirname, 'preload.js'),
+        contextIsolation: true,
+        nodeIntegration: false
+      }
     })
 
     this.win.setIgnoreMouseEvents(true)

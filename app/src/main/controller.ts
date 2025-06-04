@@ -1,4 +1,5 @@
 import { BrowserWindow } from 'electron'
+import { join } from 'path'
 
 const DEBUG = !!process.env.DEBUG
 
@@ -16,7 +17,12 @@ export default class ControllerWindow {
       frame      : false,
       transparent: false,
       skipTaskbar: true,
-      hasShadow  : true
+      hasShadow  : true,
+      webPreferences: {
+        preload: join(__dirname, 'preload.js'),
+        contextIsolation: true,
+        nodeIntegration: false
+      }
     })
 
     this.win.setVisibleOnAllWorkspaces(DEBUG ? false : true)
