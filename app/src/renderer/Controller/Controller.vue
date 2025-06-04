@@ -33,7 +33,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import ipc from 'renderer/ipc'
 import * as types from 'root/mutation-types'
