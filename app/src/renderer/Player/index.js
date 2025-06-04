@@ -1,11 +1,6 @@
-const Vue = require('vue')
-const store = require('../store')
-const Player = require('./Player.vue')
+import { createApp } from 'vue'
+import store from '../store'
+import Player from './Player.vue'
+import 'material-design-icons/iconfont/material-icons.css'
 
-const materialIcons = require('material-design-icons/iconfont/material-icons.css')
-
-new Vue({
-  el: '#player',
-  store,
-  render: h => h(Player)
-})
+createApp(Player).use(store).mount('#player')
