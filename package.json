@@ -1,45 +1,18 @@
 {
-  "name": "Polidium",
+  "name": "polidium",
   "productName": "Polidium",
   "version": "2.0.3",
   "description": "Polid Movie Screen",
   "main": "./dist-electron/main.js",
   "scripts": {
-    "start": "electron .",
     "test": "pnpm run test:e2e",
+    "prepare": "rm -rf node_modules/electron/dist && node node_modules/electron/install.js",
     "dev": "vite",
-    "build": "vite build",
+    "build": "pnpm prepare && vue-tsc && vite build && electron-builder --config electron-builder.config.cjs",
+    "release": "pnpm build && electron-builder --publish always -c --config electron-builder.config.cjs",
+    "build:icon": "electron-icon-builder --input=./public/images/logo/icon.png --output=./public",
     "test:e2e": "pnpm run pack && mocha test/e2e",
     "pack": "pnpm run build && build --dir ./"
-  },
-  "build": {
-    "appId": "net.nekobato.polidium",
-    "files": [
-      "!src"
-    ],
-    "asar": true,
-    "linux": {
-      "arch": [
-        "ia32",
-        "x64"
-      ],
-      "target": [
-        "deb",
-        "AppImage",
-        "rpm"
-      ]
-    },
-    "win": {
-      "icon": "./app/app.ico",
-      "target": [
-        "squirrel"
-      ]
-    },
-    "mac": {
-      "category": "public.app-category.video",
-      "icon": "./app/app.icns",
-      "target": "default"
-    }
   },
   "repository": {
     "type": "git",

@@ -22,7 +22,7 @@ const config = {
   mac: {
     target: ["default"],
     icon: "dist/icons/mac/icon.icns",
-    category: "public.app-category.social-networking",
+    category: "public.app-category.video",
     entitlements: "build/entitlements.mac.plist",
     entitlementsInherit: "build/entitlements.mac.plist",
     publish: ["github"]
