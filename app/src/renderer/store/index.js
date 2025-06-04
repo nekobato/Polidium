@@ -2,12 +2,17 @@ const { ipcRenderer } = require('electron')
 const Vue = require('vue')
 const Vuex = require('vuex')
 const types = require('root/mutation-types')
+const Sentry = require('@sentry/electron')
 
 Vue.use(Vuex)
 
 const DEBUG = process.env.NODE_ENV !== 'production'
 
 Vue.config.debug = DEBUG ? true : false
+
+if (process.env.SENTRY_DSN) {
+  Sentry.init({ dsn: process.env.SENTRY_DSN })
+}
 
 const store = new Vuex.Store({
   modules: {

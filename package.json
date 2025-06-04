@@ -95,6 +95,7 @@
     "xss": "^0.3.2"
   },
   "dependencies": {
-    "xss": "^0.3.3"
+    "xss": "^0.3.3",
+    "@sentry/electron": "^3.0.8"
   }
 }

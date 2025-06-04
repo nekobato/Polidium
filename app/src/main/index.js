@@ -2,12 +2,17 @@
 
 const electron = require('electron')
 const { app, Tray, nativeImage, globalShortcut, ipcMain } = electron
+const Sentry = require('@sentry/electron')
 const os = require('os')
 const DEBUG = process.env.DEBUG ? true : false
 const MAC = os.type() === 'Darwin' ? true : false
 const types = require('root/mutation-types')
 const PlayerWindow = require('./player')
 const ControllerWindow = require('./controller')
+
+if (process.env.SENTRY_DSN) {
+  Sentry.init({ dsn: process.env.SENTRY_DSN })
+}
 
 if (MAC) app.dock.hide()
 
