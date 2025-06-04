@@ -6,12 +6,12 @@
   "main": "./dist-electron/main.js",
   "scripts": {
     "start": "electron .",
-    "test": "npm run test:unit && npm run test:e2e",
+    "test": "pnpm run test:unit && pnpm run test:e2e",
     "dev": "vite",
     "build": "vite build",
     "test:unit": "karma start test/unit/karma.conf.js",
-    "test:e2e": "npm run pack && mocha test/e2e",
-    "pack": "npm run build && build --dir ./"
+    "test:e2e": "pnpm run pack && mocha test/e2e",
+    "pack": "pnpm run build && build --dir ./"
   },
   "build": {
     "appId": "net.nekobato.polidium",
@@ -83,5 +83,6 @@
     "@sentry/electron": "^3.0.8",
     "electron-updater": "^2.23.3",
     "xss": "^1.0.15"
-  }
+  },
+  "packageManager": "pnpm@10.5.2"
 }

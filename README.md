@@ -48,8 +48,8 @@ https://github.com/nekobato/Polidium/releases
 ```
 Clone this Repository
 cd Polidium
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 ```
 
 Sentry を利用する場合は、環境変数 `SENTRY_DSN` に DSN を設定してください。
