@@ -8,16 +8,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useSettingsStore } from 'renderer/store/modules/settings'
-import ipc from 'renderer/ipc'
-import * as types from 'root/mutation-types'
+import ipc from "@/renderer/ipc";
+import * as types from "@/mutation-types";
 
-const settingsStore = useSettingsStore()
-const resizeMode = computed(() => settingsStore.player.resizeMode)
-
-function onRestore () {
-  ipc.commit(types.RESIZE_PLAYER, { mode: false })
+function onRestore() {
+  ipc.commit(types.RESIZE_PLAYER, { mode: false });
 }
 </script>
 
@@ -56,4 +51,3 @@ function onRestore () {
   font-size: 14px;
 }
 </style>
-

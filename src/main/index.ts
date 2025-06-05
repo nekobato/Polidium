@@ -6,13 +6,12 @@ import {
   ipcMain,
   Menu,
   dialog,
-  screen,
   BrowserWindow
 } from "electron";
 import * as Sentry from "@sentry/electron";
 import { autoUpdater } from "electron-updater";
 import * as os from "os";
-import * as types from "root/mutation-types";
+import * as types from "@/mutation-types";
 import PlayerWindow from "./player";
 import ControllerWindow from "./controller";
 import { join } from "path";
@@ -61,7 +60,7 @@ function createWindows() {
   const controller = new ControllerWindow();
 
   const trayIcon = nativeImage.createFromPath(
-    join(__dirname, 'img', 'tray_icon.png')
+    join(__dirname, "img", "tray_icon.png")
   );
   const tray = new Tray(trayIcon);
 
@@ -71,8 +70,8 @@ function createWindows() {
 
   player.show();
 
-  process.on('message', (msg) => {
-    if (msg === 'electron-vite&type=hot-reload') {
+  process.on("message", (msg) => {
+    if (msg === "electron-vite&type=hot-reload") {
       for (const win of BrowserWindow.getAllWindows()) {
         win.webContents.reload();
       }
@@ -118,7 +117,7 @@ function createWindows() {
 
 app.whenReady().then(() => {
   createWindows();
-  app.on('activate', () => {
+  app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindows();
   });
 });

@@ -10,7 +10,9 @@
           :max="100"
           @input="inputOpacity"
         />
-        <label for="opacity_range" class="label">Opacity is {{ opacityFloor }}</label>
+        <label for="opacity_range" class="label"
+          >Opacity is {{ opacityFloor }}</label
+        >
         <div class="min-max grey-text">
           <span class="min">0</span>
           <span class="max">100</span>
@@ -43,35 +45,36 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useSettingsStore } from 'renderer/store/modules/settings'
-import ipc from 'renderer/ipc'
-import * as types from 'root/mutation-types'
+import { computed } from "vue";
+import { useSettingsStore } from "@/renderer/store/modules/settings";
+import ipc from "@/renderer/ipc";
+import * as types from "@/mutation-types";
 
-const settingsStore = useSettingsStore()
-const settings = computed(() => settingsStore)
-const opacity = computed(() => settings.value.player.opacity * 100)
-const opacityFloor = computed(() => Math.floor(settings.value.player.opacity * 100))
+const settingsStore = useSettingsStore();
+const settings = computed(() => settingsStore);
+const opacity = computed(() => settings.value.player.opacity * 100);
+const opacityFloor = computed(() =>
+  Math.floor(settings.value.player.opacity * 100)
+);
 
-function quit () {
-  ipc.commit(types.QUIT, {})
+function quit() {
+  ipc.commit(types.QUIT, {});
 }
 
-function reload () {
-  ipc.commit(types.RELOAD, {})
+function reload() {
+  ipc.commit(types.RELOAD, {});
 }
 
-function reset () {
-  ipc.commit(types.RESET, {})
+function reset() {
+  ipc.commit(types.RESET, {});
 }
 
-
-function resizePlayer () {
-  ipc.commit(types.RESIZE_PLAYER, { mode: true })
+function resizePlayer() {
+  ipc.commit(types.RESIZE_PLAYER, { mode: true });
 }
 
-function inputOpacity (value: number) {
-  ipc.commit(types.CHANGE_OPACITY, value / 100)
+function inputOpacity(value: number) {
+  ipc.commit(types.CHANGE_OPACITY, value / 100);
 }
 </script>
 
@@ -116,4 +119,3 @@ function inputOpacity (value: number) {
   width: 120px;
 }
 </style>
-

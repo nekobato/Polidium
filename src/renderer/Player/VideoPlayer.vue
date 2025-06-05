@@ -1,0 +1,89 @@
+<template>
+  <video
+    ref="video"
+    class="video"
+    :src="videoSource"
+    @canplay="onVideoCanplay"
+    @timeupdate="onVideoTimeupdate"
+    @play="onVideoPlay"
+    @pause="onVideoPause"
+    @ended="onVideoEnded"
+    @loadstart="onVideoLoadStart"
+  ></video>
+</template>
+
+<script setup lang="ts">
+import { ref, watch, computed } from "vue";
+import { useVideoStore } from "@/renderer/store/modules/video";
+import ipc from "@/renderer/ipc";
+import * as types from "@/mutation-types";
+
+const videoStore = useVideoStore();
+const videoEl = ref<HTMLVideoElement | null>(null);
+
+const queues = computed(() => videoStore.queues);
+const playPointer = computed(() => videoStore.playPointer);
+const videoSource = computed(() => {
+  const pointer = playPointer.value;
+  return pointer !== null && queues.value[pointer]
+    ? queues.value[pointer].path
+    : "";
+});
+const video = computed(() => videoStore.video);
+
+watch(
+  () => video.value.seekPercentage,
+  (value) => {
+    if (videoEl.value) {
+      videoEl.value.currentTime = (video.value.duration / 100) * value;
+    }
+  }
+);
+
+watch(
+  () => video.value.switch,
+  (value) => {
+    if (!videoEl.value) return;
+    if (value === true) {
+      videoEl.value.play();
+    } else {
+      videoEl.value.pause();
+    }
+  }
+);
+
+function onVideoCanplay() {
+  ipc.commit(types.VIDEO_CANPLAY, { duration: videoEl.value!.duration });
+}
+
+function onVideoTimeupdate() {
+  ipc.commit(types.VIDEO_TIMEUPDATE, {
+    currentTime: videoEl.value!.currentTime
+  });
+}
+
+function onVideoPlay() {
+  ipc.commit(types.VIDEO_PLAYED, {});
+}
+
+function onVideoPause() {
+  ipc.commit(types.VIDEO_PAUSED, {});
+}
+
+function onVideoEnded() {
+  ipc.commit(types.VIDEO_ENDED, {});
+}
+
+function onVideoLoadStart() {
+  ipc.commit(types.VIDEO_PAUSED, {});
+}
+</script>
+
+<style lang="scss" scoped>
+.video {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+</style>

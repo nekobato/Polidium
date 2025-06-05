@@ -17,7 +17,11 @@
     >
       <template #default="{ data }">
         <span class="truncate">{{ data.name }}</span>
-        <i class="material-icons playlist-deleter" @click.stop.prevent="removeByData(data)">close</i>
+        <i
+          class="material-icons playlist-deleter"
+          @click.stop.prevent="removeByData(data)"
+          >close</i
+        >
       </template>
     </el-tree>
     <div class="clear-all" v-show="!queueIsEmpty">
@@ -51,84 +55,82 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { useVideoStore } from 'renderer/store/modules/video'
-import ipc from 'renderer/ipc'
-import * as types from 'root/mutation-types'
-import type { NodeDropType } from 'element-plus/es/components/tree/src/tree.type'
-import type Node from 'element-plus/es/components/tree/src/model/node'
+import { computed } from "vue";
+import { useVideoStore } from "@/renderer/store/modules/video";
+import ipc from "@/renderer/ipc";
+import * as types from "@/mutation-types";
+import type { NodeDropType } from "element-plus/es/components/tree/src/tree.type";
+import type Node from "element-plus/es/components/tree/src/model/node";
 
-const videoStore = useVideoStore()
+const videoStore = useVideoStore();
 
-const queues = computed(() => videoStore.queues)
-const playPointer = computed(() => videoStore.playPointer)
-const queueIsEmpty = computed(() => queues.value.length === 0)
-const video = computed(() => videoStore.video)
-const isPlaying = computed(() => video.value.isPlaying)
+const queues = computed(() => videoStore.queues);
+const playPointer = computed(() => videoStore.playPointer);
+const queueIsEmpty = computed(() => queues.value.length === 0);
+const video = computed(() => videoStore.video);
+const isPlaying = computed(() => video.value.isPlaying);
 const videoRemaining = computed(() => {
-  const remainSeconds = Math.floor(video.value.duration - video.value.currentTime)
-  return `${Math.floor(remainSeconds / 60)}:${('0' + (remainSeconds % 60)).slice(-2)}`
-})
+  const remainSeconds = Math.floor(
+    video.value.duration - video.value.currentTime
+  );
+  return `${Math.floor(remainSeconds / 60)}:${(
+    "0" +
+    (remainSeconds % 60)
+  ).slice(-2)}`;
+});
 const currentTime = computed(() => {
-  const percentage = (video.value.currentTime / video.value.duration) * 100
-  return isNaN(percentage) ? 0 : percentage
-})
+  const percentage = (video.value.currentTime / video.value.duration) * 100;
+  return isNaN(percentage) ? 0 : percentage;
+});
 
-const treeData = computed(() =>
-  queues.value.map((q, i) => ({ ...q, id: i }))
-)
+const treeData = computed(() => queues.value.map((q, i) => ({ ...q, id: i })));
 
-function playByData (data: { name: string; path: string }) {
-  const index = queues.value.findIndex(q => q === data)
-  play(index)
+function removeByData(data: { name: string; path: string }) {
+  const index = queues.value.findIndex((q) => q === data);
+  remove(index);
 }
 
-function removeByData (data: { name: string; path: string }) {
-  const index = queues.value.findIndex(q => q === data)
-  remove(index)
+function allowDrop(_dragging: Node, _drop: Node, type: NodeDropType) {
+  return type !== "inner";
 }
 
-function allowDrop (_dragging: Node, _drop: Node, type: NodeDropType) {
-  return type !== 'inner'
+function onNodeClick(_data: any, node: Node) {
+  const index = (node.data as any).id;
+  play(index);
 }
 
-function onNodeClick (_data: any, node: Node) {
-  const index = (node.data as any).id
-  play(index)
-}
-
-function onNodeDrop (draggingNode: Node, dropNode: Node, type: NodeDropType) {
-  const oldIndex = (draggingNode.data as any).id
-  let newIndex = (dropNode.data as any).id
-  if (type === 'after') newIndex += 1
-  if (oldIndex < newIndex) newIndex -= 1
-  if (type !== 'inner') {
-    ipc.commit(types.SORT_QUEUE, { oldIndex, newIndex })
+function onNodeDrop(draggingNode: Node, dropNode: Node, type: NodeDropType) {
+  const oldIndex = (draggingNode.data as any).id;
+  let newIndex = (dropNode.data as any).id;
+  if (type === "after") newIndex += 1;
+  if (oldIndex < newIndex) newIndex -= 1;
+  if (type !== "inner") {
+    ipc.commit(types.SORT_QUEUE, { oldIndex, newIndex });
   }
 }
 
-function play (index: number) {
-  ipc.commit(types.VIDEO_SELECT, { index })
+function play(index: number) {
+  ipc.commit(types.VIDEO_SELECT, { index });
 }
 
-function resume () {
-  ipc.commit(types.RESUME_FILE, {})
+function resume() {
+  ipc.commit(types.RESUME_FILE, {});
 }
 
-function pause () {
-  ipc.commit(types.PAUSE_FILE, {})
+function pause() {
+  ipc.commit(types.PAUSE_FILE, {});
 }
 
-function remove (index: number) {
-  ipc.commit(types.REMOVE_QUEUE, { index })
+function remove(index: number) {
+  ipc.commit(types.REMOVE_QUEUE, { index });
 }
 
-function clear () {
-  ipc.commit(types.CLEAR_QUEUES, {})
+function clear() {
+  ipc.commit(types.CLEAR_QUEUES, {});
 }
 
-function inputCurrentTime (value: number) {
-  ipc.commit(types.VIDEO_SEEK, { percentage: value })
+function inputCurrentTime(value: number) {
+  ipc.commit(types.VIDEO_SEEK, { percentage: value });
 }
 </script>
 
@@ -234,4 +236,3 @@ function inputCurrentTime (value: number) {
   color: #ccc;
 }
 </style>
-

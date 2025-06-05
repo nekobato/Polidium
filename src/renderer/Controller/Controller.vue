@@ -34,45 +34,42 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import ipc from 'renderer/ipc'
-import * as types from 'root/mutation-types'
-import FileController from './FileController.vue'
-import WebController from './WebController.vue'
-import Settings from './Settings.vue'
+import { ref } from "vue";
+import ipc from "@/renderer/ipc";
+import * as types from "@/mutation-types";
 
-const currentView = ref('FileController')
+const currentView = ref("FileController");
 
-function switchView (viewName: 'FileController' | 'WebController' | 'Settings') {
-  currentView.value = viewName
+function switchView(viewName: "FileController" | "WebController" | "Settings") {
+  currentView.value = viewName;
 }
 
-function onDragOver (_e: DragEvent) {
-  return false
+function onDragOver(_e: DragEvent) {
+  return false;
 }
 
-function onDragLeave (_e: DragEvent) {
-  return false
+function onDragLeave(_e: DragEvent) {
+  return false;
 }
 
-function onDragEnd (_e: DragEvent) {
-  return false
+function onDragEnd(_e: DragEvent) {
+  return false;
 }
 
-function onDrop (e: DragEvent) {
-  if (!e.dataTransfer) return false
-  const files = e.dataTransfer.files
+function onDrop(e: DragEvent) {
+  if (!e.dataTransfer) return false;
+  const files = e.dataTransfer.files;
   for (const file of files) {
-    if (file.type === 'video/mp4') {
+    if (file.type === "video/mp4") {
       ipc.commit(types.DROP_FILE, {
         file: {
           name: file.name,
           path: (file as any).path
         }
-      })
+      });
     }
   }
-  return false
+  return false;
 }
 </script>
 
@@ -112,4 +109,3 @@ html {
   padding: 0 1rem;
 }
 </style>
-

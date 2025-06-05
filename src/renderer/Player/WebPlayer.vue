@@ -3,11 +3,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useWebStore } from 'renderer/store/modules/web'
+import { computed } from "vue";
+import { useWebStore } from "@/renderer/store/modules/web";
 
-const webStore = useWebStore()
-const web = computed(() => webStore)
+const webStore = useWebStore();
+const web = computed(() => webStore);
 </script>
 
 <style lang="scss" scoped>
@@ -17,4 +17,3 @@ const web = computed(() => webStore)
   background: transparent;
 }
 </style>
-

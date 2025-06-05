@@ -31,37 +31,41 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import ipc from 'renderer/ipc'
-import { clipboard } from 'electron'
-import xss from 'xss'
-import * as types from 'root/mutation-types'
-import { useSettingsStore } from 'renderer/store/modules/settings'
+import { ref, computed } from "vue";
+import ipc from "@/renderer/ipc";
+import { clipboard } from "electron";
+import xss from "xss";
+import * as types from "@/mutation-types";
+import { useSettingsStore } from "@/renderer/store/modules/settings";
 
-const settingsStore = useSettingsStore()
-const url = ref('')
+const settingsStore = useSettingsStore();
+const url = ref("");
 
 const encodedURL = computed(() => {
-  const encoded = url.value.match(/^https?:\/\//g) ? url.value : 'http://' + url.value
-  return xss(encoded)
-})
+  const encoded = url.value.match(/^https?:\/\//g)
+    ? url.value
+    : "http://" + url.value;
+  return xss(encoded);
+});
 
-const clickThrough = computed(() => settingsStore.player.clickThrough)
+const clickThrough = computed(() => settingsStore.player.clickThrough);
 
-function submitURL () {
-  if (!encodedURL.value.match(/^https?:\/\/[-_.!~*'()a-zA-Z0-9;\/?:@&=+\$,%#]+$/)) {
-    return false
+function submitURL() {
+  if (
+    !encodedURL.value.match(/^https?:\/\/[-_.!~*'()a-zA-Z0-9;\/?:@&=+\$,%#]+$/)
+  ) {
+    return false;
   }
-  ipc.commit('OPEN_URL', { src: encodedURL.value })
+  ipc.commit("OPEN_URL", { src: encodedURL.value });
 }
 
-function tryPasteClipboard (e: KeyboardEvent) {
-  if (e.metaKey !== true) return
-  url.value = clipboard.readText()
+function tryPasteClipboard(e: KeyboardEvent) {
+  if (e.metaKey !== true) return;
+  url.value = clipboard.readText();
 }
 
-function inputClickThrough (value: boolean) {
-  ipc.commit(types.SET_CLICKTHROUGH, { clickThrough: value })
+function inputClickThrough(value: boolean) {
+  ipc.commit(types.SET_CLICKTHROUGH, { clickThrough: value });
 }
 </script>
 
@@ -83,4 +87,3 @@ function inputClickThrough (value: boolean) {
   text-align: center;
 }
 </style>
-

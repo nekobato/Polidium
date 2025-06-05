@@ -9,3 +9,4 @@ app/font
 app/js
 release/
 app/main.js
+dist-electron
