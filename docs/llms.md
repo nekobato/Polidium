@@ -14,8 +14,12 @@ Polidium は Electron と Vue を組み合わせて作られた、透過ウィ�
 ## ディレクトリ構成
 
 - `src/main` - Electron のメインプロセス。`player.ts` と `controller.ts` がプレイヤー・コントローラウィンドウを生成します。
+  - `src/main/player.ts` - プレイヤーウィンドウの初期化と制御。
+  - `src/main/controller.ts` - コントローラウィンドウの初期化と制御。
 - `src/renderer` - Vue / Element Plus によるフロントエンド。`Controller` と `Player` コンポーネントで UI を提供します。
-- `src/renderer/store` - Pinia を用いた状態管理。
+  - `src/renderer/Controller` - コントローラウィンドウの Vue コンポーネント。
+  - `src/renderer/Player` - プレイヤーウィンドウの Vue コンポーネント。
+  - `src/renderer/store` - Pinia を用いた状態管理。
 - `imageSource` - アプリアイコン等の画像リソース。
 
 ## 開発
