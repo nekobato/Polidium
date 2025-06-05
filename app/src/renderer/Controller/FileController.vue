@@ -47,18 +47,18 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { useStore } from 'vuex'
+import { useVideoStore } from 'renderer/store/modules/video'
 import ipc from 'renderer/ipc'
 import * as types from 'root/mutation-types'
 import Sortable, { type SortableEvent } from 'sortablejs'
 
-const store = useStore()
+const videoStore = useVideoStore()
 const queueList = ref<HTMLElement | null>(null)
 
-const queues = computed(() => store.state.video.queues)
-const playPointer = computed(() => store.state.video.playPointer)
+const queues = computed(() => videoStore.queues)
+const playPointer = computed(() => videoStore.playPointer)
 const queueIsEmpty = computed(() => queues.value.length === 0)
-const video = computed(() => store.state.video.video)
+const video = computed(() => videoStore.video)
 const isPlaying = computed(() => video.value.isPlaying)
 const videoRemaining = computed(() => {
   const remainSeconds = Math.floor(video.value.duration - video.value.currentTime)

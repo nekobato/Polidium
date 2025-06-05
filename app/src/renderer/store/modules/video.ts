@@ -1,76 +1,70 @@
-import * as types from 'root/mutation-types'
+import { defineStore } from 'pinia'
 
 function getQeueusFromLocalStrage () {
   return localStorage.queues ? JSON.parse(localStorage.queues) : []
 }
 
-const saveQueues = function () {
-  localStorage.setItem('queues', JSON.stringify(state.queues))
-}
-
-const state = {
-  queues: getQeueusFromLocalStrage(),
-  playPointer: null,
-  video: {
-    duration: 0,
-    currentTime: 0,
-    seekPercentage: 0,
-    isPlaying: false,
-    switch: false // switch play/pause control by controller
-  }
-}
-
-export default {
-  state,
-  mutations: {
-    [types.DROP_FILE] (state, payload) {
-      state.queues.push(payload.file)
-      saveQueues()
+export const useVideoStore = defineStore('video', {
+  state: () => ({
+    queues: getQeueusFromLocalStrage() as Array<{ name: string; path: string }>,
+    playPointer: null as number | null,
+    video: {
+      duration: 0,
+      currentTime: 0,
+      seekPercentage: 0,
+      isPlaying: false,
+      switch: false // switch play/pause control by controller
+    }
+  }),
+  actions: {
+    dropFile (payload: { file: { name: string; path: string } }) {
+      this.queues.push(payload.file)
+      localStorage.setItem('queues', JSON.stringify(this.queues))
     },
-    [types.PAUSE_FILE] (state) {
-      state.video.switch = false
+    pauseFile () {
+      this.video.switch = false
     },
-    [types.RESUME_FILE] (state) {
-      state.video.switch = true
+    resumeFile () {
+      this.video.switch = true
     },
-    [types.VIDEO_SELECT] (state, payload) {
-      state.playPointer = payload.index
+    selectVideo (payload: { index: number }) {
+      this.playPointer = payload.index
     },
-    [types.REMOVE_QUEUE] (state, payload) {
-      state.queues.splice(payload.index, 1)
-      saveQueues()
+    removeQueue (payload: { index: number }) {
+      this.queues.splice(payload.index, 1)
+      localStorage.setItem('queues', JSON.stringify(this.queues))
     },
-    [types.CLEAR_QUEUES] (state) {
-      state.queues = []
+    clearQueues () {
+      this.queues = []
     },
-    [types.SORT_QUEUE] (state, payload) {
-      const newRow = state.queues.splice(payload.newIndex, 1, null)[0]
-      state.queues.splice(payload.newIndex, 1, state.queues[payload.oldIndex])
-      state.queues.splice(payload.oldIndex, 1, newRow)
-      saveQueues()
+    sortQueue (payload: { oldIndex: number; newIndex: number }) {
+      const newRow = this.queues.splice(payload.newIndex, 1, null as any)[0]
+      this.queues.splice(payload.newIndex, 1, this.queues[payload.oldIndex])
+      this.queues.splice(payload.oldIndex, 1, newRow)
+      localStorage.setItem('queues', JSON.stringify(this.queues))
     },
-    [types.VIDEO_CANPLAY] (state, payload) {
-      state.video.duration = payload.duration
-      state.video.switch = true
+    videoCanplay (payload: { duration: number }) {
+      this.video.duration = payload.duration
+      this.video.switch = true
     },
-    [types.VIDEO_TIMEUPDATE] (state, payload) {
-      state.video.currentTime = payload.currentTime
+    videoTimeupdate (payload: { currentTime: number }) {
+      this.video.currentTime = payload.currentTime
     },
-    [types.VIDEO_SEEK] (state, payload) {
-      state.video.seekPercentage = payload.percentage
+    videoSeek (payload: { percentage: number }) {
+      this.video.seekPercentage = payload.percentage
     },
-    [types.VIDEO_PLAYED] (state) {
-      state.video.isPlaying = true
-      state.video.switch = true
+    videoPlayed () {
+      this.video.isPlaying = true
+      this.video.switch = true
     },
-    [types.VIDEO_PAUSED] (state) {
-      state.video.isPlaying = false
-      state.video.switch = false
+    videoPaused () {
+      this.video.isPlaying = false
+      this.video.switch = false
     },
-    [types.VIDEO_ENDED] (state) {
-      if (state.queues[state.playPointer + 1]) {
-        state.playPointer += 1
+    videoEnded () {
+      if (this.queues[(this.playPointer ?? -1) + 1]) {
+        this.playPointer = (this.playPointer ?? -1) + 1
       }
     }
   }
-}
+})

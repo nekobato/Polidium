@@ -36,9 +36,9 @@ import ipc from 'renderer/ipc'
 import { clipboard } from 'electron'
 import xss from 'xss'
 import * as types from 'root/mutation-types'
-import { useStore } from 'vuex'
+import { useSettingsStore } from 'renderer/store/modules/settings'
 
-const store = useStore()
+const settingsStore = useSettingsStore()
 const url = ref('')
 
 const encodedURL = computed(() => {
@@ -46,7 +46,7 @@ const encodedURL = computed(() => {
   return xss(encoded)
 })
 
-const clickThrough = computed(() => store.state.settings.player.clickThrough)
+const clickThrough = computed(() => settingsStore.player.clickThrough)
 
 function submitURL () {
   if (!encodedURL.value.match(/^https?:\/\/[-_.!~*'()a-zA-Z0-9;\/?:@&=+\$,%#]+$/)) {

@@ -1,12 +1,12 @@
-import * as types from 'root/mutation-types'
+import { defineStore } from 'pinia'
 
-export default {
-  state: {
+export const useWebStore = defineStore('web', {
+  state: () => ({
     src: ''
-  },
-  mutations: {
-    [types.OPEN_URL] (state, payload) {
-      state.src = payload.src
+  }),
+  actions: {
+    openUrl (payload: { src: string }) {
+      this.src = payload.src
     }
   }
-}
+})

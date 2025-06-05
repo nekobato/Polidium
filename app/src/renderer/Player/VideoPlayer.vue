@@ -14,19 +14,19 @@
 
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
-import { useStore } from 'vuex'
+import { useVideoStore } from 'renderer/store/modules/video'
 import ipc from 'renderer/ipc'
 import * as types from 'root/mutation-types'
 
-const store = useStore()
+const videoStore = useVideoStore()
 const videoEl = ref<HTMLVideoElement | null>(null)
 
-const queues = computed(() => store.state.video.queues)
-const playPointer = computed(() => store.state.video.playPointer)
+const queues = computed(() => videoStore.queues)
+const playPointer = computed(() => videoStore.playPointer)
 const videoSource = computed(() => {
   return queues.value[playPointer.value] ? queues.value[playPointer.value].path : ''
 })
-const video = computed(() => store.state.video.video)
+const video = computed(() => videoStore.video)
 
 watch(() => video.value.seekPercentage, (value) => {
   if (videoEl.value) {
