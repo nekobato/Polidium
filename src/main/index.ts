@@ -95,6 +95,11 @@ function createWindows() {
           player.win!.setVisibleOnAllWorkspaces(parsedPayload.clickThrough);
       }
 
+      if (typeName === types.CHANGE_OPACITY) {
+        const value = JSON.parse(payload);
+        player.win!.setOpacity(value);
+      }
+
       if (typeName === types.RESIZE_PLAYER) {
         const parsedPayload = JSON.parse(payload);
 

@@ -71,7 +71,9 @@ function resizePlayer() {
 }
 
 function inputOpacity(value: number) {
-  settingsStore.changeOpacity(value / 100);
+  const opacity = value / 100;
+  settingsStore.changeOpacity(opacity);
+  ipc.commit(types.CHANGE_OPACITY, opacity);
 }
 </script>
 
