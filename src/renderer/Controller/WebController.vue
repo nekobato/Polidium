@@ -78,6 +78,7 @@ function tryPasteClipboard(e: KeyboardEvent) {
 
 function inputClickThrough(value: boolean) {
   settingsStore.setClickthrough({ clickThrough: value });
+  ipc.commit(types.SET_CLICKTHROUGH, { clickThrough: value });
 }
 </script>
 
