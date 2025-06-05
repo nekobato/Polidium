@@ -6,6 +6,8 @@ import { pinia } from "./store";
 import { createRouter, createWebHistory } from "vue-router";
 import App from "./App.vue";
 import Player from "./Player/Player.vue";
+import VideoPlayer from "./Player/VideoPlayer.vue";
+import WebPlayer from "./Player/WebPlayer.vue";
 import Controller from "./Controller/Controller.vue";
 import FileController from "./Controller/FileController.vue";
 import WebController from "./Controller/WebController.vue";
@@ -14,7 +16,15 @@ import Settings from "./Controller/Settings.vue";
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: "/player", component: Player },
+    {
+      path: "/player",
+      component: Player,
+      children: [
+        { path: "", redirect: "/player/file" },
+        { path: "file", component: VideoPlayer },
+        { path: "web", component: WebPlayer }
+      ]
+    },
     {
       path: "/controller",
       component: Controller,
