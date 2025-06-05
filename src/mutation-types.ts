@@ -5,6 +5,7 @@ export const CONNECT_SCREEN = 'CONNECT_SCREEN'
 export const DROP_FILE = 'DROP_FILE'
 
 export const VIDEO_SELECT = 'VIDEO_SELECT'
+export const PLAY_FILE = 'PLAY_FILE'
 export const PAUSE_FILE = 'PAUSE_FILE'
 export const RESUME_FILE = 'RESUME_FILE'
 export const REMOVE_QUEUE = 'REMOVE_QUEUE'
