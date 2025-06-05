@@ -52,4 +52,4 @@ pnpm install
 pnpm run dev
 ```
 
-Sentry を利用する場合は、環境変数 `SENTRY_DSN` に DSN を設定してください。
+Sentry を利用する場合は、環境変数 `VITE_SENTRY_DSN` に DSN を設定してください。
