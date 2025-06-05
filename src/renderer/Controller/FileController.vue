@@ -1,7 +1,7 @@
 <template>
   <div class="playlist">
     <div class="empty-queue" v-show="queueIsEmpty">
-      <span class="grey-text">Drop Movie files? Here</span>
+      <el-empty description="Drop Movie files? Here" />
     </div>
     <el-tree
       class="queue-tree"
@@ -16,41 +16,66 @@
       @node-drop="onNodeDrop"
     >
       <template #default="{ data }">
-        <span class="truncate">{{ data.name }}</span>
-        <Icon
-          icon="mingcute:close-line"
-          class="playlist-deleter"
-          @click.stop.prevent="removeByData(data)"
-        />
+        <div class="tree-node-content">
+          <span class="truncate">{{ data.name }}</span>
+          <el-button
+            type="danger"
+            size="small"
+            circle
+            class="playlist-deleter"
+            @click.stop.prevent="removeByData(data)"
+          >
+            <Icon icon="mingcute:close-line" />
+          </el-button>
+        </div>
       </template>
     </el-tree>
     <div class="clear-all" v-show="!queueIsEmpty">
-      <div class="clear-btn" @click="clear">
+      <el-button type="danger" class="clear-btn" @click="clear">
         <Icon icon="mingcute:delete-2-line" class="icon" />
         <span class="clear-text">Clear Playlist</span>
-      </div>
+      </el-button>
     </div>
-    <div class="blue-grey darken-2 center video-controller">
-      <button class="btn pause-btn" v-if="isPlaying" @click="pause">
-        <Icon icon="mingcute:pause-line" class="white-text" />
-      </button>
-      <button class="btn play-btn" v-if="!isPlaying" @click="resume">
-        <Icon icon="mingcute:play-line" class="white-text" />
-      </button>
-      <div class="seekbar-container">
-        <el-slider
-          class="seekbar"
-          id="seekbar"
-          :min="0"
-          :max="100"
-          :model-value="currentTime"
-          @input="inputCurrentTime"
-        />
+    <el-card class="video-controller-card" shadow="never">
+      <div class="video-controller">
+        <el-button
+          class="pause-btn"
+          v-if="isPlaying"
+          type="primary"
+          circle
+          size="large"
+          @click="pause"
+        >
+          <Icon icon="mingcute:pause-line" class="white-text" />
+        </el-button>
+        <el-button
+          class="play-btn"
+          v-if="!isPlaying"
+          type="primary"
+          circle
+          size="large"
+          @click="resume"
+        >
+          <Icon icon="mingcute:play-line" class="white-text" />
+        </el-button>
+        <div class="seekbar-container">
+          <el-slider
+            class="seekbar"
+            id="seekbar"
+            :min="0"
+            :max="100"
+            :model-value="currentTime"
+            @input="inputCurrentTime"
+            show-tooltip
+          />
+        </div>
+        <div class="duration">
+          <el-tag type="info" effect="dark" class="duration-text">{{
+            videoRemaining
+          }}</el-tag>
+        </div>
       </div>
-      <div class="duration">
-        <span class="duration-text">{{ videoRemaining }}</span>
-      </div>
-    </div>
+    </el-card>
   </div>
 </template>
 
@@ -136,103 +161,78 @@ function inputCurrentTime(value: number) {
 </script>
 
 <style lang="scss" scoped>
-.play-controller {
-  text-align: center;
-}
-.playlist-deleter {
-  right: 5px;
-  display: none;
-  position: absolute;
-}
-.queue-tree {
-  width: 100%;
-}
-.queue-tree .el-tree-node__content {
-  position: relative;
-  cursor: pointer;
-}
-.queue-tree .el-tree-node__content:hover .playlist-deleter {
-  display: inline-block;
-  color: #9e9e9e;
-}
-.queue-tree .is-current > .el-tree-node__content {
-  background: #22b4e2;
-  color: #fff;
-}
-.queue-tree .is-current > .el-tree-node__content .playlist-deleter {
-  color: #fff;
-}
-.clear-all {
-  text-align: center;
-  padding: 20px 0 30px;
-}
-.clear-all .clear-btn {
-  display: block;
-  margin: auto;
-  width: 100px;
-  color: #999;
-  cursor: pointer;
-}
-.clear-all .clear-btn:hover {
-  color: #666;
-}
-.clear-all .clear-text,
-.clear-all .icon {
-  display: block;
-}
-.clear-all .icon {
-  font-size: 24px;
-}
 .playlist {
-  margin: 0;
   width: 100%;
-  height: 100%;
-  overflow-y: scroll;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 24px 0 0 0;
 }
+
 .empty-queue {
   display: flex;
-  align-items: center;
   justify-content: center;
-  margin: 20px auto 0;
-  border: 2px dotted #ccc;
-  border-radius: 5px;
-  width: 280px;
-  height: 210px;
+  align-items: center;
+  min-height: 180px;
+}
+
+.queue-tree {
+  width: 100%;
+  margin-bottom: 12px;
+}
+.tree-node-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 2px 8px 2px 0;
+}
+.truncate {
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 15px;
+}
+.playlist-deleter {
+  margin-left: 8px;
+}
+.clear-all {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+.clear-btn {
+  font-weight: 500;
+}
+.video-controller-card {
+  background: var(--el-bg-color);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  margin: 0 auto;
+  max-width: 480px;
+  padding: 16px 24px 12px 24px;
 }
 .video-controller {
-  position: absolute;
   display: flex;
-  bottom: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.seekbar-container {
+  flex: 1 1 auto;
+  margin: 0 16px;
+}
+.seekbar {
   width: 100%;
-  height: 24px;
 }
-.video-controller .play-btn,
-.video-controller .pause-btn {
-  display: inline-block;
-  padding: 0 1rem;
-  height: 24px;
-  line-height: 24px;
-  vertical-align: top;
+.duration {
+  min-width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
-.video-controller .seekbar-container {
-  flex-grow: 1;
-  display: inline-block;
-  padding: 0 10px;
-  line-height: 18px;
-}
-.video-controller .seekbar {
-  border: 0;
-  border-radius: 2px;
-  margin: 0;
-}
-.video-controller .duration {
-  width: 50px;
-  text-align: right;
-  padding: 0 6px 0 0;
-}
-.video-controller .duration-text {
-  line-height: 24px;
-  white-space: nowrap;
-  color: #ccc;
+.duration-text {
+  font-size: 14px;
+  padding: 2px 10px;
 }
 </style>
