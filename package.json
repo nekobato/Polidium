@@ -10,7 +10,7 @@
     "dev": "vite",
     "build": "pnpm prepare && vue-tsc && vite build && electron-builder --config electron-builder.config.cjs",
     "build:icon": "electron-icon-builder --input=./public/images/logo/icon.png --output=./public",
-    "lint": "tsc --noEmit && vite lint",
+    "lint": "tsc --noEmit && vue-tsc --noEmit",
     "release": "pnpm build && electron-builder --publish always -c --config electron-builder.config.cjs"
   },
   "repository": {
