@@ -33,9 +33,9 @@ export default class ControllerWindow {
 
     const devUrl = process.env.VITE_DEV_SERVER_URL
     if (devUrl) {
-      this.win.loadURL(devUrl + '/controller.html')
+      this.win.loadURL(devUrl + '#controller')
     } else {
-      this.win.loadURL('file://' + __dirname + '/controller.html')
+      this.win.loadURL('file://' + __dirname + '/index.html#controller')
     }
   }
 

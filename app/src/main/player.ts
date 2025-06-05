@@ -33,9 +33,9 @@ export default class PlayerWindow {
 
     const devUrl = process.env.VITE_DEV_SERVER_URL
     if (devUrl) {
-      this.win.loadURL(devUrl + '/player.html')
+      this.win.loadURL(devUrl + '#player')
     } else {
-      this.win.loadURL('file://' + __dirname + '/player.html')
+      this.win.loadURL('file://' + __dirname + '/index.html#player')
     }
 
     this.win.on('closed', () => {
