@@ -22,12 +22,9 @@ export default defineConfig({
     outDir: 'js',
     emptyOutDir: false,
     rollupOptions: {
-      input: {
-        controller: resolve(__dirname, 'app/src/renderer/Controller/index.ts'),
-        player: resolve(__dirname, 'app/src/renderer/Player/index.ts')
-      },
+      input: resolve(__dirname, 'app/src/renderer/index.ts'),
       output: {
-        entryFileNames: '[name].js',
+        entryFileNames: 'index.js',
         format: 'cjs'
       }
     }

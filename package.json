@@ -45,6 +45,7 @@
     "@sentry/electron": "^3.0.8",
     "electron-updater": "^2.23.3",
     "element-plus": "^2.9.11",
+    "vue-router": "^4.5.1",
     "xss": "^1.0.15"
   },
   "packageManager": "pnpm@10.5.2"
