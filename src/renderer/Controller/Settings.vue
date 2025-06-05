@@ -1,46 +1,42 @@
 <template>
-  <div class="white settings">
-    <div class="row">
-      <div class="input-field center opacity">
-        <el-slider
-          id="opacity_range"
-          class="range validate"
-          :model-value="opacity"
-          :min="0"
-          :max="100"
-          @input="inputOpacity"
-        />
-        <label for="opacity_range" class="label"
-          >Opacity is {{ opacityFloor }}</label
-        >
-        <div class="min-max grey-text">
-          <span class="min">0</span>
-          <span class="max">100</span>
-        </div>
-      </div>
-    </div>
-    <div class="row center resize">
-      <div class="btn" @click="resizePlayer">
-        <Icon icon="mingcute:transformation-line" class="left" />
-        <span>resize player</span>
-      </div>
-    </div>
-    <div class="row center disruptive">
-      <div class="btn blue" @click="reload">
-        <Icon icon="mingcute:refresh-2-line" class="left" />
-        <span>reload</span>
-      </div>
-      <div class="btn blue" @click="reset">
-        <Icon icon="mingcute:settings-6-line" class="left" />
-        <span>reset settings</span>
-      </div>
-    </div>
-    <div class="row center disruptive">
-      <div class="btn red" @click="quit">
-        <Icon icon="mingcute:close-line" class="left" />
-        <span>quit</span>
-      </div>
-    </div>
+  <div class="settings-page">
+    <el-card shadow="never" class="settings-card">
+      <el-form label-position="top" class="opacity-form">
+        <el-form-item :label="`Opacity: ${opacityFloor}`">
+          <el-slider
+            id="opacity_range"
+            :model-value="opacity"
+            :min="0"
+            :max="100"
+            @input="inputOpacity"
+          />
+        </el-form-item>
+      </el-form>
+
+      <el-divider />
+
+      <el-space direction="vertical" alignment="center" class="actions" size="large">
+        <el-button @click="resizePlayer">
+          <Icon icon="mingcute:transformation-line" class="icon" />
+          <span>Resize Player</span>
+        </el-button>
+
+        <el-button type="primary" @click="reload">
+          <Icon icon="mingcute:refresh-2-line" class="icon" />
+          <span>Reload</span>
+        </el-button>
+
+        <el-button type="primary" @click="reset">
+          <Icon icon="mingcute:settings-6-line" class="icon" />
+          <span>Reset Settings</span>
+        </el-button>
+
+        <el-button type="danger" @click="quit">
+          <Icon icon="mingcute:close-line" class="icon" />
+          <span>Quit</span>
+        </el-button>
+      </el-space>
+    </el-card>
   </div>
 </template>
 
@@ -80,43 +76,11 @@ function inputOpacity(value: number) {
 </script>
 
 <style lang="scss">
-.settings {
+.settings-page {
   padding: 20px;
 }
-.opacity .label {
-  top: -1rem;
-}
-.opacity .min-max {
-  position: relative;
-  display: inline-block;
-  width: 100%;
-  height: 1rem;
-  top: -10px;
-}
-.opacity .min,
-.opacity .max {
-  position: absolute;
-}
-.opacity .min {
-  left: 0;
-}
-.opacity .max {
-  right: 0;
-}
-.displays {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-.displays .btn {
-  padding: 0 1rem;
-}
-.disruptive {
-  display: flex;
-}
-.disruptive .btn {
-  margin: auto;
-  padding: 0 10px;
-  width: 120px;
+
+.actions .icon {
+  margin-right: 4px;
 }
 </style>
