@@ -31,7 +31,8 @@ export default defineConfig({
   resolve: {
     alias: {
       renderer: resolve(__dirname, "src/renderer"),
-      root: resolve(__dirname, "src")
+      root: resolve(__dirname, "src"),
+      "@": resolve(__dirname, "src")
     }
   },
   optimizeDeps: {
