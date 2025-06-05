@@ -6,27 +6,24 @@
     @dragend.prevent="onDragEnd"
     @drop.prevent="onDrop"
   >
-    <div class="blue-grey my-tabs">
-      <button
-        class="waves-effect waves-teal btn-flat my-tab"
-        @click="switchView('FileController')"
-        :class="{ 'my-on': currentView === 'FileController' }"
+    <div class="blue-grey my-header">
+      <el-segmented
+        v-model="currentView"
+        :options="options"
+        size="small"
+        class="my-toggle"
       >
-        file
-      </button>
+        <template #default="{ item }">
+          <Icon :icon="item.icon" class="icon" />
+          <span class="label">{{ item.label }}</span>
+        </template>
+      </el-segmented>
       <button
-        class="waves-effect waves-teal btn-flat my-tab"
-        @click="switchView('WebController')"
-        :class="{ 'my-on': currentView === 'WebController' }"
-      >
-        Web
-      </button>
-      <button
-        class="waves-effect waves-teal btn-flat my-tab my-settings"
+        class="waves-effect waves-teal btn-flat my-settings"
         @click="switchView('Settings')"
         :class="{ 'my-on': currentView === 'Settings' }"
       >
-        <i class="material-icons">settings</i>
+        <Icon icon="mingcute:settings-6-line" />
       </button>
     </div>
     <component :is="currentView" />
@@ -35,8 +32,14 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { Icon } from "@iconify/vue";
 import ipc from "@/renderer/ipc";
 import * as types from "@/mutation-types";
+
+const options = [
+  { label: "file", value: "FileController", icon: "mingcute:file-line" },
+  { label: "Web", value: "WebController", icon: "mingcute:world-2-line" }
+];
 
 const currentView = ref("FileController");
 
@@ -91,21 +94,22 @@ html {
   height: 100%;
   border-radius: 5px;
 }
-.my-tabs {
+.my-header {
   display: flex;
   flex-shrink: 0;
   height: 36px;
-}
-.my-tab {
-  color: #fff;
-}
-.my-tab.my-on {
-  background-color: rgba(0, 0, 0, 0.2);
+  align-items: center;
+  justify-content: center;
+  position: relative;
 }
 .my-settings {
   position: absolute;
   right: 0;
   top: 0;
   padding: 0 1rem;
+  color: #fff;
+}
+.my-toggle .icon {
+  margin-right: 4px;
 }
 </style>
