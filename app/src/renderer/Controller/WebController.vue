@@ -2,8 +2,12 @@
   <div class="web">
     <form @submit.prevent="submitURL">
       <div class="input-field">
-        <input id="url_input" type="text" placeholder="URL" v-model="url" @keydown.86="tryPasteClipboard" />
-        <label for="url_input">{{ encodedURL }}</label>
+        <el-input
+          id="url_input"
+          placeholder="URL"
+          v-model="url"
+          @keydown.86="tryPasteClipboard"
+        />
       </div>
     </form>
     <div class="row click-through">
@@ -13,10 +17,12 @@
       <div class="col s6 no-padding">
         <div class="switch">
           <label>
-            <span>Off</span>
-            <input type="checkbox" :checked="clickThrough" @change="inputClickThrough" />
-            <span class="lever"></span>
-            <span>On</span>
+            <el-switch
+              :model-value="clickThrough"
+              active-text="On"
+              inactive-text="Off"
+              @change="inputClickThrough"
+            />
           </label>
         </div>
       </div>
@@ -54,8 +60,8 @@ function tryPasteClipboard (e: KeyboardEvent) {
   url.value = clipboard.readText()
 }
 
-function inputClickThrough (e: Event) {
-  ipc.commit(types.SET_CLICKTHROUGH, { clickThrough: (e.target as HTMLInputElement).checked })
+function inputClickThrough (value: boolean) {
+  ipc.commit(types.SET_CLICKTHROUGH, { clickThrough: value })
 }
 </script>
 

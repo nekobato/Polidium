@@ -29,13 +29,12 @@
         <i class="material-icons white-text">play_arrow</i>
       </button>
       <div class="seekbar-container">
-        <input
+        <el-slider
           class="seekbar"
           id="seekbar"
-          type="range"
-          min="0"
-          max="100"
-          :value="currentTime"
+          :min="0"
+          :max="100"
+          :model-value="currentTime"
           @input="inputCurrentTime"
         />
       </div>
@@ -90,8 +89,8 @@ function clear () {
   ipc.commit(types.CLEAR_QUEUES, {})
 }
 
-function inputCurrentTime (e: Event) {
-  ipc.commit(types.VIDEO_SEEK, { percentage: (e.target as HTMLInputElement).value })
+function inputCurrentTime (value: number) {
+  ipc.commit(types.VIDEO_SEEK, { percentage: value })
 }
 
 onMounted(() => {

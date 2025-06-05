@@ -2,11 +2,12 @@
   <div class="white settings">
     <div class="row">
       <div class="input-field center opacity">
-        <input
+        <el-slider
           id="opacity_range"
           class="range validate"
-          type="range"
-          :value="opacity"
+          :model-value="opacity"
+          :min="0"
+          :max="100"
           @input="inputOpacity"
         />
         <label for="opacity_range" class="label">Opacity is {{ opacityFloor }}</label>
@@ -70,8 +71,8 @@ function resizePlayer () {
   ipc.commit(types.RESIZE_PLAYER, { mode: true })
 }
 
-function inputOpacity (e: Event) {
-  ipc.commit(types.CHANGE_OPACITY, (e.target as HTMLInputElement).value / 100)
+function inputOpacity (value: number) {
+  ipc.commit(types.CHANGE_OPACITY, value / 100)
 }
 </script>
 
