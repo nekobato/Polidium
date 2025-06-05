@@ -7,8 +7,10 @@ import { useSettingsStore } from "./modules/settings";
 
 const ipc = (window as any).electronAPI;
 
-if (process.env.SENTRY_DSN) {
-  Sentry.init({ dsn: process.env.SENTRY_DSN });
+const { VITE_SENTRY_DSN } = import.meta.env;
+
+if (VITE_SENTRY_DSN) {
+  Sentry.init({ dsn: VITE_SENTRY_DSN });
 }
 
 export const pinia = createPinia();
