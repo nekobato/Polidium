@@ -36,17 +36,29 @@ import { ref, watch, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { Icon } from "@iconify/vue";
 import { useVideoStore } from "@/renderer/store/modules/video";
+import { useSettingsStore } from "@/renderer/store/modules/settings";
+import ipc from "@/renderer/ipc";
+import * as types from "@/mutation-types";
 
 const router = useRouter();
 const route = useRoute();
 const videoStore = useVideoStore();
+const settingsStore = useSettingsStore();
 
 const options = [
   { label: "file", value: "/controller/file", icon: "mingcute:file-line" },
   { label: "Web", value: "/controller/web", icon: "mingcute:world-2-line" }
 ];
 
-const currentView = ref(options[0].value);
+const currentView = ref(
+  settingsStore.player.mode === "web-player"
+    ? "/controller/web"
+    : "/controller/file"
+);
+
+if (route.path === "/controller") {
+  router.replace(currentView.value);
+}
 
 // sync currentView with current route
 watch(
@@ -61,6 +73,13 @@ watch(
 
 function switchView(path: string) {
   router.push(path);
+  if (path.startsWith("/controller/web")) {
+    settingsStore.changeMode("web-player");
+    ipc.commit(types.CHANGE_MODE, "web-player");
+  } else if (path.startsWith("/controller/file")) {
+    settingsStore.changeMode("video-player");
+    ipc.commit(types.CHANGE_MODE, "video-player");
+  }
 }
 
 const isSettings = computed(() => route.path.startsWith("/controller/settings"));
