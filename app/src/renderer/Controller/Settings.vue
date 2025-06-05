@@ -44,13 +44,12 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useStore } from 'vuex'
+import { useSettingsStore } from 'renderer/store/modules/settings'
 import ipc from 'renderer/ipc'
 import * as types from 'root/mutation-types'
 
-const store = useStore()
-
-const settings = computed(() => store.state.settings)
+const settingsStore = useSettingsStore()
+const settings = computed(() => settingsStore)
 const opacity = computed(() => settings.value.player.opacity * 100)
 const opacityFloor = computed(() => Math.floor(settings.value.player.opacity * 100))
 

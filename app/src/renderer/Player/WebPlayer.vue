@@ -4,10 +4,10 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useStore } from 'vuex'
+import { useWebStore } from 'renderer/store/modules/web'
 
-const store = useStore()
-const web = computed(() => store.state.web)
+const webStore = useWebStore()
+const web = computed(() => webStore)
 </script>
 
 <style lang="scss" scoped>

@@ -1,4 +1,4 @@
-import * as types from 'root/mutation-types'
+import { defineStore } from 'pinia'
 
 function getSettingsFromLocalStrage () {
   return localStorage.settings ? JSON.parse(localStorage.settings) : {
@@ -11,44 +11,38 @@ function getSettingsFromLocalStrage () {
   }
 }
 
-const saveSettings = function () {
-  localStorage.setItem('settings', JSON.stringify(state))
-}
-
-const state = getSettingsFromLocalStrage()
-
-export default {
-  state,
-  mutations: {
-    [types.CHANGE_MODE] (state, mode) {
-      state.player.mode = mode // mode = video | web
+export const useSettingsStore = defineStore('settings', {
+  state: () => getSettingsFromLocalStrage(),
+  actions: {
+    changeMode (mode: string) {
+      this.player.mode = mode
     },
-    [types.CHANGE_OPACITY] (state, newOpacity) {
-      state.player.opacity = newOpacity
-      saveSettings()
+    changeOpacity (newOpacity: number) {
+      this.player.opacity = newOpacity
+      localStorage.setItem('settings', JSON.stringify(this.$state))
     },
-    [types.SET_CLICKTHROUGH] (state, payload) {
-      state.player.clickThrough = payload.clickThrough
+    setClickthrough (payload: { clickThrough: boolean }) {
+      this.player.clickThrough = payload.clickThrough
     },
-    [types.RELOAD] (state) {
+    reload () {
       window.location.reload()
     },
-    [types.RESET] (state) {
+    reset () {
       localStorage.removeItem('queues')
       localStorage.removeItem('settings')
       window.location.reload()
     },
-    [types.OPEN_URL] (state, payload) {
-      state.player.mode = 'web-player'
-      saveSettings()
+    openUrl () {
+      this.player.mode = 'web-player'
+      localStorage.setItem('settings', JSON.stringify(this.$state))
     },
-    [types.VIDEO_SELECT] (state, payload) {
-      state.player.mode = 'video-player'
-      saveSettings()
+    videoSelect () {
+      this.player.mode = 'video-player'
+      localStorage.setItem('settings', JSON.stringify(this.$state))
     },
-    [types.RESIZE_PLAYER] (state, payload) {
-      state.player.resizeMode = payload.mode
-      state.player.clickThrough = !payload.mode
+    resizePlayer (payload: { mode: boolean }) {
+      this.player.resizeMode = payload.mode
+      this.player.clickThrough = !payload.mode
     }
   }
-}
+})

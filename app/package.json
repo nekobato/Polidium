@@ -9,7 +9,7 @@
   "author": "nekobato",
   "dependencies": {
     "vue": "^2.1.10",
-    "vuex": "^2.1.2"
+    "pinia": "^2.1.7"
   },
   "devDependencies": {}
 }
