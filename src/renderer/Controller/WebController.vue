@@ -33,7 +33,6 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import ipc from "@/renderer/ipc";
-import { clipboard } from "electron";
 import xss from "xss";
 import * as types from "@/mutation-types";
 import { useSettingsStore } from "@/renderer/store/modules/settings";
@@ -61,7 +60,7 @@ function submitURL() {
 
 function tryPasteClipboard(e: KeyboardEvent) {
   if (e.metaKey !== true) return;
-  url.value = clipboard.readText();
+  url.value = ipc.readClipboardText();
 }
 
 function inputClickThrough(value: boolean) {

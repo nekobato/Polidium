@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer } from 'electron'
+import { contextBridge, ipcRenderer, clipboard } from 'electron'
 
 contextBridge.exposeInMainWorld('electronAPI', {
   send(channel: string, ...args: unknown[]) {
@@ -9,5 +9,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   },
   invoke(channel: string, ...args: unknown[]) {
     return ipcRenderer.invoke(channel, ...args)
+  },
+  readClipboardText() {
+    return clipboard.readText()
   }
 })
