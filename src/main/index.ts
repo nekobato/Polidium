@@ -60,7 +60,7 @@ function createWindows() {
   const controller = new ControllerWindow();
 
   const trayIcon = nativeImage.createFromPath(
-    join(__dirname, "img", "tray_icon.png")
+    join(__dirname, "../img", "tray_icon.png")
   );
   const tray = new Tray(trayIcon);
 

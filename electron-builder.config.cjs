@@ -12,6 +12,7 @@ const config = {
   },
   files: [
     "dist",
+    "img",
     "!dist/assets/*.map",
     "dist-electron",
     {
