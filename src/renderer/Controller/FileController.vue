@@ -83,12 +83,12 @@
 import { computed } from "vue";
 import { Icon } from "@iconify/vue";
 import { useVideoStore } from "@/renderer/store/modules/video";
-import ipc from "@/renderer/ipc";
-import * as types from "@/mutation-types";
+import { useSettingsStore } from "@/renderer/store/modules/settings";
 import type { NodeDropType } from "element-plus/es/components/tree/src/tree.type";
 import type Node from "element-plus/es/components/tree/src/model/node";
 
 const videoStore = useVideoStore();
+const settingsStore = useSettingsStore();
 
 const queues = computed(() => videoStore.queues);
 const playPointer = computed(() => videoStore.playPointer);
@@ -131,32 +131,33 @@ function onNodeDrop(draggingNode: Node, dropNode: Node, type: NodeDropType) {
   if (type === "after") newIndex += 1;
   if (oldIndex < newIndex) newIndex -= 1;
   if (type !== "inner") {
-    ipc.commit(types.SORT_QUEUE, { oldIndex, newIndex });
+    videoStore.sortQueue({ oldIndex, newIndex });
   }
 }
 
 function play(index: number) {
-  ipc.commit(types.VIDEO_SELECT, { index });
+  videoStore.selectVideo({ index });
+  settingsStore.videoSelect();
 }
 
 function resume() {
-  ipc.commit(types.RESUME_FILE, {});
+  videoStore.resumeFile();
 }
 
 function pause() {
-  ipc.commit(types.PAUSE_FILE, {});
+  videoStore.pauseFile();
 }
 
 function remove(index: number) {
-  ipc.commit(types.REMOVE_QUEUE, { index });
+  videoStore.removeQueue({ index });
 }
 
 function clear() {
-  ipc.commit(types.CLEAR_QUEUES, {});
+  videoStore.clearQueues();
 }
 
 function inputCurrentTime(value: number) {
-  ipc.commit(types.VIDEO_SEEK, { percentage: value });
+  videoStore.videoSeek({ percentage: value });
 }
 </script>
 

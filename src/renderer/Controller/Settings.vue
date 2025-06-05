@@ -59,19 +59,19 @@ function quit() {
 }
 
 function reload() {
-  ipc.commit(types.RELOAD, {});
+  settingsStore.reload();
 }
 
 function reset() {
-  ipc.commit(types.RESET, {});
+  settingsStore.reset();
 }
 
 function resizePlayer() {
-  ipc.commit(types.RESIZE_PLAYER, { mode: true });
+  settingsStore.resizePlayer({ mode: true });
 }
 
 function inputOpacity(value: number) {
-  ipc.commit(types.CHANGE_OPACITY, value / 100);
+  settingsStore.changeOpacity(value / 100);
 }
 </script>
 

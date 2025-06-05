@@ -15,8 +15,6 @@
 <script setup lang="ts">
 import { ref, watch, computed } from "vue";
 import { useVideoStore } from "@/renderer/store/modules/video";
-import ipc from "@/renderer/ipc";
-import * as types from "@/mutation-types";
 
 const videoStore = useVideoStore();
 const videoEl = ref<HTMLVideoElement | null>(null);
@@ -53,29 +51,29 @@ watch(
 );
 
 function onVideoCanplay() {
-  ipc.commit(types.VIDEO_CANPLAY, { duration: videoEl.value!.duration });
+  videoStore.videoCanplay({ duration: videoEl.value!.duration });
 }
 
 function onVideoTimeupdate() {
-  ipc.commit(types.VIDEO_TIMEUPDATE, {
+  videoStore.videoTimeupdate({
     currentTime: videoEl.value!.currentTime
   });
 }
 
 function onVideoPlay() {
-  ipc.commit(types.VIDEO_PLAYED, {});
+  videoStore.videoPlayed();
 }
 
 function onVideoPause() {
-  ipc.commit(types.VIDEO_PAUSED, {});
+  videoStore.videoPaused();
 }
 
 function onVideoEnded() {
-  ipc.commit(types.VIDEO_ENDED, {});
+  videoStore.videoEnded();
 }
 
 function onVideoLoadStart() {
-  ipc.commit(types.VIDEO_PAUSED, {});
+  videoStore.videoPaused();
 }
 </script>
 

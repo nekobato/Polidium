@@ -34,10 +34,11 @@
 import { ref, computed } from "vue";
 import ipc from "@/renderer/ipc";
 import xss from "xss";
-import * as types from "@/mutation-types";
 import { useSettingsStore } from "@/renderer/store/modules/settings";
+import { useWebStore } from "@/renderer/store/modules/web";
 
 const settingsStore = useSettingsStore();
+const webStore = useWebStore();
 const url = ref("");
 
 const encodedURL = computed(() => {
@@ -55,7 +56,8 @@ function submitURL() {
   ) {
     return false;
   }
-  ipc.commit("OPEN_URL", { src: encodedURL.value });
+  webStore.openUrl({ src: encodedURL.value });
+  settingsStore.openUrl();
 }
 
 function tryPasteClipboard(e: KeyboardEvent) {
@@ -64,7 +66,7 @@ function tryPasteClipboard(e: KeyboardEvent) {
 }
 
 function inputClickThrough(value: boolean) {
-  ipc.commit(types.SET_CLICKTHROUGH, { clickThrough: value });
+  settingsStore.setClickthrough({ clickThrough: value });
 }
 </script>
 

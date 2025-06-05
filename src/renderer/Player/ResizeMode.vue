@@ -8,12 +8,13 @@
 </template>
 
 <script setup lang="ts">
-import ipc from "@/renderer/ipc";
-import * as types from "@/mutation-types";
 import { Icon } from "@iconify/vue";
+import { useSettingsStore } from "@/renderer/store/modules/settings";
+
+const settingsStore = useSettingsStore();
 
 function onRestore() {
-  ipc.commit(types.RESIZE_PLAYER, { mode: false });
+  settingsStore.resizePlayer({ mode: false });
 }
 </script>
 
