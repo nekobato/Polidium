@@ -4,11 +4,14 @@
       <div class="input-field">
         <el-input
           id="url_input"
-          placeholder="URL"
+          placeholder="https://"
           v-model="url"
           @keydown.86="tryPasteClipboard"
         />
       </div>
+      <el-button type="primary" native-type="submit" class="submit-btn">
+        {{ buttonText }}
+      </el-button>
     </form>
     <div class="row click-through">
       <div class="col s6 no-padding">
@@ -41,25 +44,31 @@ import { useWebStore } from "@/renderer/store/modules/web";
 const settingsStore = useSettingsStore();
 const webStore = useWebStore();
 const url = ref("");
+const buttonText = ref("Submit");
+const defaultButtonText = "Submit";
 
 const encodedURL = computed(() => {
-  const encoded = url.value.match(/^https?:\/\//g)
-    ? url.value
-    : "http://" + url.value;
+  let encoded = url.value.trim();
+  if (encoded && !/^https?:\/\//.test(encoded)) {
+    encoded = "https://" + encoded;
+  }
   return xss(encoded);
 });
 
 const clickThrough = computed(() => settingsStore.player.clickThrough);
 
 function submitURL() {
-  if (
-    !encodedURL.value.match(/^https?:\/\/[-_.!~*'()a-zA-Z0-9;\/?:@&=+\$,%#]+$/)
-  ) {
+  const target = encodedURL.value;
+  if (!target.match(/^https?:\/\/[-_.!~*'()a-zA-Z0-9;\/?:@&=+\$,%#]+$/)) {
+    buttonText.value = "Invalid URL";
+    setTimeout(() => {
+      buttonText.value = defaultButtonText;
+    }, 1000);
     return false;
   }
-  webStore.openUrl({ src: encodedURL.value });
+  webStore.openUrl({ src: target });
   settingsStore.openUrl();
-  ipc.commit(types.OPEN_URL, { src: encodedURL.value });
+  ipc.commit(types.OPEN_URL, { src: target });
 }
 
 function tryPasteClipboard(e: KeyboardEvent) {
@@ -88,5 +97,9 @@ function inputClickThrough(value: boolean) {
 }
 .switch {
   text-align: center;
+}
+.submit-btn {
+  width: 100%;
+  margin-top: 12px;
 }
 </style>
