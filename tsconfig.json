@@ -6,7 +6,10 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
+<<<<<<< Updated upstream
     "types": ["node"],
+=======
+>>>>>>> Stashed changes
     "baseUrl": "./app/src",
     "paths": {
       "root/*": ["*"],

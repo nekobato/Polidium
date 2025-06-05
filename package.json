@@ -9,11 +9,9 @@
     "prepare": "rm -rf node_modules/electron/dist && node node_modules/electron/install.js",
     "dev": "vite",
     "build": "pnpm prepare && vue-tsc && vite build && electron-builder --config electron-builder.config.cjs",
-    "lint": "vue-tsc --noEmit",
-    "release": "pnpm build && electron-builder --publish always -c --config electron-builder.config.cjs",
     "build:icon": "electron-icon-builder --input=./public/images/logo/icon.png --output=./public",
-    "test:e2e": "pnpm run pack && mocha test/e2e",
-    "pack": "pnpm run build && build --dir ./"
+    "lint": "tsc --noEmit && vite lint",
+    "release": "pnpm build && electron-builder --publish always -c --config electron-builder.config.cjs"
   },
   "repository": {
     "type": "git",
@@ -32,8 +30,6 @@
     "electron": "^36.4.0",
     "electron-builder": "^26.0.12",
     "electron-debug": "^4.1.0",
-    "material-design-icons": "^3.0.1",
-    "materialize-css": "^1.0.0",
     "sass-embedded": "^1.89.1",
     "sortablejs": "^1.15.6",
     "typescript": "^5.4.5",
