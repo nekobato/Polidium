@@ -3,7 +3,7 @@
   "productName": "Polidium",
   "version": "2.0.3",
   "description": "Polid Movie Screen",
-  "main": "./dist-electron/main.js",
+  "main": "./dist-electron/index.js",
   "scripts": {
     "test": "pnpm run test:e2e",
     "prepare": "rm -rf node_modules/electron/dist && node node_modules/electron/install.js",

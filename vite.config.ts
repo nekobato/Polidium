@@ -37,5 +37,13 @@ export default defineConfig({
   },
   optimizeDeps: {
     exclude: ["electron"]
+  },
+
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: "modern-compiler"
+      }
+    }
   }
 });
