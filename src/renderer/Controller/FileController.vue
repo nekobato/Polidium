@@ -84,6 +84,8 @@ import { computed } from "vue";
 import { Icon } from "@iconify/vue";
 import { useVideoStore } from "@/renderer/store/modules/video";
 import { useSettingsStore } from "@/renderer/store/modules/settings";
+import ipc from "@/renderer/ipc";
+import * as types from "@/mutation-types";
 import type { NodeDropType } from "element-plus/es/components/tree/src/tree.type";
 import type Node from "element-plus/es/components/tree/src/model/node";
 
@@ -136,16 +138,19 @@ function onNodeDrop(draggingNode: Node, dropNode: Node, type: NodeDropType) {
 }
 
 function play(index: number) {
+  const file = queues.value[index];
   videoStore.selectVideo({ index });
+  ipc.commit(types.VIDEO_SELECT, { index });
+  ipc.commit(types.PLAY_FILE, { file });
   settingsStore.videoSelect();
 }
 
 function resume() {
-  videoStore.resumeFile();
+  ipc.commit(types.RESUME_FILE, {});
 }
 
 function pause() {
-  videoStore.pauseFile();
+  ipc.commit(types.PAUSE_FILE, {});
 }
 
 function remove(index: number) {
@@ -157,7 +162,7 @@ function clear() {
 }
 
 function inputCurrentTime(value: number) {
-  videoStore.videoSeek({ percentage: value });
+  ipc.commit(types.VIDEO_SEEK, { percentage: value });
 }
 </script>
 

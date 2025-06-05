@@ -19,14 +19,8 @@ import { useVideoStore } from "@/renderer/store/modules/video";
 const videoStore = useVideoStore();
 const videoEl = ref<HTMLVideoElement | null>(null);
 
-const queues = computed(() => videoStore.queues);
-const playPointer = computed(() => videoStore.playPointer);
-const videoSource = computed(() => {
-  const pointer = playPointer.value;
-  return pointer !== null && queues.value[pointer]
-    ? queues.value[pointer].path
-    : "";
-});
+const currentFile = computed(() => videoStore.currentFile);
+const videoSource = computed(() => currentFile.value ? currentFile.value.path : "");
 const video = computed(() => videoStore.video);
 
 watch(

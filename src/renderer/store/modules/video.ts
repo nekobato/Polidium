@@ -5,6 +5,7 @@ import { ref, reactive } from 'vue'
 export const useVideoStore = defineStore('video', () => {
   const queues = useStorage<Array<{ name: string; path: string }>>('queues', [])
   const playPointer = ref<number | null>(null)
+  const currentFile = ref<{ name: string; path: string } | null>(null)
   const video = reactive({
     duration: 0,
     currentTime: 0,
@@ -27,6 +28,7 @@ export const useVideoStore = defineStore('video', () => {
 
   function selectVideo (payload: { index: number }) {
     playPointer.value = payload.index
+    currentFile.value = queues.value[payload.index] ?? null
   }
 
   function removeQueue (payload: { index: number }) {
@@ -69,12 +71,18 @@ export const useVideoStore = defineStore('video', () => {
   function videoEnded () {
     if (queues.value[(playPointer.value ?? -1) + 1]) {
       playPointer.value = (playPointer.value ?? -1) + 1
+      currentFile.value = queues.value[playPointer.value] ?? null
     }
+  }
+
+  function setCurrentFile (payload: { file: { name: string; path: string } | null }) {
+    currentFile.value = payload.file
   }
 
   return {
     queues,
     playPointer,
+    currentFile,
     video,
     dropFile,
     pauseFile,
@@ -88,6 +96,7 @@ export const useVideoStore = defineStore('video', () => {
     videoSeek,
     videoPlayed,
     videoPaused,
-    videoEnded
+    videoEnded,
+    setCurrentFile
   }
 })

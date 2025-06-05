@@ -23,6 +23,7 @@ const commitMap: Record<string, (payload: any) => void> = {
   [types.DROP_FILE]: (payload) => videoStore.dropFile(payload),
   [types.PAUSE_FILE]: () => videoStore.pauseFile(),
   [types.RESUME_FILE]: () => videoStore.resumeFile(),
+  [types.PLAY_FILE]: (payload) => videoStore.setCurrentFile(payload),
   [types.VIDEO_SELECT]: (payload) => {
     videoStore.selectVideo(payload);
     settingsStore.videoSelect();
