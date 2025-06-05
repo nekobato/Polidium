@@ -24,7 +24,10 @@ const videoEl = ref<HTMLVideoElement | null>(null)
 const queues = computed(() => videoStore.queues)
 const playPointer = computed(() => videoStore.playPointer)
 const videoSource = computed(() => {
-  return queues.value[playPointer.value] ? queues.value[playPointer.value].path : ''
+  const pointer = playPointer.value
+  return pointer !== null && queues.value[pointer]
+    ? queues.value[pointer].path
+    : ''
 })
 const video = computed(() => videoStore.video)
 
