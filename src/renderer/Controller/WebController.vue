@@ -33,6 +33,7 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import ipc from "@/renderer/ipc";
+import * as types from "@/mutation-types";
 import xss from "xss";
 import { useSettingsStore } from "@/renderer/store/modules/settings";
 import { useWebStore } from "@/renderer/store/modules/web";
@@ -58,6 +59,7 @@ function submitURL() {
   }
   webStore.openUrl({ src: encodedURL.value });
   settingsStore.openUrl();
+  ipc.commit(types.OPEN_URL, { src: encodedURL.value });
 }
 
 function tryPasteClipboard(e: KeyboardEvent) {
