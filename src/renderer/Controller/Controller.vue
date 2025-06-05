@@ -12,6 +12,7 @@
         :options="options"
         size="small"
         class="my-toggle"
+        @change="switchView"
       >
         <template #default="{ item }">
           <Icon :icon="item.icon" class="icon" />
@@ -20,32 +21,49 @@
       </el-segmented>
       <button
         class="waves-effect waves-teal btn-flat my-settings"
-        @click="switchView('Settings')"
-        :class="{ 'my-on': currentView === 'Settings' }"
+        @click="switchView('/controller/settings')"
+        :class="{ 'my-on': isSettings }"
       >
         <Icon icon="mingcute:settings-6-line" />
       </button>
     </div>
-    <component :is="currentView" />
+    <router-view />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch, computed } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import { Icon } from "@iconify/vue";
 import ipc from "@/renderer/ipc";
 import * as types from "@/mutation-types";
 
+const router = useRouter();
+const route = useRoute();
+
 const options = [
-  { label: "file", value: "FileController", icon: "mingcute:file-line" },
-  { label: "Web", value: "WebController", icon: "mingcute:world-2-line" }
+  { label: "file", value: "/controller/file", icon: "mingcute:file-line" },
+  { label: "Web", value: "/controller/web", icon: "mingcute:world-2-line" }
 ];
 
-const currentView = ref("FileController");
+const currentView = ref(options[0].value);
 
-function switchView(viewName: "FileController" | "WebController" | "Settings") {
-  currentView.value = viewName;
+// sync currentView with current route
+watch(
+  () => route.path,
+  (path) => {
+    if (path.startsWith("/controller/web")) currentView.value = "/controller/web";
+    else if (path.startsWith("/controller/file")) currentView.value = "/controller/file";
+    else currentView.value = "";
+  },
+  { immediate: true }
+);
+
+function switchView(path: string) {
+  router.push(path);
 }
+
+const isSettings = computed(() => route.path.startsWith("/controller/settings"));
 
 function onDragOver(_e: DragEvent) {
   return false;
