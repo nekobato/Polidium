@@ -7,6 +7,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import type { CSSProperties } from 'vue'
 import { useSettingsStore } from 'renderer/store/modules/settings'
 import VideoPlayer from './VideoPlayer.vue'
 import WebPlayer from './WebPlayer.vue'
@@ -14,7 +15,7 @@ import ResizeMode from './ResizeMode.vue'
 
 const settingsStore = useSettingsStore()
 const settings = computed(() => settingsStore.player)
-const playerStyle = computed(() => ({
+const playerStyle = computed<CSSProperties>(() => ({
   opacity: settings.value.resizeMode ? 1 : settings.value.opacity,
   pointerEvents: settings.value.clickThrough ? 'none' : 'auto'
 }))
