@@ -35,11 +35,11 @@
 import { ref, watch, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { Icon } from "@iconify/vue";
-import ipc from "@/renderer/ipc";
-import * as types from "@/mutation-types";
+import { useVideoStore } from "@/renderer/store/modules/video";
 
 const router = useRouter();
 const route = useRoute();
+const videoStore = useVideoStore();
 
 const options = [
   { label: "file", value: "/controller/file", icon: "mingcute:file-line" },
@@ -82,7 +82,7 @@ function onDrop(e: DragEvent) {
   const files = e.dataTransfer.files;
   for (const file of files) {
     if (file.type === "video/mp4") {
-      ipc.commit(types.DROP_FILE, {
+      videoStore.dropFile({
         file: {
           name: file.name,
           path: (file as any).path
