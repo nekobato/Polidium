@@ -68,6 +68,7 @@ function reset() {
 
 function resizePlayer() {
   settingsStore.resizePlayer({ mode: true });
+  ipc.commit(types.RESIZE_PLAYER, { mode: true });
 }
 
 function inputOpacity(value: number) {

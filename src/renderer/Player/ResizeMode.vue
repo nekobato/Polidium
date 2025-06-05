@@ -10,11 +10,14 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
 import { useSettingsStore } from "@/renderer/store/modules/settings";
+import ipc from "@/renderer/ipc";
+import * as types from "@/mutation-types";
 
 const settingsStore = useSettingsStore();
 
 function onRestore() {
   settingsStore.resizePlayer({ mode: false });
+  ipc.commit(types.RESIZE_PLAYER, { mode: false });
 }
 </script>
 
