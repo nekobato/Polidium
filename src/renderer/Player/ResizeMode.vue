@@ -1,7 +1,7 @@
 <template>
   <div class="resize">
     <div class="restore" @click="onRestore">
-      <i class="material-icons">settings_backup_restore</i>
+      <Icon icon="mingcute:restore-line" class="icon" />
       <span class="text">Restore</span>
     </div>
   </div>
@@ -10,6 +10,7 @@
 <script setup lang="ts">
 import ipc from "@/renderer/ipc";
 import * as types from "@/mutation-types";
+import { Icon } from "@iconify/vue";
 
 function onRestore() {
   ipc.commit(types.RESIZE_PLAYER, { mode: false });
@@ -42,7 +43,7 @@ function onRestore() {
   color: #888;
 }
 
-.restore .material-icons {
+.restore .icon {
   font-size: 48px;
 }
 

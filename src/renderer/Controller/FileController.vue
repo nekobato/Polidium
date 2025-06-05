@@ -17,25 +17,25 @@
     >
       <template #default="{ data }">
         <span class="truncate">{{ data.name }}</span>
-        <i
-          class="material-icons playlist-deleter"
+        <Icon
+          icon="mingcute:close-line"
+          class="playlist-deleter"
           @click.stop.prevent="removeByData(data)"
-          >close</i
-        >
+        />
       </template>
     </el-tree>
     <div class="clear-all" v-show="!queueIsEmpty">
       <div class="clear-btn" @click="clear">
-        <i class="material-icons">clear</i>
+        <Icon icon="mingcute:delete-2-line" class="icon" />
         <span class="clear-text">Clear Playlist</span>
       </div>
     </div>
     <div class="blue-grey darken-2 center video-controller">
       <button class="btn pause-btn" v-if="isPlaying" @click="pause">
-        <i class="material-icons white-text">pause</i>
+        <Icon icon="mingcute:pause-line" class="white-text" />
       </button>
       <button class="btn play-btn" v-if="!isPlaying" @click="resume">
-        <i class="material-icons white-text">play_arrow</i>
+        <Icon icon="mingcute:play-line" class="white-text" />
       </button>
       <div class="seekbar-container">
         <el-slider
@@ -56,6 +56,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
+import { Icon } from "@iconify/vue";
 import { useVideoStore } from "@/renderer/store/modules/video";
 import ipc from "@/renderer/ipc";
 import * as types from "@/mutation-types";
@@ -176,10 +177,10 @@ function inputCurrentTime(value: number) {
   color: #666;
 }
 .clear-all .clear-text,
-.clear-all .material-icons {
+.clear-all .icon {
   display: block;
 }
-.clear-all .material-icons {
+.clear-all .icon {
   font-size: 24px;
 }
 .playlist {

@@ -21,23 +21,23 @@
     </div>
     <div class="row center resize">
       <div class="btn" @click="resizePlayer">
-        <i class="material-icons left">transform</i>
+        <Icon icon="mingcute:transformation-line" class="left" />
         <span>resize player</span>
       </div>
     </div>
     <div class="row center disruptive">
       <div class="btn blue" @click="reload">
-        <i class="material-icons left">refresh</i>
+        <Icon icon="mingcute:refresh-2-line" class="left" />
         <span>reload</span>
       </div>
       <div class="btn blue" @click="reset">
-        <i class="material-icons left">settings_applications</i>
+        <Icon icon="mingcute:settings-6-line" class="left" />
         <span>reset settings</span>
       </div>
     </div>
     <div class="row center disruptive">
       <div class="btn red" @click="quit">
-        <i class="material-icons left">close</i>
+        <Icon icon="mingcute:close-line" class="left" />
         <span>quit</span>
       </div>
     </div>
@@ -46,6 +46,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
+import { Icon } from "@iconify/vue";
 import { useSettingsStore } from "@/renderer/store/modules/settings";
 import ipc from "@/renderer/ipc";
 import * as types from "@/mutation-types";
