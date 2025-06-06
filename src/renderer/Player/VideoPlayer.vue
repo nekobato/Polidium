@@ -15,6 +15,8 @@
 <script setup lang="ts">
 import { ref, watch, computed } from "vue";
 import { useVideoStore } from "@/renderer/store/modules/video";
+import ipc from "@/renderer/ipc";
+import * as types from "@/mutation-types";
 
 const videoStore = useVideoStore();
 const videoEl = ref<HTMLVideoElement | null>(null);
@@ -49,8 +51,12 @@ function onVideoCanplay() {
 }
 
 function onVideoTimeupdate() {
+  const current = videoEl.value!.currentTime;
   videoStore.videoTimeupdate({
-    currentTime: videoEl.value!.currentTime
+    currentTime: current
+  });
+  ipc.commit(types.VIDEO_TIMEUPDATE, {
+    currentTime: current
   });
 }
 
