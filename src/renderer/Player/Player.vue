@@ -6,17 +6,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch } from "vue";
+import { computed, watch, onMounted } from "vue";
 import type { CSSProperties } from "vue";
 import { useRouter } from "vue-router";
 import { useSettingsStore } from "@/renderer/store/modules/settings";
+import ipc from "@/renderer/ipc";
+import * as types from "@/mutation-types";
 import ResizeMode from "./ResizeMode.vue";
 
 const settingsStore = useSettingsStore();
 const settings = computed(() => settingsStore.player);
 const router = useRouter();
 const playerStyle = computed<CSSProperties>(() => ({
-  opacity: settings.value.resizeMode ? 1 : settings.value.opacity,
   pointerEvents: settings.value.clickThrough ? "none" : "auto"
 }));
 
@@ -28,6 +29,12 @@ watch(
   },
   { immediate: true }
 );
+
+// 初期化時にBrowserWindowにopacityを設定
+onMounted(() => {
+  const targetOpacity = settings.value.resizeMode ? 1 : settings.value.opacity;
+  ipc.commit(types.CHANGE_OPACITY, targetOpacity);
+});
 </script>
 
 <style lang="scss">
