@@ -1,10 +1,12 @@
-import { BrowserWindow, screen } from 'electron'
+import { BrowserWindow, screen, WebContentsView } from 'electron'
 import { join } from 'path'
 
 const DEBUG = !!process.env.DEBUG
 
 export default class PlayerWindow {
   win: BrowserWindow | null
+  private webView: WebContentsView | null = null
+  private currentUrl: string | null = null
 
   constructor () {
     const size = screen.getPrimaryDisplay().workAreaSize
@@ -45,5 +47,62 @@ export default class PlayerWindow {
 
   show () {
     this.win?.show()
+  }
+
+  private updateViewBounds () {
+    if (!this.win || !this.webView) return
+    const [width, height] = this.win.getContentSize()
+    this.webView.setBounds({ x: 0, y: 0, width, height })
+  }
+
+  private attachView () {
+    if (!this.win || !this.webView) return
+    if (!this.win.getBrowserViews().includes(this.webView as any)) {
+      this.win.addBrowserView(this.webView as any)
+    }
+    this.updateViewBounds()
+  }
+
+  private detachView () {
+    if (!this.win || !this.webView) return
+    if (this.win.getBrowserViews().includes(this.webView as any)) {
+      this.win.removeBrowserView(this.webView as any)
+    }
+  }
+
+  showWebView () {
+    if (!this.currentUrl) return
+    if (!this.webView) {
+      this.webView = new WebContentsView({
+        webPreferences: {
+          preload: join(__dirname, 'preload.js'),
+          contextIsolation: true,
+          nodeIntegration: false
+        }
+      })
+      this.win?.on('resize', () => this.updateViewBounds())
+      this.webView.webContents.loadURL(this.currentUrl)
+    }
+    this.attachView()
+  }
+
+  openUrl (url: string) {
+    this.currentUrl = url
+    if (!this.webView) {
+      this.webView = new WebContentsView({
+        webPreferences: {
+          preload: join(__dirname, 'preload.js'),
+          contextIsolation: true,
+          nodeIntegration: false
+        }
+      })
+      this.win?.on('resize', () => this.updateViewBounds())
+    }
+    this.attachView()
+    this.webView!.webContents.loadURL(url)
+  }
+
+  hideWebView () {
+    this.detachView()
   }
 }
