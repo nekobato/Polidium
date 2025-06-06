@@ -116,6 +116,17 @@ function createWindows() {
         player.win!.setMovable(parsedPayload.mode);
         if (MAC) player.win!.setHasShadow(parsedPayload.mode);
       }
+
+      if (typeName === types.OPEN_URL) {
+        const parsed = JSON.parse(payload);
+        player.openUrl(parsed.src);
+      }
+
+      if (typeName === types.CHANGE_MODE) {
+        const mode = JSON.parse(payload);
+        if (mode === 'video-player') player.hideWebView();
+        if (mode === 'web-player') player.showWebView();
+      }
     }
   );
 }

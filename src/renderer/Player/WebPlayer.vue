@@ -1,13 +1,9 @@
 <template>
-  <webview class="web-player" nodeintegration :src="web.src"></webview>
+  <div class="web-player"></div>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import { useWebStore } from "@/renderer/store/modules/web";
-
-const webStore = useWebStore();
-const web = computed(() => webStore);
+// Web page contents are handled in the main process via WebContentsView
 </script>
 
 <style lang="scss" scoped>
