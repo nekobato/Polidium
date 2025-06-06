@@ -85,6 +85,15 @@ function createWindows() {
       player.win!.webContents.send(types.CONNECT_COMMIT, typeName, payload);
       controller.win.webContents.send(types.CONNECT_COMMIT, typeName, payload);
 
+      // Also send to WebContentsView if it exists
+      if (player.webView?.webContents) {
+        player.webView.webContents.send(
+          types.CONNECT_COMMIT,
+          typeName,
+          payload
+        );
+      }
+
       if (typeName === types.QUIT) app.quit();
 
       if (typeName === types.SET_CLICKTHROUGH) {
@@ -124,8 +133,8 @@ function createWindows() {
 
       if (typeName === types.CHANGE_MODE) {
         const mode = JSON.parse(payload);
-        if (mode === 'video-player') player.hideWebView();
-        if (mode === 'web-player') player.showWebView();
+        if (mode === "video-player") player.hideWebView();
+        if (mode === "web-player") player.showWebView();
       }
     }
   );

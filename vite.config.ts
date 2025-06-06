@@ -21,7 +21,7 @@ export default defineConfig({
     outDir: "js",
     emptyOutDir: false,
     rollupOptions: {
-      input: resolve(__dirname, "src/renderer/index.ts"),
+      input: resolve(__dirname, "src/renderer/main.ts"),
       output: {
         entryFileNames: "index.js",
         format: "cjs"
