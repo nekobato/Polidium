@@ -57,16 +57,16 @@ export default class PlayerWindow {
 
   private attachView () {
     if (!this.win || !this.webView) return
-    if (!this.win.getBrowserViews().includes(this.webView as any)) {
-      this.win.addBrowserView(this.webView as any)
+    if (this.webView instanceof BrowserView && !this.win.getBrowserViews().includes(this.webView)) {
+      this.win.addBrowserView(this.webView)
     }
     this.updateViewBounds()
   }
 
   private detachView () {
     if (!this.win || !this.webView) return
-    if (this.win.getBrowserViews().includes(this.webView as any)) {
-      this.win.removeBrowserView(this.webView as any)
+    if (this.webView instanceof BrowserView && this.win.getBrowserViews().includes(this.webView)) {
+      this.win.removeBrowserView(this.webView)
     }
   }
 
