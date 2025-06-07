@@ -34,7 +34,7 @@ export default class ControllerWindow {
     const devUrl = process.env.VITE_DEV_SERVER_URL;
     if (devUrl) {
       this.win.loadURL(devUrl + "#controller");
-      this.win.webContents.openDevTools({ mode: "detach" });
+      // this.win.webContents.openDevTools({ mode: "detach" });
     } else {
       this.win.loadURL("file://" + __dirname + "/index.html#controller");
     }
