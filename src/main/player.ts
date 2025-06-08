@@ -35,10 +35,10 @@ export default class PlayerWindow {
 
     const devUrl = process.env.VITE_DEV_SERVER_URL;
     if (devUrl) {
-      this.win.loadURL(devUrl + "#player");
-      this.win.webContents.openDevTools({ mode: "detach" });
+      this.win.loadURL(devUrl + "#/player");
+      this.win.webContents.openDevTools();
     } else {
-      this.win.loadURL("file://" + __dirname + "/index.html#player");
+      this.win.loadURL("file://" + __dirname + "/index.html#/player");
     }
 
     this.win.on("closed", () => {
@@ -48,6 +48,25 @@ export default class PlayerWindow {
 
   show() {
     this.win?.show();
+  }
+
+  destroy() {
+    // WebContentsViewのクリーンアップ
+    if (this.webView) {
+      this.detachView();
+      // WebContentsViewの破棄
+      if (!this.webView.webContents.isDestroyed()) {
+        this.webView.webContents.close();
+      }
+      this.webView = null;
+    }
+
+    // BrowserWindowのクリーンアップ
+    if (this.win && !this.win.isDestroyed()) {
+      this.win.removeAllListeners();
+      this.win.close();
+      this.win = null;
+    }
   }
 
   private updateViewBounds() {
@@ -85,6 +104,8 @@ export default class PlayerWindow {
           nodeIntegration: false
         }
       });
+      // resizeイベントリスナーを一度だけ登録
+      this.win?.removeAllListeners("resize");
       this.win?.on("resize", () => this.updateViewBounds());
       this.webView.webContents.loadURL(this.currentUrl);
     }
@@ -101,6 +122,8 @@ export default class PlayerWindow {
           nodeIntegration: false
         }
       });
+      // resizeイベントリスナーを一度だけ登録
+      this.win?.removeAllListeners("resize");
       this.win?.on("resize", () => this.updateViewBounds());
     }
     this.attachView();

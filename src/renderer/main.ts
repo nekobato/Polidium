@@ -3,7 +3,7 @@ import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
 import "element-plus/theme-chalk/dark/css-vars.css";
 import { pinia } from "./store";
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 import App from "./App.vue";
 import Player from "./Player/Player.vue";
 import VideoPlayer from "./Player/VideoPlayer.vue";
@@ -14,7 +14,7 @@ import WebController from "./Controller/WebController.vue";
 import Settings from "./Controller/Settings.vue";
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes: [
     {
       path: "/player",
@@ -38,12 +38,8 @@ const router = createRouter({
   ]
 });
 
-const app = createApp(App).use(pinia).use(ElementPlus).use(router);
+const app = createApp(App).use(router).use(pinia).use(ElementPlus);
 
-// Support '#player' and '#controller' hash navigation including child paths
-const hash = window.location.hash.replace("#", "");
-if (hash === "player" || hash.startsWith("controller")) {
-  router.replace("/" + hash);
-}
+// Hash mode handles this automatically, no manual hash handling needed
 
 app.mount("#app");

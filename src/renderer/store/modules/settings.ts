@@ -30,6 +30,11 @@ export const useSettingsStore = defineStore("settings", () => {
   }
 
   function changeOpacity(newOpacity: number) {
+    // 値が変更された場合のみ更新
+    if (state.value.player.opacity === newOpacity) {
+      return;
+    }
+
     state.value.player.opacity = newOpacity;
     // リサイズモードでない場合のみBrowserWindowに適用
     if (!state.value.player.resizeMode) {
@@ -60,6 +65,11 @@ export const useSettingsStore = defineStore("settings", () => {
   }
 
   function resizePlayer(payload: { mode: boolean }) {
+    // 既に同じモードの場合は何もしない
+    if (state.value.player.resizeMode === payload.mode) {
+      return;
+    }
+
     state.value.player.resizeMode = payload.mode;
     state.value.player.clickThrough = !payload.mode;
 

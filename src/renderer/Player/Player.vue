@@ -34,6 +34,7 @@ watch(
 onMounted(() => {
   const targetOpacity = settings.value.resizeMode ? 1 : settings.value.opacity;
   ipc.commit(types.CHANGE_OPACITY, targetOpacity);
+  console.log("Player mounted with opacity:", settings.value);
 });
 </script>
 

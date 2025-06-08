@@ -33,10 +33,10 @@ export default class ControllerWindow {
 
     const devUrl = process.env.VITE_DEV_SERVER_URL;
     if (devUrl) {
-      this.win.loadURL(devUrl + "#controller");
-      // this.win.webContents.openDevTools({ mode: "detach" });
+      this.win.loadURL(devUrl + "#/controller");
+      this.win.webContents.openDevTools();
     } else {
-      this.win.loadURL("file://" + __dirname + "/index.html#controller");
+      this.win.loadURL("file://" + __dirname + "/index.html#/controller");
     }
   }
 
@@ -51,6 +51,13 @@ export default class ControllerWindow {
       this.win.hide();
     } else {
       this.showWindow(x);
+    }
+  }
+
+  destroy() {
+    if (this.win && !this.win.isDestroyed()) {
+      this.win.removeAllListeners();
+      this.win.close();
     }
   }
 }

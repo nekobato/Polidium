@@ -50,6 +50,7 @@ const commitMap: Record<string, (payload: any) => void> = {
 };
 
 ipc.on(types.CONNECT_COMMIT, (typeName: string, payload: string) => {
+  console.log(`[CONNECT_COMMIT] ${typeName}`, payload);
   const handler = commitMap[typeName];
   if (handler) handler(JSON.parse(payload));
 });
