@@ -23,6 +23,7 @@ export default class PlayerWindow {
       transparent: true,
       skipTaskbar: true,
       alwaysOnTop: true,
+      roundedCorners: false,
       webPreferences: {
         preload: join(__dirname, "preload.js"),
         contextIsolation: true,

@@ -10,6 +10,12 @@ interface SettingsState {
     opacity: number;
     clickThrough: boolean;
     resizeMode: boolean;
+    windowBounds?: {
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    };
   };
 }
 
@@ -78,6 +84,15 @@ export const useSettingsStore = defineStore("settings", () => {
     ipc.commit(types.CHANGE_OPACITY, targetOpacity);
   }
 
+  function saveWindowBounds(bounds: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  }) {
+    state.value.player.windowBounds = bounds;
+  }
+
   return {
     player,
     changeMode,
@@ -87,6 +102,7 @@ export const useSettingsStore = defineStore("settings", () => {
     reset,
     openUrl,
     videoSelect,
-    resizePlayer
+    resizePlayer,
+    saveWindowBounds
   };
 });

@@ -12,6 +12,7 @@ import Controller from "./Controller/Controller.vue";
 import FileController from "./Controller/FileController.vue";
 import WebController from "./Controller/WebController.vue";
 import Settings from "./Controller/Settings.vue";
+import "./styles/index.scss";
 
 const router = createRouter({
   history: createWebHashHistory(),

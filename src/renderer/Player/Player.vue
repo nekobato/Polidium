@@ -1,7 +1,7 @@
 <template>
   <div class="player" :style="playerStyle">
     <router-view />
-    <resize-mode v-show="settings.resizeMode" />
+    <resize-mode v-if="settings.resizeMode" />
   </div>
 </template>
 
@@ -32,9 +32,11 @@ watch(
 
 // 初期化時にBrowserWindowにopacityを設定
 onMounted(() => {
-  const targetOpacity = settings.value.resizeMode ? 1 : settings.value.opacity;
-  ipc.commit(types.CHANGE_OPACITY, targetOpacity);
-  console.log("Player mounted with opacity:", settings.value);
+  // 起動時は必ずresizeModeをfalseに設定
+  settingsStore.resizePlayer({ mode: false });
+
+  // opacityの設定（resizeModeがfalseなので、通常のopacityが適用される）
+  ipc.commit(types.CHANGE_OPACITY, settings.value.opacity);
 });
 </script>
 

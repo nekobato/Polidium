@@ -64,8 +64,10 @@ if (route.path === "/controller") {
 watch(
   () => route.path,
   (path) => {
-    if (path.startsWith("/controller/web")) currentView.value = "/controller/web";
-    else if (path.startsWith("/controller/file")) currentView.value = "/controller/file";
+    if (path.startsWith("/controller/web"))
+      currentView.value = "/controller/web";
+    else if (path.startsWith("/controller/file"))
+      currentView.value = "/controller/file";
     else currentView.value = "";
   },
   { immediate: true }
@@ -82,7 +84,9 @@ function switchView(path: string) {
   }
 }
 
-const isSettings = computed(() => route.path.startsWith("/controller/settings"));
+const isSettings = computed(() =>
+  route.path.startsWith("/controller/settings")
+);
 
 function onDragOver(_e: DragEvent) {
   return false;

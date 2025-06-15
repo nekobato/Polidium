@@ -1,14 +1,15 @@
 <template>
   <div class="resize">
-    <div class="restore" @click="onRestore">
+    <el-button class="restore" @click="onRestore" size="large">
       <Icon icon="mingcute:restore-line" class="icon" />
       <span class="text">Restore</span>
-    </div>
+    </el-button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
+import { ElButton } from "element-plus";
 import { useSettingsStore } from "@/renderer/store/modules/settings";
 import ipc from "@/renderer/ipc";
 import * as types from "@/mutation-types";
@@ -16,6 +17,9 @@ import * as types from "@/mutation-types";
 const settingsStore = useSettingsStore();
 
 function onRestore() {
+  // ウィンドウの現在の位置とサイズを保存
+  ipc.commit(types.SAVE_WINDOW_BOUNDS, {});
+
   settingsStore.resizePlayer({ mode: false });
   ipc.commit(types.RESIZE_PLAYER, { mode: false });
 }
@@ -34,24 +38,19 @@ function onRestore() {
   width: 100%;
   height: 100%;
   cursor: move;
+  background-color: rgba(0, 0, 0, 0.24);
+  border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
 .restore {
-  display: flex;
-  flex-direction: column;
-  color: #b2b2b2;
-  cursor: pointer;
-}
+  -webkit-app-region: no-drag;
 
-.restore:hover {
-  color: #888;
-}
+  .icon {
+    font-size: 20px;
 
-.restore .icon {
-  font-size: 48px;
-}
-
-.restore .text {
-  font-size: 14px;
+    & + .text {
+      margin-left: 12px;
+    }
+  }
 }
 </style>

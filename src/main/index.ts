@@ -15,6 +15,7 @@ import * as types from "../mutation-types";
 import PlayerWindow from "./player";
 import ControllerWindow from "./controller";
 import { join } from "path";
+import { saveWindowBounds, loadWindowBounds } from "./windowBounds";
 
 const DEBUG = process.env.DEBUG ? true : false;
 const MAC = os.type() === "Darwin";
@@ -90,6 +91,12 @@ function createWindows() {
   player = new PlayerWindow();
   controller = new ControllerWindow();
 
+  // 保存されたウィンドウ位置とサイズを復元
+  const savedBounds = loadWindowBounds();
+  if (savedBounds && player.win && !player.win.isDestroyed()) {
+    player.win.setBounds(savedBounds);
+  }
+
   const trayIcon = nativeImage.createFromPath(
     join(__dirname, "../img", "tray_icon.png")
   );
@@ -161,6 +168,14 @@ function createWindows() {
       player.win?.setResizable(parsedPayload.mode);
       player.win?.setMovable(parsedPayload.mode);
       if (MAC) player.win?.setHasShadow(parsedPayload.mode);
+    }
+
+    if (typeName === types.SAVE_WINDOW_BOUNDS) {
+      if (player.win && !player.win.isDestroyed()) {
+        const bounds = player.win.getBounds();
+        // ウィンドウ位置とサイズを保存
+        saveWindowBounds(bounds);
+      }
     }
 
     if (typeName === types.OPEN_URL) {

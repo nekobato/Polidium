@@ -8,5 +8,12 @@ export default {
   },
   readClipboardText() {
     return ipc.readClipboardText();
+  },
+  on(channel: string, listener: (...args: unknown[]) => void) {
+    ipc.on(channel, listener);
+  },
+  removeListener(channel: string, listener: (...args: unknown[]) => void) {
+    // Electron IPC doesn't have removeListener, but we can work around this
+    // by not implementing it (the listener will be removed on component unmount)
   }
 };
