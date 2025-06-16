@@ -15,5 +15,14 @@ export default {
   removeListener(channel: string, listener: (...args: unknown[]) => void) {
     // Electron IPC doesn't have removeListener, but we can work around this
     // by not implementing it (the listener will be removed on component unmount)
-  }
+  },
+  async invoke(channel: string, ...args: unknown[]) {
+    return ipc.invoke(channel, ...args);
+  },
+  getFilePath(file: File) {
+    return ipc.getFilePath(file);
+  },
+  pathToFileURL(filePath: string) {
+    return ipc.pathToFileURL(filePath);
+  },
 };

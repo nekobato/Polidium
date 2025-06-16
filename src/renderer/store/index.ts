@@ -4,8 +4,7 @@ import * as Sentry from "@sentry/electron";
 import { useVideoStore } from "./modules/video";
 import { useWebStore } from "./modules/web";
 import { useSettingsStore } from "./modules/settings";
-
-const ipc = (window as any).electronAPI;
+import ipc from "@/renderer/ipc";
 
 const { VITE_SENTRY_DSN } = import.meta.env;
 
@@ -46,7 +45,7 @@ const commitMap: Record<string, (payload: any) => void> = {
     webStore.openUrl(payload);
     settingsStore.openUrl();
   },
-  [types.RESIZE_PLAYER]: (payload) => settingsStore.resizePlayer(payload)
+  [types.RESIZE_PLAYER]: (payload) => settingsStore.resizePlayer(payload),
 };
 
 ipc.on(types.CONNECT_COMMIT, (typeName: string, payload: string) => {

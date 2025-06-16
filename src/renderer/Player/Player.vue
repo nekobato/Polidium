@@ -18,7 +18,7 @@ const settingsStore = useSettingsStore();
 const settings = computed(() => settingsStore.player);
 const router = useRouter();
 const playerStyle = computed<CSSProperties>(() => ({
-  pointerEvents: settings.value.clickThrough ? "none" : "auto"
+  pointerEvents: settings.value.clickThrough ? "none" : "auto",
 }));
 
 watch(
@@ -27,11 +27,12 @@ watch(
     if (mode === "video-player") router.push("/player/file");
     else if (mode === "web-player") router.push("/player/web");
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 // 初期化時にBrowserWindowにopacityを設定
 onMounted(() => {
+  console.log("[Player]");
   // 起動時は必ずresizeModeをfalseに設定
   settingsStore.resizePlayer({ mode: false });
 

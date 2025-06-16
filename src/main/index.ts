@@ -1,13 +1,4 @@
-import {
-  app,
-  Tray,
-  nativeImage,
-  globalShortcut,
-  ipcMain,
-  Menu,
-  dialog,
-  BrowserWindow
-} from "electron";
+import { app, Tray, nativeImage, globalShortcut, ipcMain, Menu, dialog, BrowserWindow, net } from "electron";
 import * as Sentry from "@sentry/electron";
 import { autoUpdater } from "electron-updater";
 import * as os from "os";
@@ -51,6 +42,50 @@ function cleanupWindows() {
   }
 }
 
+// ファイルパスを取得するためのipcハンドラー
+ipcMain.handle("get-file-path", async (_event, fileInfo) => {
+  console.log("[Main] get-file-path called with:", fileInfo);
+
+  // fileInfoからパスを取得
+  let filePath = fileInfo.path || "";
+
+  if (!filePath) {
+    console.error("[Main] No file path provided");
+    return { success: false, error: "No file path provided" };
+  }
+
+  try {
+    // パスの正規化（OSに応じた処理）
+    if (os.platform() === "win32") {
+      // Windowsパスの処理
+      filePath = filePath.replace(/\\/g, "/");
+
+      // Windowsの場合、ドライブレターのコロンを確認
+      if (!filePath.match(/^[A-Za-z]:\//)) {
+        // ドライブレターがない場合は、何らかのデフォルトパスを使用
+        filePath = `C:/${filePath}`;
+      }
+    } else {
+      // MacやLinuxの場合
+      if (!filePath.startsWith("/")) {
+        filePath = `/${filePath}`;
+      }
+    }
+
+    // URIエンコードが必要な文字をエスケープ
+    const encodedPath = encodeURI(filePath).replace(/#/g, "%23");
+
+    // ファイルプロトコルを追加
+    const fullPath = `file://${encodedPath}`;
+
+    console.log("[Main] Resolved file path:", fullPath);
+    return { success: true, path: fullPath };
+  } catch (error) {
+    console.error("[Main] Error resolving file path:", error);
+    return { success: false, error: String(error) };
+  }
+});
+
 function createWindows() {
   const menuTemplate: Electron.MenuItemConstructorOptions[] = [
     {
@@ -60,15 +95,15 @@ function createWindows() {
           label: "Check for Updates...",
           click() {
             autoUpdater.checkForUpdates();
-          }
+          },
         },
         { type: "separator" },
-        { role: "quit" }
-      ]
+        { role: "quit" },
+      ],
     },
     {
-      role: "editMenu"
-    }
+      role: "editMenu",
+    },
   ];
   Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate));
 
@@ -78,7 +113,7 @@ function createWindows() {
         type: "info",
         buttons: ["Restart", "Later"],
         title: "Update ready",
-        message: "Update downloaded. Restart now?"
+        message: "Update downloaded. Restart now?",
       })
       .then((result) => {
         if (result.response === 0) autoUpdater.quitAndInstall();
@@ -97,9 +132,7 @@ function createWindows() {
     player.win.setBounds(savedBounds);
   }
 
-  const trayIcon = nativeImage.createFromPath(
-    join(__dirname, "../img", "tray_icon.png")
-  );
+  const trayIcon = nativeImage.createFromPath(join(__dirname, "../img", "tray_icon.png"));
   tray = new Tray(trayIcon);
 
   tray.on("click", (_event, bounds) => {
@@ -121,11 +154,7 @@ function createWindows() {
   process.on("message", hotReloadHandler);
 
   // IPCハンドラー
-  const ipcHandler = (
-    _event: Electron.IpcMainEvent,
-    typeName: string,
-    payload: string
-  ) => {
+  const ipcHandler = (_event: Electron.IpcMainEvent, typeName: string, payload: string) => {
     if (DEBUG) console.log(typeName, payload);
 
     if (!player || !controller) return;
@@ -144,8 +173,7 @@ function createWindows() {
       const parsedPayload = JSON.parse(payload);
       player.win?.setIgnoreMouseEvents(parsedPayload.clickThrough);
       player.win?.setAlwaysOnTop(parsedPayload.clickThrough);
-      if (MAC)
-        player.win?.setVisibleOnAllWorkspaces(parsedPayload.clickThrough);
+      if (MAC) player.win?.setVisibleOnAllWorkspaces(parsedPayload.clickThrough);
     }
 
     if (typeName === types.CHANGE_OPACITY) {
@@ -187,6 +215,53 @@ function createWindows() {
       const mode = JSON.parse(payload);
       if (mode === "video-player") player.hideWebView();
       if (mode === "web-player") player.showWebView();
+    }
+
+    if (typeName === types.PLAY_FILE) {
+      // 動画ファイル再生時に適切なモードに切り替え
+      player.hideWebView();
+
+      // ファイル情報を解析して、プレイヤーに送り直す
+      try {
+        const parsedPayload = JSON.parse(payload);
+        if (parsedPayload.file) {
+          // ファイル情報を取得
+          const filePath = parsedPayload.file.path || "";
+          const fileName = parsedPayload.file.name || "unknown";
+          const fileType = parsedPayload.file.type || "";
+          const fileSize = parsedPayload.file.size || 0;
+          const fileLastModified = parsedPayload.file.lastModified || 0;
+
+          // パスが有効かどうかチェック
+          if (filePath) {
+            console.log(`[Main] Processing video file: ${fileName}, path: ${filePath}`);
+            
+            // そのままパスを使用（renderer側ですでに絶対パスになっている前提）
+
+            // ファイル情報をそのままプレイヤーに送信
+            console.log(`[Main] Sending file to player: ${fileName}, ${filePath}`);
+            player.win?.webContents.send(
+              types.CONNECT_COMMIT,
+              types.PLAY_FILE,
+              JSON.stringify({
+                file: {
+                  name: fileName,
+                  path: filePath,
+                  type: fileType,
+                  size: fileSize,
+                  lastModified: fileLastModified
+                }
+              }),
+            );
+          } else {
+            console.error("[Main] No valid file path provided");
+          }
+        } else {
+          console.error("[Main] No file information in payload");
+        }
+      } catch (error) {
+        console.error("Failed to parse PLAY_FILE payload:", error);
+      }
     }
   };
 

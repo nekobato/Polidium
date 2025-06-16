@@ -7,13 +7,7 @@
     @drop.prevent="onDrop"
   >
     <div class="blue-grey my-header">
-      <el-segmented
-        v-model="currentView"
-        :options="options"
-        size="small"
-        class="my-toggle"
-        @change="switchView"
-      >
+      <el-segmented v-model="currentView" :options="options" size="small" class="my-toggle" @change="switchView">
         <template #default="{ item }">
           <Icon :icon="item.icon" class="icon" />
           <span class="label">{{ item.label }}</span>
@@ -32,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { Icon } from "@iconify/vue";
 import { useVideoStore } from "@/renderer/store/modules/video";
@@ -47,14 +41,10 @@ const settingsStore = useSettingsStore();
 
 const options = [
   { label: "file", value: "/controller/file", icon: "mingcute:file-line" },
-  { label: "Web", value: "/controller/web", icon: "mingcute:world-2-line" }
+  { label: "Web", value: "/controller/web", icon: "mingcute:world-2-line" },
 ];
 
-const currentView = ref(
-  settingsStore.player.mode === "web-player"
-    ? "/controller/web"
-    : "/controller/file"
-);
+const currentView = ref(settingsStore.player.mode === "web-player" ? "/controller/web" : "/controller/file");
 
 if (route.path === "/controller") {
   router.replace(currentView.value);
@@ -64,13 +54,11 @@ if (route.path === "/controller") {
 watch(
   () => route.path,
   (path) => {
-    if (path.startsWith("/controller/web"))
-      currentView.value = "/controller/web";
-    else if (path.startsWith("/controller/file"))
-      currentView.value = "/controller/file";
+    if (path.startsWith("/controller/web")) currentView.value = "/controller/web";
+    else if (path.startsWith("/controller/file")) currentView.value = "/controller/file";
     else currentView.value = "";
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 function switchView(path: string) {
@@ -84,9 +72,7 @@ function switchView(path: string) {
   }
 }
 
-const isSettings = computed(() =>
-  route.path.startsWith("/controller/settings")
-);
+const isSettings = computed(() => route.path.startsWith("/controller/settings"));
 
 function onDragOver(_e: DragEvent) {
   return false;
@@ -100,21 +86,37 @@ function onDragEnd(_e: DragEvent) {
   return false;
 }
 
-function onDrop(e: DragEvent) {
+async function onDrop(e: DragEvent) {
   if (!e.dataTransfer) return false;
   const files = e.dataTransfer.files;
+
   for (const file of files) {
-    if (file.type === "video/mp4") {
-      videoStore.dropFile({
-        file: {
-          name: file.name,
-          path: (file as any).path
+    // ビデオファイルタイプの判定をより広く
+    if (file.type.startsWith("video/") || file.name.endsWith(".mp4") || file.name.endsWith(".webm") || file.name.endsWith(".mov")) {
+      try {
+        const absoluteFilePath = ipc.getFilePath(file);
+
+        if (absoluteFilePath) {
+          console.log("Got absolute path from main process:", absoluteFilePath);
+
+          videoStore.dropFile({
+            file: {
+              name: file.name,
+              path: absoluteFilePath,
+            },
+          });
         }
-      });
+      } catch (error) {
+        console.error("Error processing file:", file.name, error);
+      }
     }
   }
   return false;
 }
+
+onMounted(() => {
+  console.log("[Controller]");
+});
 </script>
 
 <style lang="scss">

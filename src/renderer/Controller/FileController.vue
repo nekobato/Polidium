@@ -18,13 +18,7 @@
       <template #default="{ data }">
         <div class="tree-node-content">
           <span class="truncate">{{ data.name }}</span>
-          <el-button
-            type="danger"
-            size="small"
-            circle
-            class="playlist-deleter"
-            @click.stop.prevent="removeByData(data)"
-          >
+          <el-button type="danger" size="small" circle class="playlist-deleter" @click.stop.prevent="removeByData(data)">
             <Icon icon="mingcute:close-line" />
           </el-button>
         </div>
@@ -38,41 +32,17 @@
     </div>
     <el-card class="video-controller-card" shadow="never">
       <div class="video-controller">
-        <el-button
-          class="pause-btn"
-          v-if="isPlaying"
-          type="primary"
-          circle
-          size="large"
-          @click="pause"
-        >
+        <el-button class="pause-btn" v-if="isPlaying" type="primary" circle size="large" @click="pause">
           <Icon icon="mingcute:pause-line" class="white-text" />
         </el-button>
-        <el-button
-          class="play-btn"
-          v-if="!isPlaying"
-          type="primary"
-          circle
-          size="large"
-          @click="resume"
-        >
+        <el-button class="play-btn" v-if="!isPlaying" type="primary" circle size="large" @click="resume">
           <Icon icon="mingcute:play-line" class="white-text" />
         </el-button>
         <div class="seekbar-container">
-          <el-slider
-            class="seekbar"
-            id="seekbar"
-            :min="0"
-            :max="100"
-            :model-value="currentTime"
-            @input="inputCurrentTime"
-            show-tooltip
-          />
+          <el-slider class="seekbar" id="seekbar" :min="0" :max="100" :model-value="currentTime" @input="inputCurrentTime" show-tooltip />
         </div>
         <div class="duration">
-          <el-tag type="info" effect="dark" class="duration-text">{{
-            videoRemaining
-          }}</el-tag>
+          <el-tag type="info" effect="dark" class="duration-text">{{ videoRemaining }}</el-tag>
         </div>
       </div>
     </el-card>
@@ -98,13 +68,8 @@ const queueIsEmpty = computed(() => queues.value.length === 0);
 const video = computed(() => videoStore.video);
 const isPlaying = computed(() => video.value.isPlaying);
 const videoRemaining = computed(() => {
-  const remainSeconds = Math.floor(
-    video.value.duration - video.value.currentTime
-  );
-  return `${Math.floor(remainSeconds / 60)}:${(
-    "0" +
-    (remainSeconds % 60)
-  ).slice(-2)}`;
+  const remainSeconds = Math.floor(video.value.duration - video.value.currentTime);
+  return `${Math.floor(remainSeconds / 60)}:${("0" + (remainSeconds % 60)).slice(-2)}`;
 });
 const currentTime = computed(() => {
   const percentage = (video.value.currentTime / video.value.duration) * 100;
@@ -123,6 +88,7 @@ function allowDrop(_dragging: Node, _drop: Node, type: NodeDropType) {
 }
 
 function onNodeClick(_data: any, node: Node) {
+  console.log("Node clicked:", _data, node);
   const index = (node.data as any).id;
   play(index);
 }
@@ -139,9 +105,29 @@ function onNodeDrop(draggingNode: Node, dropNode: Node, type: NodeDropType) {
 
 function play(index: number) {
   const file = queues.value[index];
+  console.log("Playing file:", file);
+  if (!file) {
+    console.error("Invalid file");
+    return;
+  }
+
+  // まずはビデオ選択状態を更新
   videoStore.selectVideo({ index });
   ipc.commit(types.VIDEO_SELECT, { index });
-  ipc.commit(types.PLAY_FILE, { file });
+
+  // 次にビデオプレイヤーモードに切り替え
+  settingsStore.changeMode("video-player");
+  ipc.commit(types.CHANGE_MODE, "video-player");
+
+  // ファイル情報をIPCを通して送信
+  const fileInfo = {
+    name: file.name,
+    // storeに保存されているパスは既に絶対パスなので、そのまま使用
+    path: file.path || "",
+  };
+
+  // IPCでファイル情報を送信（メインプロセスでパス解決される）
+  ipc.commit(types.PLAY_FILE, { file: fileInfo });
   settingsStore.videoSelect();
 }
 
