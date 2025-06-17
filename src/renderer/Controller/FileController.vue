@@ -150,6 +150,16 @@ function clear() {
 function inputCurrentTime(value: number) {
   ipc.commit(types.VIDEO_SEEK, { percentage: value });
 }
+
+ipc.on(types.VIDEO_CANPLAY, (data: { duration: number }) => {
+  console.log("[VideoPlayer] Video can play:", data);
+  videoStore.videoCanplay({ duration: data.duration });
+});
+
+ipc.on(types.VIDEO_TIMEUPDATE, (data: { currentTime: number }) => {
+  console.log("[VideoPlayer] Video update:", data);
+  videoStore.videoTimeupdate({ currentTime: data.currentTime });
+});
 </script>
 
 <style lang="scss" scoped>

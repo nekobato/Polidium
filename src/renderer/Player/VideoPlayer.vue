@@ -107,6 +107,9 @@ watch(
 
 function onVideoCanplay() {
   videoStore.videoCanplay({ duration: videoEl.value!.duration });
+  ipc.commit(types.VIDEO_CANPLAY, {
+    duration: videoEl.value!.duration,
+  });
 }
 
 function onVideoTimeupdate() {
