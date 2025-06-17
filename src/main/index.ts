@@ -154,17 +154,25 @@ function createWindows() {
   process.on("message", hotReloadHandler);
 
   // IPCハンドラー
-  const ipcHandler = (_event: Electron.IpcMainEvent, typeName: string, payload: string) => {
+  const ipcHandler = (event: Electron.IpcMainEvent, typeName: string, payload: string) => {
     if (DEBUG) console.log(typeName, payload);
 
     if (!player || !controller) return;
 
-    player.win?.webContents.send(types.CONNECT_COMMIT, typeName, payload);
-    controller.win?.webContents.send(types.CONNECT_COMMIT, typeName, payload);
+    // 送信元のウィンドウを識別
+    const isFromPlayer = event.sender === player.win?.webContents || event.sender === player.webView?.webContents;
+    const isFromController = event.sender === controller.win?.webContents;
 
-    // Also send to WebContentsView if it exists
-    if (player.webView?.webContents) {
-      player.webView.webContents.send(types.CONNECT_COMMIT, typeName, payload);
+    // 送信元でないウィンドウにのみイベントを転送
+    if (isFromController) {
+      // コントローラーからのイベントはプレイヤーに送信
+      player.win?.webContents.send(types.CONNECT_COMMIT, typeName, payload);
+      if (player.webView?.webContents) {
+        player.webView.webContents.send(types.CONNECT_COMMIT, typeName, payload);
+      }
+    } else if (isFromPlayer) {
+      // プレイヤーからのイベントはコントローラーに送信
+      controller.win?.webContents.send(types.CONNECT_COMMIT, typeName, payload);
     }
 
     if (typeName === types.QUIT) app.quit();
