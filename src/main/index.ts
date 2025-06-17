@@ -1,4 +1,4 @@
-import { app, Tray, nativeImage, globalShortcut, ipcMain, Menu, dialog, BrowserWindow, net } from "electron";
+import { app, Tray, nativeImage, globalShortcut, ipcMain, Menu, dialog, BrowserWindow, net, protocol } from "electron";
 import * as Sentry from "@sentry/electron";
 import { autoUpdater } from "electron-updater";
 import * as os from "os";
@@ -7,6 +7,8 @@ import PlayerWindow from "./player";
 import ControllerWindow from "./controller";
 import { join } from "path";
 import { saveWindowBounds, loadWindowBounds } from "./windowBounds";
+import { pathToFileURL } from "url";
+import fs from "node:fs";
 
 const DEBUG = process.env.DEBUG ? true : false;
 const MAC = os.type() === "Darwin";
@@ -22,6 +24,19 @@ let player: PlayerWindow | null = null;
 let controller: ControllerWindow | null = null;
 let tray: Tray | null = null;
 let ipcHandlers: Array<() => void> = [];
+
+// media://xxxx
+protocol.registerSchemesAsPrivileged([
+  {
+    scheme: "media",
+    privileges: {
+      secure: true,
+      supportFetchAPI: true,
+      bypassCSP: true,
+      stream: true,
+    },
+  },
+]);
 
 function cleanupWindows() {
   // IPCハンドラーをクリーンアップ
@@ -235,30 +250,27 @@ function createWindows() {
         if (parsedPayload.file) {
           // ファイル情報を取得
           const filePath = parsedPayload.file.path || "";
-          const fileName = parsedPayload.file.name || "unknown";
-          const fileType = parsedPayload.file.type || "";
-          const fileSize = parsedPayload.file.size || 0;
-          const fileLastModified = parsedPayload.file.lastModified || 0;
+          const fileName = parsedPayload.file.name || "";
 
           // パスが有効かどうかチェック
           if (filePath) {
-            console.log(`[Main] Processing video file: ${fileName}, path: ${filePath}`);
-            
-            // そのままパスを使用（renderer側ですでに絶対パスになっている前提）
+            console.log(`[Main] Processing video file: ${parsedPayload.name}, path: ${filePath}`);
 
-            // ファイル情報をそのままプレイヤーに送信
-            console.log(`[Main] Sending file to player: ${fileName}, ${filePath}`);
+            // media://プロトコルを使用してパスを変換
+            const mediaPath = pathToFileURL(filePath).href.replace(/^file:\/\//, "");
+            console.log(`[Main] Converted media path: ${mediaPath}`);
+            const mediaUrl = `media://${mediaPath}`;
+
+            // ファイル情報をmedia://プロトコルでプレイヤーに送信
+            console.log(`[Main] Sending file to player: ${parsedPayload.name}, ${mediaUrl}`);
             player.win?.webContents.send(
               types.CONNECT_COMMIT,
               types.PLAY_FILE,
               JSON.stringify({
                 file: {
                   name: fileName,
-                  path: filePath,
-                  type: fileType,
-                  size: fileSize,
-                  lastModified: fileLastModified
-                }
+                  path: mediaUrl,
+                },
               }),
             );
           } else {
@@ -276,6 +288,11 @@ function createWindows() {
   // 既存のリスナーを削除してから新しいリスナーを追加
   ipcMain.removeAllListeners(types.CONNECT_COMMIT);
   ipcMain.on(types.CONNECT_COMMIT, ipcHandler);
+
+  protocol.handle("media", (req) => {
+    const filePath = decodeURIComponent(req.url.slice("media://".length));
+    return net.fetch(pathToFileURL(filePath).href);
+  });
 }
 
 app.whenReady().then(() => {

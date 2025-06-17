@@ -4,6 +4,7 @@ const ipc = (window as any).electronAPI;
 
 export default {
   commit(type: string, payload: unknown) {
+    console.log("ipc commit", type, payload);
     ipc.send(types.CONNECT_COMMIT, type, JSON.stringify(payload));
   },
   readClipboardText() {

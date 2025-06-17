@@ -32,17 +32,7 @@ const videoSource = computed(() => {
     // pathプロパティが存在する場合はそれを使用
     if (currentFile.value.path) {
       const filePath = currentFile.value.path;
-      console.log("Using file path for video source:", filePath);
-
-      // すでに完全なURLの場合はそのまま使用
-      if (filePath.startsWith("file://")) {
-        console.log("Using absolute file URL:", filePath);
-        return filePath;
-      }
-
-      // 既にfile://が含まれていなければ追加
-      console.log("Adding file:// protocol to path");
-      return `file://${filePath}`;
+      return filePath;
     }
   }
 
