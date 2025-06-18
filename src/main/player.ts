@@ -7,6 +7,8 @@ export default class PlayerWindow {
   win: BrowserWindow | null;
   webView: WebContentsView | null = null;
   private currentUrl: string | null = null;
+  private currentMode: string = "video-player"; // 現在のプレイヤーモードを保持
+  private isResizeMode: boolean = false; // resize modeの状態を保持
 
   constructor() {
     const size = screen.getPrimaryDisplay().workAreaSize;
@@ -27,8 +29,8 @@ export default class PlayerWindow {
       webPreferences: {
         preload: join(__dirname, "preload.js"),
         contextIsolation: true,
-        nodeIntegration: false
-      }
+        nodeIntegration: false,
+      },
     });
 
     this.win.setIgnoreMouseEvents(true);
@@ -102,8 +104,8 @@ export default class PlayerWindow {
         webPreferences: {
           preload: join(__dirname, "preload.js"),
           contextIsolation: true,
-          nodeIntegration: false
-        }
+          nodeIntegration: false,
+        },
       });
       // resizeイベントリスナーを一度だけ登録
       this.win?.removeAllListeners("resize");
@@ -120,8 +122,8 @@ export default class PlayerWindow {
         webPreferences: {
           preload: join(__dirname, "preload.js"),
           contextIsolation: true,
-          nodeIntegration: false
-        }
+          nodeIntegration: false,
+        },
       });
       // resizeイベントリスナーを一度だけ登録
       this.win?.removeAllListeners("resize");
@@ -133,5 +135,25 @@ export default class PlayerWindow {
 
   hideWebView() {
     this.detachView();
+  }
+
+  setMode(mode: string) {
+    this.currentMode = mode;
+    this.updateWebViewVisibility();
+  }
+
+  setResizeMode(isResizeMode: boolean) {
+    this.isResizeMode = isResizeMode;
+    this.updateWebViewVisibility();
+  }
+
+  private updateWebViewVisibility() {
+    // resize modeがONで、かつweb-player modeの場合、webviewを非表示にする
+    if (this.isResizeMode && this.currentMode === "web-player") {
+      this.detachView();
+    } else if (this.currentMode === "web-player" && this.currentUrl) {
+      // resize modeがOFFで、web-player modeの場合、webviewを表示する
+      this.showWebView();
+    }
   }
 }

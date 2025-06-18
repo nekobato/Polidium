@@ -219,6 +219,9 @@ function createWindows() {
       player.win?.setResizable(parsedPayload.mode);
       player.win?.setMovable(parsedPayload.mode);
       if (MAC) player.win?.setHasShadow(parsedPayload.mode);
+
+      // resize modeの状態を設定
+      player.setResizeMode(parsedPayload.mode);
     }
 
     if (typeName === types.SAVE_WINDOW_BOUNDS) {
@@ -236,6 +239,7 @@ function createWindows() {
 
     if (typeName === types.CHANGE_MODE) {
       const mode = JSON.parse(payload);
+      player.setMode(mode);
       if (mode === "video-player") player.hideWebView();
       if (mode === "web-player") player.showWebView();
     }
