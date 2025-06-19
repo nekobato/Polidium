@@ -18,18 +18,18 @@ export default class ControllerWindow {
       transparent: false,
       skipTaskbar: true,
       hasShadow: true,
+      minimizable: false,
+      titleBarStyle: "hidden",
+      titleBarOverlay: true,
+      trafficLightPosition: { x: 8, y: 12 },
       webPreferences: {
         preload: join(__dirname, "preload.js"),
         contextIsolation: true,
-        nodeIntegration: false
-      }
+        nodeIntegration: false,
+      },
     });
 
     this.win.setVisibleOnAllWorkspaces(DEBUG ? false : true);
-
-    this.win.on("blur", () => {
-      if (!DEBUG) this.win.hide();
-    });
 
     const devUrl = process.env.VITE_DEV_SERVER_URL;
     if (devUrl) {
