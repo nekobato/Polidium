@@ -3,7 +3,7 @@ import * as types from "@/mutation-types";
 const ipc = (window as any).electronAPI;
 
 export default {
-  commit(type: string, payload: unknown) {
+  commit(type: string, payload?: any) {
     console.log("ipc commit", type, payload);
     ipc.send(types.CONNECT_COMMIT, type, JSON.stringify(payload));
   },

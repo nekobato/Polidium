@@ -6,20 +6,25 @@
     @dragend.prevent="onDragEnd"
     @drop.prevent="onDrop"
   >
+    <div class="header">
+      <h1 class="title">Polidium</h1>
+      <el-button class="quit" circle size="small">
+        <Icon icon="mingcute:power-line" @click="quit" />
+      </el-button>
+    </div>
     <div class="blue-grey my-header">
+      <el-button class="opacity" size="small">
+        <Icon icon="mingcute:eye-2-line" />
+      </el-button>
       <el-segmented v-model="currentView" :options="options" size="small" class="my-toggle" @change="switchView">
         <template #default="{ item }">
           <Icon :icon="item.icon" class="icon" />
           <span class="label">{{ item.label }}</span>
         </template>
       </el-segmented>
-      <button
-        class="waves-effect waves-teal btn-flat my-settings"
-        @click="switchView('/controller/settings')"
-        :class="{ 'my-on': isSettings }"
-      >
-        <Icon icon="mingcute:settings-6-line" />
-      </button>
+      <el-button class="resize" size="small">
+        <Icon icon="mingcute:aspect-ratio-line" />
+      </el-button>
     </div>
     <router-view />
   </div>
@@ -31,6 +36,7 @@ import { useRouter, useRoute } from "vue-router";
 import { Icon } from "@iconify/vue";
 import { useVideoStore } from "@/renderer/store/modules/video";
 import { useSettingsStore } from "@/renderer/store/modules/settings";
+import { ElButton } from "element-plus";
 import ipc from "@/renderer/ipc";
 import * as types from "@/mutation-types";
 
@@ -70,6 +76,10 @@ function switchView(path: string) {
     settingsStore.changeMode("video-player");
     ipc.commit(types.CHANGE_MODE, "video-player");
   }
+}
+
+function quit() {
+  ipc.commit("QUIT");
 }
 
 const isSettings = computed(() => route.path.startsWith("/controller/settings"));
@@ -119,16 +129,30 @@ onMounted(() => {
 });
 </script>
 
-<style lang="scss">
-body,
-html {
-  margin: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-</style>
 <style lang="scss" scoped>
+.header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #f6ecc2;
+  height: 40px;
+  padding: 0 8px;
+  width: 100%;
+  -webkit-app-region: drag;
+
+  .title {
+    font-size: 16px;
+    font-weight: normal;
+    margin: auto;
+  }
+
+  .quit {
+    position: absolute;
+    right: 8px;
+    -webkit-app-region: no-drag;
+  }
+}
 .my-controller {
   display: flex;
   flex-direction: column;
