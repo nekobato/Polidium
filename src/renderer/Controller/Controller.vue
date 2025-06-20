@@ -12,17 +12,33 @@
         <Icon icon="mingcute:power-line" @click="quit" />
       </el-button>
     </div>
-    <div class="blue-grey my-header">
-      <el-button class="opacity" size="small">
-        <Icon icon="mingcute:eye-2-line" />
-      </el-button>
+    <div class="actions">
+      <el-popover
+        placement="bottom"
+        width="calc(100% - 8px)"
+        trigger="click"
+        v-model:visible="showOpacityPopover"
+        popper-class="opacity-popover"
+      >
+        <template #reference>
+          <el-button class="opacity" size="small" :class="{ active: showOpacityPopover }">
+            <Icon icon="mingcute:eye-2-line" />
+          </el-button>
+        </template>
+
+        <el-form-item class="opacity-input" :label="`${opacityFloor}%`">
+          <el-slider :model-value="opacity" :min="0" :max="100" @input="handleOpacityChange" />
+        </el-form-item>
+      </el-popover>
+
       <el-segmented v-model="currentView" :options="options" size="small" class="my-toggle" @change="switchView">
         <template #default="{ item }">
           <Icon :icon="item.icon" class="icon" />
           <span class="label">{{ item.label }}</span>
         </template>
       </el-segmented>
-      <el-button class="resize" size="small">
+
+      <el-button class="resize" size="small" :class="{ active: isResizeMode }" @click="handleResize">
         <Icon icon="mingcute:aspect-ratio-line" />
       </el-button>
     </div>
@@ -36,7 +52,7 @@ import { useRouter, useRoute } from "vue-router";
 import { Icon } from "@iconify/vue";
 import { useVideoStore } from "@/renderer/store/modules/video";
 import { useSettingsStore } from "@/renderer/store/modules/settings";
-import { ElButton } from "element-plus";
+import { ElButton, ElPopover, ElSlider, ElFormItem } from "element-plus";
 import ipc from "@/renderer/ipc";
 import * as types from "@/mutation-types";
 
@@ -78,11 +94,30 @@ function switchView(path: string) {
   }
 }
 
+// Opacity関連
+const showOpacityPopover = ref(false);
+const opacity = computed(() => settingsStore.player.opacity * 100);
+const opacityFloor = computed(() => Math.floor(opacity.value));
+
+function handleOpacityChange(value: number | number[]) {
+  const numValue = Array.isArray(value) ? value[0] : value;
+  const opacityValue = numValue / 100;
+  settingsStore.changeOpacity(opacityValue);
+  ipc.commit(types.CHANGE_OPACITY, opacityValue);
+}
+
+// Resize関連
+const isResizeMode = computed(() => settingsStore.player.resizeMode);
+
+function handleResize() {
+  const newMode = !isResizeMode.value;
+  settingsStore.resizePlayer({ mode: newMode });
+  ipc.commit(types.RESIZE_PLAYER, { mode: newMode });
+}
+
 function quit() {
   ipc.commit("QUIT");
 }
-
-const isSettings = computed(() => route.path.startsWith("/controller/settings"));
 
 function onDragOver(_e: DragEvent) {
   return false;
@@ -153,6 +188,7 @@ onMounted(() => {
     -webkit-app-region: no-drag;
   }
 }
+
 .my-controller {
   display: flex;
   flex-direction: column;
@@ -161,22 +197,44 @@ onMounted(() => {
   height: 100%;
   border-radius: 5px;
 }
-.my-header {
+.actions {
   display: flex;
   flex-shrink: 0;
   height: 36px;
   align-items: center;
   justify-content: center;
   position: relative;
+
+  .opacity,
+  .resize {
+    &.active {
+      background-color: var(--el-color-primary);
+      color: white;
+    }
+  }
+
+  .opacity {
+    margin: 0 auto 0 8px;
+  }
+
+  .resize {
+    margin: 0 8px 0 auto;
+  }
 }
-.my-settings {
-  position: absolute;
-  right: 0;
-  top: 0;
-  padding: 0 1rem;
-  color: #fff;
+.opacity-input {
+  align-items: center;
 }
-.my-toggle .icon {
-  margin-right: 4px;
+</style>
+
+<style lang="scss">
+.opacity-popover {
+  width: 100%;
+  .el-form-item {
+    margin-bottom: 0;
+  }
+
+  .el-slider {
+    margin: 8px 0;
+  }
 }
 </style>

@@ -11,7 +11,6 @@ import WebPlayer from "./Player/WebPlayer.vue";
 import Controller from "./Controller/Controller.vue";
 import FileController from "./Controller/FileController.vue";
 import WebController from "./Controller/WebController.vue";
-import Settings from "./Controller/Settings.vue";
 import "./styles/index.scss";
 
 const router = createRouter({
@@ -23,8 +22,8 @@ const router = createRouter({
       children: [
         { path: "", redirect: "/player/file" },
         { path: "file", component: VideoPlayer },
-        { path: "web", component: WebPlayer }
-      ]
+        { path: "web", component: WebPlayer },
+      ],
     },
     {
       path: "/controller",
@@ -33,10 +32,9 @@ const router = createRouter({
         { path: "", redirect: "/controller/file" },
         { path: "file", component: FileController },
         { path: "web", component: WebController },
-        { path: "settings", component: Settings }
-      ]
-    }
-  ]
+      ],
+    },
+  ],
 });
 
 const app = createApp(App).use(router).use(pinia).use(ElementPlus);

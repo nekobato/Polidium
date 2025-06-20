@@ -1,5 +1,22 @@
 <template>
   <div class="playlist">
+    <el-card class="video-controller-card" shadow="never">
+      <div class="video-actions">
+        <el-button class="pause-btn" v-if="isPlaying" type="primary" circle size="large" @click="pause">
+          <Icon icon="mingcute:pause-line" class="white-text" />
+        </el-button>
+        <el-button class="play-btn" v-if="!isPlaying" type="primary" circle size="large" @click="resume">
+          <Icon icon="mingcute:play-line" class="white-text" />
+        </el-button>
+        <div class="seekbar-container">
+          <el-slider class="seekbar" id="seekbar" :min="0" :max="100" :model-value="currentTime" @input="inputCurrentTime" show-tooltip />
+        </div>
+        <div class="duration">
+          <el-tag type="info" effect="dark" class="duration-text">{{ videoRemaining }}</el-tag>
+        </div>
+      </div>
+    </el-card>
+
     <div class="empty-queue" v-show="queueIsEmpty">
       <el-empty description="Drop Movie files? Here" />
     </div>
@@ -24,28 +41,12 @@
         </div>
       </template>
     </el-tree>
+
     <div class="clear-all" v-show="!queueIsEmpty">
       <el-button type="danger" class="clear-btn" @click="clear">
         <Icon icon="mingcute:delete-2-line" class="icon" />
-        <span class="clear-text">Clear Playlist</span>
       </el-button>
     </div>
-    <el-card class="video-controller-card" shadow="never">
-      <div class="video-controller">
-        <el-button class="pause-btn" v-if="isPlaying" type="primary" circle size="large" @click="pause">
-          <Icon icon="mingcute:pause-line" class="white-text" />
-        </el-button>
-        <el-button class="play-btn" v-if="!isPlaying" type="primary" circle size="large" @click="resume">
-          <Icon icon="mingcute:play-line" class="white-text" />
-        </el-button>
-        <div class="seekbar-container">
-          <el-slider class="seekbar" id="seekbar" :min="0" :max="100" :model-value="currentTime" @input="inputCurrentTime" show-tooltip />
-        </div>
-        <div class="duration">
-          <el-tag type="info" effect="dark" class="duration-text">{{ videoRemaining }}</el-tag>
-        </div>
-      </div>
-    </el-card>
   </div>
 </template>
 
@@ -206,13 +207,10 @@ ipc.on(types.VIDEO_TIMEUPDATE, (data: { currentTime: number }) => {
 .clear-btn {
   font-weight: 500;
 }
-.video-controller-card {
-  background: var(--el-bg-color);
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+.video-actions {
+  border-radius: 16px;
   margin: 0 auto;
-  max-width: 480px;
-  padding: 16px 24px 12px 24px;
+  padding: 8px;
 }
 .video-controller {
   display: flex;

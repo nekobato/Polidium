@@ -113,6 +113,31 @@ function createWindows() {
           },
         },
         { type: "separator" },
+        {
+          label: "Reload",
+          click() {
+            // Controller と Player に RELOAD イベント送信
+            if (controller?.win && !controller.win.isDestroyed()) {
+              controller.win.webContents.reload();
+            }
+            if (player?.win && !player.win.isDestroyed()) {
+              player.win.webContents.reload();
+            }
+          },
+        },
+        {
+          label: "Reset Settings",
+          click() {
+            // Controller と Player に RESET イベント送信
+            if (controller?.win && !controller.win.isDestroyed()) {
+              controller.win.webContents.send(types.CONNECT_COMMIT, types.RESET, "{}");
+            }
+            if (player?.win && !player.win.isDestroyed()) {
+              player.win.webContents.send(types.CONNECT_COMMIT, types.RESET, "{}");
+            }
+          },
+        },
+        { type: "separator" },
         { role: "quit" },
       ],
     },
@@ -242,6 +267,11 @@ function createWindows() {
       player.setMode(mode);
       if (mode === "video-player") player.hideWebView();
       if (mode === "web-player") player.showWebView();
+    }
+
+    if (typeName === types.RESET) {
+      // Settings リセット処理は各ウィンドウで処理される
+      // メインプロセスでは特別な処理は不要
     }
 
     if (typeName === types.PLAY_FILE) {
