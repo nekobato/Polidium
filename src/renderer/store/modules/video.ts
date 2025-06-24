@@ -34,10 +34,12 @@ export const useVideoStore = defineStore("video", () => {
 
   function pauseFile() {
     video.switch = false;
+    video.isPlaying = false;
   }
 
   function resumeFile() {
     video.switch = true;
+    video.isPlaying = true;
   }
 
   function selectVideo(payload: { index: number }) {
