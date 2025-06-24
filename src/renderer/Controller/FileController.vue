@@ -1,21 +1,25 @@
 <template>
   <div class="playlist">
-    <el-card class="video-controller-card" shadow="never">
-      <div class="video-actions">
-        <el-button class="pause-btn" v-if="isPlaying" type="primary" circle size="large" @click="pause">
+    <div class="video-actions">
+      <div class="action-buttons">
+        <el-button class="prev-button" type="primary" circle :disabled="!canPlayPrevious" @click="playPrevious">
+          <Icon icon="mingcute:skip-previous-line" class="white-text" />
+        </el-button>
+        <el-button class="pause-button" v-if="isPlaying" type="primary" size="large" circle @click="pause">
           <Icon icon="mingcute:pause-line" class="white-text" />
         </el-button>
-        <el-button class="play-btn" v-if="!isPlaying" type="primary" circle size="large" @click="resume">
+        <el-button class="play-button" v-if="!isPlaying" type="primary" size="large" circle :disabled="!canPlay" @click="resume">
           <Icon icon="mingcute:play-line" class="white-text" />
         </el-button>
-        <div class="seekbar-container">
-          <el-slider class="seekbar" id="seekbar" :min="0" :max="100" :model-value="currentTime" @input="inputCurrentTime" show-tooltip />
-        </div>
-        <div class="duration">
-          <el-tag type="info" effect="dark" class="duration-text">{{ videoRemaining }}</el-tag>
-        </div>
+        <el-button class="next-button" type="primary" circle :disabled="!canPlayNext" @click="playNext">
+          <Icon icon="mingcute:skip-forward-line" class="white-text" />
+        </el-button>
       </div>
-    </el-card>
+      <div class="seekbar-container">
+        <el-slider class="seekbar" id="seekbar" :min="0" :max="100" :model-value="currentTime" @input="inputCurrentTime" show-tooltip />
+      </div>
+      <el-tag type="info" class="duration" size="small">{{ videoRemaining }}</el-tag>
+    </div>
 
     <div class="empty-queue" v-show="queueIsEmpty">
       <el-empty description="Drop Movie files? Here" />
@@ -35,7 +39,7 @@
       <template #default="{ data }">
         <div class="tree-node-content">
           <span class="truncate">{{ data.name }}</span>
-          <el-button type="danger" size="small" circle class="playlist-deleter" @click.stop.prevent="removeByData(data)">
+          <el-button plain size="small" class="playlist-deleter" @click.stop.prevent="removeByData(data)">
             <Icon icon="mingcute:close-line" />
           </el-button>
         </div>
@@ -43,7 +47,7 @@
     </el-tree>
 
     <div class="clear-all" v-show="!queueIsEmpty">
-      <el-button type="danger" class="clear-btn" @click="clear">
+      <el-button type="danger" class="clear-btn" @click="clear" size="small">
         <Icon icon="mingcute:delete-2-line" class="icon" />
       </el-button>
     </div>
@@ -78,6 +82,18 @@ const currentTime = computed(() => {
 });
 
 const treeData = computed(() => queues.value.map((q, i) => ({ ...q, id: i })));
+
+const canPlay = computed(() => {
+  return queues.value.length > 0 && videoStore.playPointer !== undefined;
+});
+
+const canPlayPrevious = computed(() => {
+  return queues.value.length > 0 && videoStore.playPointer && videoStore.playPointer > 0;
+});
+
+const canPlayNext = computed(() => {
+  return queues.value.length > 0 && videoStore.playPointer && videoStore.playPointer < queues.value.length - 1;
+});
 
 function removeByData(data: { name: string; path: string }) {
   const index = queues.value.findIndex((q) => q === data);
@@ -140,6 +156,18 @@ function pause() {
   ipc.commit(types.PAUSE_FILE, {});
 }
 
+function playPrevious() {
+  if (canPlayPrevious.value) {
+    videoStore.selectVideo({ index: videoStore.playPointer! - 1 });
+  }
+}
+
+function playNext() {
+  if (canPlayNext.value) {
+    videoStore.selectVideo({ index: videoStore.playPointer! + 1 });
+  }
+}
+
 function remove(index: number) {
   videoStore.removeQueue({ index });
 }
@@ -180,7 +208,7 @@ ipc.on(types.VIDEO_TIMEUPDATE, (data: { currentTime: number }) => {
 
 .queue-tree {
   width: 100%;
-  margin-bottom: 12px;
+  background-color: #575757;
 }
 .tree-node-content {
   display: flex;
@@ -196,43 +224,40 @@ ipc.on(types.VIDEO_TIMEUPDATE, (data: { currentTime: number }) => {
   white-space: nowrap;
   font-size: 15px;
 }
-.playlist-deleter {
-  margin-left: 8px;
-}
 .clear-all {
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 12px;
+  padding: 8px;
 }
 .clear-btn {
   font-weight: 500;
 }
 .video-actions {
+  position: relative;
   border-radius: 16px;
   margin: 0 auto;
-  padding: 8px;
 }
-.video-controller {
+.action-buttons {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+  justify-content: center;
+  gap: 4px;
 }
 .seekbar-container {
+  position: relative;
   flex: 1 1 auto;
   margin: 0 16px;
+  padding: 8px;
 }
 .seekbar {
   width: 100%;
 }
 .duration {
+  padding: 0 4px;
+  position: absolute;
+  right: 24px;
+  top: 10px;
   min-width: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-.duration-text {
   font-size: 14px;
-  padding: 2px 10px;
 }
 </style>
