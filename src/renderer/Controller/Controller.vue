@@ -161,6 +161,11 @@ async function onDrop(e: DragEvent) {
 
 onMounted(() => {
   console.log("[Controller]");
+
+  // 初期状態に戻す
+  if (settingsStore.player.resizeMode) {
+    settingsStore.player.resizeMode = false;
+  }
 });
 </script>
 

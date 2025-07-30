@@ -10,18 +10,12 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
 import { ElButton } from "element-plus";
-import { useSettingsStore } from "@/renderer/store/modules/settings";
 import ipc from "@/renderer/ipc";
 import * as types from "@/mutation-types";
 
-const settingsStore = useSettingsStore();
-
 function onRestore() {
-  // ウィンドウの現在の位置とサイズを保存
-  ipc.commit(types.SAVE_WINDOW_BOUNDS, {});
-
-  settingsStore.resizePlayer({ mode: false });
-  ipc.commit(types.RESIZE_PLAYER, { mode: false });
+  // リサイズモードを終了
+  ipc.commit(types.RESIZED_PLAYER);
 }
 </script>
 

@@ -1,7 +1,7 @@
 <template>
   <div class="player" :style="playerStyle">
     <router-view />
-    <resize-mode v-if="settings.resizeMode" />
+    <resize-mode v-if="playerStore.resizeMode" />
   </div>
 </template>
 
@@ -9,20 +9,17 @@
 import { computed, watch, onMounted } from "vue";
 import type { CSSProperties } from "vue";
 import { useRouter } from "vue-router";
-import { useSettingsStore } from "@/renderer/store/modules/settings";
-import ipc from "@/renderer/ipc";
-import * as types from "@/mutation-types";
+import { usePlayerStore } from "@/renderer/store/modules/player";
 import ResizeMode from "./ResizeMode.vue";
 
-const settingsStore = useSettingsStore();
-const settings = computed(() => settingsStore.player);
+const playerStore = usePlayerStore();
 const router = useRouter();
 const playerStyle = computed<CSSProperties>(() => ({
-  pointerEvents: settings.value.clickThrough ? "none" : "auto",
+  pointerEvents: playerStore.clickThrough ? "none" : "auto",
 }));
 
 watch(
-  () => settings.value.mode,
+  () => playerStore.mode,
   (mode) => {
     if (mode === "video-player") router.push("/player/file");
     else if (mode === "web-player") router.push("/player/web");
@@ -34,10 +31,7 @@ watch(
 onMounted(() => {
   console.log("[Player]");
   // 起動時は必ずresizeModeをfalseに設定
-  settingsStore.resizePlayer({ mode: false });
-
-  // opacityの設定（resizeModeがfalseなので、通常のopacityが適用される）
-  ipc.commit(types.CHANGE_OPACITY, settings.value.opacity);
+  playerStore.setResizeMode(false);
 });
 </script>
 

@@ -22,7 +22,7 @@ export const CHANGE_MODE = "CHANGE_MODE";
 export const CHANGE_OPACITY = "CHANGE_OPACITY";
 export const SET_CLICKTHROUGH = "SET_CLICKTHROUGH";
 export const RESIZE_PLAYER = "RESIZE_PLAYER";
-export const SAVE_WINDOW_BOUNDS = "SAVE_WINDOW_BOUNDS";
+export const RESIZED_PLAYER = "RESIZED_PLAYER";
 
 export const OPEN_URL = "OPEN_URL";
 

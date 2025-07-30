@@ -25,8 +25,8 @@ export const useSettingsStore = defineStore("settings", () => {
       mode: "video-player",
       opacity: 0.05,
       clickThrough: true,
-      resizeMode: false
-    }
+      resizeMode: false,
+    },
   });
 
   const player = computed(() => state.value.player);
@@ -84,12 +84,7 @@ export const useSettingsStore = defineStore("settings", () => {
     ipc.commit(types.CHANGE_OPACITY, targetOpacity);
   }
 
-  function saveWindowBounds(bounds: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-  }) {
+  function saveWindowBounds(bounds: { x: number; y: number; width: number; height: number }) {
     state.value.player.windowBounds = bounds;
   }
 
@@ -103,6 +98,6 @@ export const useSettingsStore = defineStore("settings", () => {
     openUrl,
     videoSelect,
     resizePlayer,
-    saveWindowBounds
+    saveWindowBounds,
   };
 });

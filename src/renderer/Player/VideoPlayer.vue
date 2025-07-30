@@ -15,15 +15,15 @@
 
 <script setup lang="ts">
 import { ref, watch, computed, onMounted, onUnmounted } from "vue";
-import { useVideoStore } from "@/renderer/store/modules/video";
+import { usePlayerStore } from "@/renderer/store/modules/player";
 import ipc from "@/renderer/ipc";
 import * as types from "@/mutation-types";
 
-const videoStore = useVideoStore();
+const playerStore = usePlayerStore();
 const video = ref<HTMLVideoElement | null>(null);
 const videoEl = ref<HTMLVideoElement | null>(null);
 
-const currentFile = computed(() => videoStore.currentFile);
+const currentFile = computed(() => playerStore.currentFile);
 const videoSource = computed(() => {
   // currentFileが設定されている場合の処理
   if (currentFile.value) {
@@ -38,7 +38,6 @@ const videoSource = computed(() => {
 
   return ""; // ファイルが設定されていない場合は空文字列
 });
-const videoState = computed(() => videoStore.video);
 
 // 変数削除
 
@@ -47,7 +46,8 @@ onMounted(() => {
   videoEl.value = video.value;
 
   // メインプロセスからのPLAY_FILEメッセージをリッスン
-  ipc.on(types.CONNECT_COMMIT, (typeName: string, payload: string) => {
+  ipc.on(types.CONNECT_COMMIT, (...args: unknown[]) => {
+    const [typeName, payload] = args as [string, string];
     if (typeName === types.PLAY_FILE) {
       try {
         const data = JSON.parse(payload);
@@ -55,10 +55,33 @@ onMounted(() => {
           console.log("[VideoPlayer] Received file from main process:", data.file);
 
           // ストアを更新して再生を開始
-          videoStore.setCurrentFile({ file: data.file });
+          playerStore.setCurrentFile(data.file);
         }
       } catch (error) {
         console.error("[VideoPlayer] Failed to parse PLAY_FILE payload:", error);
+      }
+    }
+
+    // Controllerからのビデオ制御コマンドを処理
+    if (typeName === types.VIDEO_SEEK) {
+      const data = JSON.parse(payload);
+      const seekTime = playerStore.seekVideo(data.percentage);
+      if (videoEl.value) {
+        videoEl.value.currentTime = seekTime;
+      }
+    }
+
+    if (typeName === types.PAUSE_FILE) {
+      playerStore.pauseVideo();
+      if (videoEl.value) {
+        videoEl.value.pause();
+      }
+    }
+
+    if (typeName === types.RESUME_FILE) {
+      playerStore.resumeVideo();
+      if (videoEl.value) {
+        videoEl.value.play();
       }
     }
   });
@@ -70,20 +93,12 @@ onUnmounted(() => {
   ipc.removeListener(types.CONNECT_COMMIT, () => {});
 });
 
+// Playerストアの状態変化を監視
 watch(
-  () => videoState.value.seekPercentage,
-  (value) => {
-    if (videoEl.value) {
-      videoEl.value.currentTime = (videoState.value.duration / 100) * value;
-    }
-  },
-);
-
-watch(
-  () => videoState.value.switch,
-  (value) => {
+  () => playerStore.isPlaying,
+  (playing) => {
     if (!videoEl.value) return;
-    if (value === true) {
+    if (playing) {
       videoEl.value.play();
     } else {
       videoEl.value.pause();
@@ -106,36 +121,31 @@ watch(
 );
 
 function onVideoCanplay() {
-  videoStore.videoCanplay({ duration: videoEl.value!.duration });
-  ipc.commit(types.VIDEO_CANPLAY, {
-    duration: videoEl.value!.duration,
-  });
+  if (videoEl.value) {
+    playerStore.onVideoCanplay(videoEl.value.duration);
+  }
 }
 
 function onVideoTimeupdate() {
-  const current = videoEl.value!.currentTime;
-  videoStore.videoTimeupdate({
-    currentTime: current,
-  });
-  ipc.commit(types.VIDEO_TIMEUPDATE, {
-    currentTime: current,
-  });
+  if (videoEl.value) {
+    playerStore.onVideoTimeupdate(videoEl.value.currentTime);
+  }
 }
 
 function onVideoPlay() {
-  videoStore.videoPlayed();
+  playerStore.onVideoPlay();
 }
 
 function onVideoPause() {
-  videoStore.videoPaused();
+  playerStore.onVideoPause();
 }
 
 function onVideoEnded() {
-  videoStore.videoEnded();
+  playerStore.onVideoEnded();
 }
 
 function onVideoLoadStart() {
-  videoStore.videoPaused();
+  playerStore.onVideoPause();
 }
 </script>
 

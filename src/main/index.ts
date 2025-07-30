@@ -1,4 +1,4 @@
-import { app, Tray, nativeImage, globalShortcut, ipcMain, Menu, dialog, BrowserWindow, net, protocol } from "electron";
+import { app, Tray, nativeImage, ipcMain, Menu, dialog, BrowserWindow, net, protocol } from "electron";
 import * as Sentry from "@sentry/electron";
 import { autoUpdater } from "electron-updater";
 import * as os from "os";
@@ -8,7 +8,6 @@ import ControllerWindow from "./controller";
 import { join } from "path";
 import { saveWindowBounds, loadWindowBounds } from "./windowBounds";
 import { pathToFileURL } from "url";
-import fs from "node:fs";
 
 const DEBUG = process.env.DEBUG ? true : false;
 const MAC = os.type() === "Darwin";
@@ -230,30 +229,26 @@ function createWindows() {
     }
 
     if (typeName === types.RESIZE_PLAYER) {
-      const parsedPayload = JSON.parse(payload);
+      const parsedPayload: { mode: boolean } = JSON.parse(payload);
 
-      if (parsedPayload.mode) {
-        player.win?.focus();
-      } else {
-        player.win?.blur();
-      }
-
-      player.win?.setIgnoreMouseEvents(!parsedPayload.mode);
-      player.win?.setAlwaysOnTop(true);
-      if (MAC) player.win?.setVisibleOnAllWorkspaces(true);
-      player.win?.setResizable(parsedPayload.mode);
-      player.win?.setMovable(parsedPayload.mode);
-      if (MAC) player.win?.setHasShadow(parsedPayload.mode);
-
-      // resize modeの状態を設定
-      player.setResizeMode(parsedPayload.mode);
-    }
-
-    if (typeName === types.SAVE_WINDOW_BOUNDS) {
       if (player.win && !player.win.isDestroyed()) {
-        const bounds = player.win.getBounds();
-        // ウィンドウ位置とサイズを保存
-        saveWindowBounds(bounds);
+        if (parsedPayload.mode) {
+          player.win?.focus();
+        } else {
+          player.win?.blur();
+          const bounds = player.win.getBounds();
+          saveWindowBounds(bounds);
+        }
+
+        player.win?.setIgnoreMouseEvents(!parsedPayload.mode);
+        player.win?.setAlwaysOnTop(true);
+        if (MAC) player.win?.setVisibleOnAllWorkspaces(true);
+        player.win?.setResizable(parsedPayload.mode);
+        player.win?.setMovable(parsedPayload.mode);
+        if (MAC) player.win?.setHasShadow(parsedPayload.mode);
+
+        // resize modeの状態を設定
+        player.setResizeMode(parsedPayload.mode);
       }
     }
 

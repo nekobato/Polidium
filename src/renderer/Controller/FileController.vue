@@ -180,12 +180,14 @@ function inputCurrentTime(value: number) {
   ipc.commit(types.VIDEO_SEEK, { percentage: value });
 }
 
-ipc.on(types.VIDEO_CANPLAY, (data: { duration: number }) => {
+ipc.on(types.VIDEO_CANPLAY, (...args: unknown[]) => {
+  const data = args[0] as { duration: number };
   console.log("[VideoPlayer] Video can play:", data);
   videoStore.videoCanplay({ duration: data.duration });
 });
 
-ipc.on(types.VIDEO_TIMEUPDATE, (data: { currentTime: number }) => {
+ipc.on(types.VIDEO_TIMEUPDATE, (...args: unknown[]) => {
+  const data = args[0] as { currentTime: number };
   console.log("[VideoPlayer] Video update:", data);
   videoStore.videoTimeupdate({ currentTime: data.currentTime });
 });
