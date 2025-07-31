@@ -49,6 +49,7 @@ export const usePlayerStore = defineStore("player", () => {
     console.log(`[Player] Resize mode: ${isResizeMode}`);
 
     resizeMode.value = isResizeMode;
+    clickThrough.value = !isResizeMode;
   }
 
   // ビデオ関連のアクション

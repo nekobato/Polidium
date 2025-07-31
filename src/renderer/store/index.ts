@@ -33,7 +33,7 @@ const controllerCommitMap: Record<string, (payload: any) => void> = {
   [types.VIDEO_ENDED]: () => videoStore.videoEnded(),
   [types.RELOAD]: () => settingsStore.reload(),
   [types.RESET]: () => settingsStore.reset(),
-  [types.RESIZED_PLAYER]: () => playerStore.setResizeMode(false),
+  [types.RESIZED_PLAYER]: () => settingsStore.resizePlayer({ mode: false }),
 };
 
 // Player window用のコミットマップ
@@ -60,7 +60,7 @@ const commitMap = isPlayerWindow ? playerCommitMap : controllerCommitMap;
 
 ipc.on(types.CONNECT_COMMIT, (...args: unknown[]) => {
   const [typeName, payload] = args as [string, string];
-  console.log(`[CONNECT_COMMIT] ${typeName}`, payload);
+  console.log(`[IPC received] ${typeName}`, payload);
   const handler = commitMap[typeName];
   if (handler) handler(JSON.parse(payload));
 });

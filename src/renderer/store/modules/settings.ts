@@ -82,6 +82,7 @@ export const useSettingsStore = defineStore("settings", () => {
     // リサイズモード時はopacity 1、通常時は設定されたopacityを適用
     const targetOpacity = payload.mode ? 1 : state.value.player.opacity;
     ipc.commit(types.CHANGE_OPACITY, targetOpacity);
+    ipc.commit(types.RESIZE_PLAYER, { mode: payload.mode });
   }
 
   function saveWindowBounds(bounds: { x: number; y: number; width: number; height: number }) {

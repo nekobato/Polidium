@@ -112,7 +112,6 @@ const isResizeMode = computed(() => settingsStore.player.resizeMode);
 function handleResize() {
   const newMode = !isResizeMode.value;
   settingsStore.resizePlayer({ mode: newMode });
-  ipc.commit(types.RESIZE_PLAYER, { mode: newMode });
 }
 
 function quit() {
