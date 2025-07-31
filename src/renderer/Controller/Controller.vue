@@ -165,6 +165,12 @@ onMounted(() => {
   if (settingsStore.player.resizeMode) {
     settingsStore.player.resizeMode = false;
   }
+
+  if (!settingsStore.player.clickThrough) {
+    settingsStore.player.clickThrough = true;
+  }
+
+  settingsStore.changeOpacity(settingsStore.player.opacity);
 });
 </script>
 

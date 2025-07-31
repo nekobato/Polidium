@@ -9,6 +9,7 @@ export default class PlayerWindow {
   private currentUrl: string | null = null;
   private currentMode: string = "video-player"; // 現在のプレイヤーモードを保持
   private isResizeMode: boolean = false; // resize modeの状態を保持
+  private ignoreMouseEvents: boolean = true; // マウスイベント無視状態を保持
 
   constructor() {
     const size = screen.getPrimaryDisplay().workAreaSize;
@@ -110,6 +111,12 @@ export default class PlayerWindow {
       // resizeイベントリスナーを一度だけ登録
       this.win?.removeAllListeners("resize");
       this.win?.on("resize", () => this.updateViewBounds());
+
+      // did-finish-loadイベントでpointer-eventsを設定
+      this.webView.webContents.once("did-finish-load", () => {
+        this.updateWebViewPointerEvents();
+      });
+
       this.webView.webContents.loadURL(this.currentUrl);
     }
     this.attachView();
@@ -128,6 +135,11 @@ export default class PlayerWindow {
       // resizeイベントリスナーを一度だけ登録
       this.win?.removeAllListeners("resize");
       this.win?.on("resize", () => this.updateViewBounds());
+
+      // did-finish-loadイベントでpointer-eventsを設定
+      this.webView.webContents.once("did-finish-load", () => {
+        this.updateWebViewPointerEvents();
+      });
     }
     this.attachView();
     this.webView!.webContents.loadURL(url);
@@ -145,6 +157,10 @@ export default class PlayerWindow {
   setResizeMode(isResizeMode: boolean) {
     this.isResizeMode = isResizeMode;
     this.updateWebViewVisibility();
+    // リサイズモード変更時もpointer-eventsを更新
+    if (this.currentMode === "web-player") {
+      this.updateWebViewPointerEvents();
+    }
   }
 
   private updateWebViewVisibility() {
@@ -155,5 +171,19 @@ export default class PlayerWindow {
       // resize modeがOFFで、web-player modeの場合、webviewを表示する
       this.showWebView();
     }
+  }
+
+  public updateWebViewPointerEvents() {
+    if (!this.webView || this.webView.webContents.isDestroyed()) return;
+
+    const css = this.ignoreMouseEvents ? `* { pointer-events: none !important; }` : ``;
+
+    this.webView.webContents.insertCSS(css);
+  }
+
+  setIgnoreMouseEvents(ignore: boolean) {
+    this.ignoreMouseEvents = ignore;
+    this.win?.setIgnoreMouseEvents(ignore);
+    this.updateWebViewPointerEvents();
   }
 }

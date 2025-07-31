@@ -36,11 +36,6 @@ export const useSettingsStore = defineStore("settings", () => {
   }
 
   function changeOpacity(newOpacity: number) {
-    // 値が変更された場合のみ更新
-    if (state.value.player.opacity === newOpacity) {
-      return;
-    }
-
     state.value.player.opacity = newOpacity;
     // リサイズモードでない場合のみBrowserWindowに適用
     if (!state.value.player.resizeMode) {

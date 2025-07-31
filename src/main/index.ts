@@ -218,7 +218,7 @@ function createWindows() {
 
     if (typeName === types.SET_CLICKTHROUGH) {
       const parsedPayload = JSON.parse(payload);
-      player.win?.setIgnoreMouseEvents(parsedPayload.clickThrough);
+      player.setIgnoreMouseEvents(parsedPayload.clickThrough);
       player.win?.setAlwaysOnTop(parsedPayload.clickThrough);
       if (MAC) player.win?.setVisibleOnAllWorkspaces(parsedPayload.clickThrough);
     }
@@ -240,7 +240,7 @@ function createWindows() {
           saveWindowBounds(bounds);
         }
 
-        player.win?.setIgnoreMouseEvents(!parsedPayload.mode);
+        player.setIgnoreMouseEvents(!parsedPayload.mode);
         player.win?.setAlwaysOnTop(true);
         if (MAC) player.win?.setVisibleOnAllWorkspaces(true);
         player.win?.setResizable(parsedPayload.mode);
