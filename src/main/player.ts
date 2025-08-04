@@ -1,4 +1,4 @@
-import { BrowserWindow, screen, WebContentsView } from "electron";
+import { BrowserWindow, screen, WebContentsView, shell } from "electron";
 import { join } from "path";
 
 const DEBUG = !!process.env.DEBUG;
@@ -10,6 +10,9 @@ export default class PlayerWindow {
   private currentMode: string = "video-player"; // 現在のプレイヤーモードを保持
   private isResizeMode: boolean = false; // resize modeの状態を保持
   private ignoreMouseEvents: boolean = true; // マウスイベント無視状態を保持
+  private navigationEventHandlers: Array<() => void> = []; // イベントハンドラー管理
+  private onNavigationStateChange?: (state: any) => void; // ナビゲーション状態変更のコールバック
+  private onNavigationHistoryChange?: (history: any) => void; // ナビゲーション履歴変更のコールバック
 
   constructor() {
     const size = screen.getPrimaryDisplay().workAreaSize;
@@ -57,6 +60,7 @@ export default class PlayerWindow {
   destroy() {
     // WebContentsViewのクリーンアップ
     if (this.webView) {
+      this.cleanupNavigationEvents();
       this.detachView();
       // WebContentsViewの破棄
       if (!this.webView.webContents.isDestroyed()) {
@@ -100,6 +104,8 @@ export default class PlayerWindow {
 
   showWebView() {
     if (!this.currentUrl) return;
+
+    // 既存のWebContentsViewがある場合は再利用
     if (!this.webView) {
       this.webView = new WebContentsView({
         webPreferences: {
@@ -108,6 +114,7 @@ export default class PlayerWindow {
           nodeIntegration: false,
         },
       });
+
       // resizeイベントリスナーを一度だけ登録
       this.win?.removeAllListeners("resize");
       this.win?.on("resize", () => this.updateViewBounds());
@@ -117,8 +124,22 @@ export default class PlayerWindow {
         this.updateWebViewPointerEvents();
       });
 
+      // ナビゲーションイベントを設定
+      this.setupWebViewNavigationEvents();
+
+      // target="_blank"のリンクをデフォルトブラウザで開く
+      this.webView.webContents.setWindowOpenHandler(({ url }) => {
+        // HTTPとHTTPSのみ許可（セキュリティ対策）
+        if (url.startsWith("http:") || url.startsWith("https:")) {
+          shell.openExternal(url);
+        }
+        return { action: "deny" }; // 新しいElectronウィンドウの作成を拒否
+      });
+
       this.webView.webContents.loadURL(this.currentUrl);
     }
+
+    // WebContentsViewをアタッチ（状態は保持される）
     this.attachView();
   }
 
@@ -139,6 +160,18 @@ export default class PlayerWindow {
       // did-finish-loadイベントでpointer-eventsを設定
       this.webView.webContents.once("did-finish-load", () => {
         this.updateWebViewPointerEvents();
+      });
+
+      // ナビゲーションイベントを設定
+      this.setupWebViewNavigationEvents();
+
+      // target="_blank"のリンクをデフォルトブラウザで開く
+      this.webView.webContents.setWindowOpenHandler(({ url }) => {
+        // HTTPとHTTPSのみ許可（セキュリティ対策）
+        if (url.startsWith("http:") || url.startsWith("https:")) {
+          shell.openExternal(url);
+        }
+        return { action: "deny" }; // 新しいElectronウィンドウの作成を拒否
       });
     }
     this.attachView();
@@ -164,19 +197,26 @@ export default class PlayerWindow {
   }
 
   private updateWebViewVisibility() {
-    // resize modeがONで、かつweb-player modeの場合、webviewを非表示にする
-    if (this.isResizeMode && this.currentMode === "web-player") {
+    if (this.currentMode === "video-player") {
+      // video-playerモード時：WebContentsViewを非表示（状態は保持）
       this.detachView();
     } else if (this.currentMode === "web-player" && this.currentUrl) {
-      // resize modeがOFFで、web-player modeの場合、webviewを表示する
-      this.showWebView();
+      // web-playerモード時：WebContentsViewを表示
+      // resize modeがONの場合は非表示のまま
+      if (this.isResizeMode) {
+        this.detachView();
+      } else {
+        this.showWebView();
+      }
     }
   }
 
   public updateWebViewPointerEvents() {
     if (!this.webView || this.webView.webContents.isDestroyed()) return;
 
-    const css = this.ignoreMouseEvents ? `* { pointer-events: none !important; }` : ``;
+    const css = this.ignoreMouseEvents 
+      ? `body, html { pointer-events: none !important; } button, a, input, select, textarea, [onclick], [data-click] { pointer-events: auto !important; }`
+      : `body, html { pointer-events: auto !important; }`;
 
     this.webView.webContents.insertCSS(css);
   }
@@ -185,5 +225,121 @@ export default class PlayerWindow {
     this.ignoreMouseEvents = ignore;
     this.win?.setIgnoreMouseEvents(ignore);
     this.updateWebViewPointerEvents();
+  }
+
+  private setupWebViewNavigationEvents() {
+    if (!this.webView || this.webView.webContents.isDestroyed()) return;
+
+    const webContents = this.webView.webContents;
+
+    // ナビゲーション状態の更新を通知する関数
+    const notifyNavigationState = () => {
+      if (webContents.isDestroyed()) return;
+
+      const navigationState = {
+        canGoBack: webContents.navigationHistory.canGoBack(),
+        canGoForward: webContents.navigationHistory.canGoForward(),
+        isLoading: webContents.isLoading(),
+        url: webContents.getURL(),
+      };
+
+      // ナビゲーション状態変更のコールバックを呼び出し
+      if (this.onNavigationStateChange) {
+        this.onNavigationStateChange(navigationState);
+      }
+    };
+
+    // ナビゲーション履歴の更新を通知する関数
+    const notifyNavigationHistory = () => {
+      if (webContents.isDestroyed()) return;
+
+      try {
+        // WebContentsのnavigationHistoryを取得（型アサーションで対応）
+        const history = webContents.navigationHistory as any;
+        const navigationHistory = {
+          currentIndex: history.currentIndex || 0,
+          entries: (history.entries || []).map((entry: any) => ({
+            url: entry.url || "",
+            title: entry.title || entry.url || "",
+          })),
+        };
+
+        // ナビゲーション履歴変更のコールバックを呼び出し
+        if (this.onNavigationHistoryChange) {
+          this.onNavigationHistoryChange(navigationHistory);
+        }
+      } catch (error) {
+        console.error("Failed to get navigation history:", error);
+      }
+    };
+
+    // ナビゲーション状態と履歴の両方を更新する関数
+    const notifyAll = () => {
+      notifyNavigationState();
+      notifyNavigationHistory();
+    };
+
+    // イベントリスナーを設定
+    const handlers = [
+      () => webContents.on("did-finish-load", notifyAll),
+      () => webContents.on("did-fail-load", notifyAll),
+      () => webContents.on("did-start-loading", notifyNavigationState),
+      () => webContents.on("did-stop-loading", notifyNavigationState),
+      () => webContents.on("did-navigate", notifyAll),
+      () => webContents.on("did-navigate-in-page", notifyAll),
+    ];
+
+    // ハンドラーを実行してイベントリスナーを登録
+    handlers.forEach((handler) => handler());
+
+    // クリーンアップ用にハンドラーを保存
+    this.navigationEventHandlers = [
+      () => webContents.removeAllListeners("did-finish-load"),
+      () => webContents.removeAllListeners("did-fail-load"),
+      () => webContents.removeAllListeners("did-start-loading"),
+      () => webContents.removeAllListeners("did-stop-loading"),
+      () => webContents.removeAllListeners("did-navigate"),
+      () => webContents.removeAllListeners("did-navigate-in-page"),
+    ];
+
+    // 初期状態を通知
+    notifyAll();
+  }
+
+  private cleanupNavigationEvents() {
+    this.navigationEventHandlers.forEach((cleanup) => cleanup());
+    this.navigationEventHandlers = [];
+  }
+
+  goBack() {
+    if (this.webView && !this.webView.webContents.isDestroyed()) {
+      this.webView.webContents.goBack();
+    }
+  }
+
+  goForward() {
+    if (this.webView && !this.webView.webContents.isDestroyed()) {
+      this.webView.webContents.goForward();
+    }
+  }
+
+  reloadWebView() {
+    if (this.webView && !this.webView.webContents.isDestroyed()) {
+      this.webView.webContents.reload();
+    }
+  }
+
+  setNavigationStateChangeCallback(callback: (state: any) => void) {
+    this.onNavigationStateChange = callback;
+  }
+
+  setNavigationHistoryChangeCallback(callback: (history: any) => void) {
+    this.onNavigationHistoryChange = callback;
+  }
+
+  goToIndex(index: number) {
+    if (this.webView && !this.webView.webContents.isDestroyed()) {
+      this.webView.webContents.goToIndex(index);
+    }
   }
 }

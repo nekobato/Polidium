@@ -165,6 +165,20 @@ function createWindows() {
   player = new PlayerWindow();
   controller = new ControllerWindow();
 
+  // PlayerWindowのナビゲーション状態変更コールバックを設定
+  player.setNavigationStateChangeCallback((navigationState) => {
+    if (controller?.win && !controller.win.isDestroyed()) {
+      controller.win.webContents.send(types.CONNECT_COMMIT, types.WEB_NAVIGATION_STATE, JSON.stringify(navigationState));
+    }
+  });
+
+  // PlayerWindowのナビゲーション履歴変更コールバックを設定
+  player.setNavigationHistoryChangeCallback((navigationHistory) => {
+    if (controller?.win && !controller.win.isDestroyed()) {
+      controller.win.webContents.send(types.CONNECT_COMMIT, types.WEB_NAVIGATION_HISTORY, JSON.stringify(navigationHistory));
+    }
+  });
+
   // 保存されたウィンドウ位置とサイズを復元
   const savedBounds = loadWindowBounds();
   if (savedBounds && player.win && !player.win.isDestroyed()) {
@@ -255,6 +269,23 @@ function createWindows() {
     if (typeName === types.OPEN_URL) {
       const parsed = JSON.parse(payload);
       player.openUrl(parsed.src);
+    }
+
+    if (typeName === types.WEB_GO_BACK) {
+      player.goBack();
+    }
+
+    if (typeName === types.WEB_GO_FORWARD) {
+      player.goForward();
+    }
+
+    if (typeName === types.WEB_RELOAD) {
+      player.reloadWebView();
+    }
+
+    if (typeName === types.WEB_GO_TO_INDEX) {
+      const parsed = JSON.parse(payload);
+      player.goToIndex(parsed.index);
     }
 
     if (typeName === types.CHANGE_MODE) {

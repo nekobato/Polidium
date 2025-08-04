@@ -25,6 +25,12 @@ export const RESIZE_PLAYER = "RESIZE_PLAYER";
 export const RESIZED_PLAYER = "RESIZED_PLAYER";
 
 export const OPEN_URL = "OPEN_URL";
+export const WEB_GO_BACK = "WEB_GO_BACK";
+export const WEB_GO_FORWARD = "WEB_GO_FORWARD";
+export const WEB_RELOAD = "WEB_RELOAD";
+export const WEB_NAVIGATION_STATE = "WEB_NAVIGATION_STATE";
+export const WEB_NAVIGATION_HISTORY = "WEB_NAVIGATION_HISTORY";
+export const WEB_GO_TO_INDEX = "WEB_GO_TO_INDEX";
 
 export const RELOAD = "RELOAD";
 export const RESET = "RESET";

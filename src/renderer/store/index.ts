@@ -34,6 +34,8 @@ const controllerCommitMap: Record<string, (payload: any) => void> = {
   [types.RELOAD]: () => settingsStore.reload(),
   [types.RESET]: () => settingsStore.reset(),
   [types.RESIZED_PLAYER]: () => settingsStore.resizePlayer({ mode: false }),
+  [types.WEB_NAVIGATION_STATE]: (payload) => webStore.updateNavigationState(payload),
+  [types.WEB_NAVIGATION_HISTORY]: (payload) => webStore.updateNavigationHistory(payload),
 };
 
 // Player window用のコミットマップ

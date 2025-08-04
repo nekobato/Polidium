@@ -31,7 +31,7 @@
         </el-form-item>
       </el-popover>
 
-      <el-segmented v-model="currentView" :options="options" size="small" class="my-toggle" @change="switchView">
+      <el-segmented v-model="currentView" :options="options" size="small" class="mode-toggle" @change="switchView">
         <template #default="{ item }">
           <Icon :icon="item.icon" class="icon" />
           <span class="label">{{ item.label }}</span>
@@ -206,6 +206,16 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   border-radius: 5px;
+}
+.mode-toggle {
+  width: 120px;
+  --el-border-radius-base: 8px;
+
+  :deep(.el-segmented__item-label) {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
 }
 .actions {
   display: flex;

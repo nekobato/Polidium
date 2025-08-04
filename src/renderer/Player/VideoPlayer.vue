@@ -55,7 +55,7 @@ onMounted(() => {
           console.log("[VideoPlayer] Received file from main process:", data.file);
 
           // ストアを更新して再生を開始
-          playerStore.setCurrentFile(data.file);
+          playerStore.openFile(data.file);
         }
       } catch (error) {
         console.error("[VideoPlayer] Failed to parse PLAY_FILE payload:", error);
