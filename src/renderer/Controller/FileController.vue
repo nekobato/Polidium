@@ -1,5 +1,11 @@
 <template>
   <div class="playlist">
+    <div class="add-video-section">
+      <el-button type="primary" @click="openFileDialog" round class="add-video-btn">
+        <Icon icon="mingcute:add-line" />
+        <span>Add Video</span>
+      </el-button>
+    </div>
     <div class="video-actions">
       <div class="action-buttons">
         <el-button class="prev-button" type="primary" circle :disabled="!canPlayPrevious" @click="playPrevious">
@@ -22,7 +28,8 @@
     </div>
 
     <div class="empty-queue" v-show="queueIsEmpty">
-      <el-empty description="Drop Movie files? Here" />
+      <Icon icon="mingcute:film-line" class="empty-icon" />
+      <span class="empty-text">No videos</span>
     </div>
     <el-tree
       class="queue-tree"
@@ -180,6 +187,30 @@ function inputCurrentTime(value: number) {
   ipc.commit(types.VIDEO_SEEK, { percentage: value });
 }
 
+function openFileDialog() {
+  // Electronのダイアログを開いてファイルを選択
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'video/*';
+  input.multiple = true;
+  
+  input.onchange = (event) => {
+    const files = (event.target as HTMLInputElement).files;
+    if (files) {
+      Array.from(files).forEach(file => {
+        // ファイルパスを取得して追加
+        const fileInfo = {
+          name: file.name,
+          path: (file as any).path || file.name // Electronではpathプロパティが利用可能
+        };
+        videoStore.addQueue(fileInfo);
+      });
+    }
+  };
+  
+  input.click();
+}
+
 ipc.on(types.VIDEO_CANPLAY, (...args: unknown[]) => {
   const data = args[0] as { duration: number };
   console.log("[VideoPlayer] Video can play:", data);
@@ -201,11 +232,33 @@ ipc.on(types.VIDEO_TIMEUPDATE, (...args: unknown[]) => {
   padding: 24px 0 0 0;
 }
 
+.add-video-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+  
+  .add-video-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
 .empty-queue {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 180px;
+  flex-direction: column;
+  height: 120px;
+  .empty-icon {
+    font-size: 24px;
+    color: #b0b0b0;
+  }
+  .empty-text {
+    margin-top: 8px;
+    color: #b0b0b0;
+    font-size: 16px;
+  }
 }
 
 .queue-tree {

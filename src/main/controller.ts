@@ -11,7 +11,7 @@ export default class ControllerWindow {
   constructor() {
     this.win = new BrowserWindow({
       width: WINDOW_WIDTH,
-      height: 310,
+      height: 360,
       show: DEBUG ? true : false,
       resizable: false,
       frame: false,
@@ -30,6 +30,12 @@ export default class ControllerWindow {
     });
 
     this.win.setVisibleOnAllWorkspaces(DEBUG ? false : true);
+
+    // closeボタンでウィンドウを隠すだけにする（完全に閉じない）
+    this.win.on("close", (event) => {
+      event.preventDefault();
+      this.win.hide();
+    });
 
     const devUrl = process.env.VITE_DEV_SERVER_URL;
     if (devUrl) {

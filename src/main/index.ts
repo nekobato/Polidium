@@ -44,9 +44,11 @@ function cleanupWindows() {
 
   // ウィンドウのクリーンアップ
   if (player) {
+    player.win?.removeAllListeners();
     player = null;
   }
   if (controller) {
+    controller.win?.removeAllListeners();
     controller = null;
   }
 
@@ -228,7 +230,9 @@ function createWindows() {
       controller.win?.webContents.send(types.CONNECT_COMMIT, typeName, payload);
     }
 
-    if (typeName === types.QUIT) app.quit();
+    if (typeName === types.QUIT) {
+      app.quit();
+    }
 
     if (typeName === types.SET_CLICKTHROUGH) {
       const parsedPayload = JSON.parse(payload);

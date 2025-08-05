@@ -14,7 +14,7 @@ export default class PlayerWindow {
   private navigationEventHandlers: Array<() => void> = []; // イベントハンドラー管理
   private onNavigationStateChange?: (state: any) => void; // ナビゲーション状態変更のコールバック
   private onNavigationHistoryChange?: (history: any) => void; // ナビゲーション履歴変更のコールバック
-  private insertedCSSKey: string;
+  private insertedCSSKey: string = ""; // 挿入されたCSSのキーを保持
 
   constructor() {
     const size = screen.getPrimaryDisplay().workAreaSize;
