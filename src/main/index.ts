@@ -291,7 +291,7 @@ function createWindows() {
     if (typeName === types.CHANGE_MODE) {
       const mode = JSON.parse(payload);
       player.setMode(mode);
-      if (mode === "video-player") player.hideWebView();
+      if (mode === "video-player") player.destroyWebView(); // WebContentsViewを完全破棄してメディア停止
       if (mode === "web-player") player.showWebView();
     }
 

@@ -47,10 +47,15 @@ export default class ControllerWindow {
   }
 
   toggle(x: number) {
-    if (this.win.isVisible()) {
-      this.win.hide();
-    } else {
+    if (!this.win.isVisible()) {
+      // ウィンドウが非表示の場合：表示してフォーカス
       this.showWindow(x);
+    } else if (!this.win.isFocused()) {
+      // ウィンドウが表示されているがフォーカスされていない場合：フォーカスのみ
+      this.win.focus();
+    } else {
+      // ウィンドウが表示されてフォーカスされている場合：非表示
+      this.win.hide();
     }
   }
 

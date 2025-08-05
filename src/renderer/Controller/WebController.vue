@@ -41,7 +41,15 @@
     </div>
     <form @submit.prevent="submitURL">
       <div class="input-field">
-        <el-input id="url_input" class="url-input" placeholder="https://" v-model="url" @keydown.86="tryPasteClipboard" type="textarea" />
+        <el-input
+          id="url_input"
+          class="url-input"
+          placeholder="https://"
+          v-model="url"
+          @keydown.86="tryPasteClipboard"
+          type="textarea"
+          @keydown.enter="submitURL"
+        />
       </div>
       <el-button type="primary" native-type="submit" round class="submit-btn">
         <Icon icon="mingcute:play-line" />
@@ -165,6 +173,11 @@ function goToHistoryIndex(index: number) {
 .url-input {
   width: 100%;
   margin: 0 auto;
+
+  :deep(.el-textarea__inner) {
+    resize: none;
+    height: 80px;
+  }
 }
 .click-through {
   display: flex;

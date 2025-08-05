@@ -1,3 +1,4 @@
+import { createPublicKey } from "crypto";
 import { BrowserWindow, screen, WebContentsView, shell } from "electron";
 import { join } from "path";
 
@@ -13,6 +14,7 @@ export default class PlayerWindow {
   private navigationEventHandlers: Array<() => void> = []; // イベントハンドラー管理
   private onNavigationStateChange?: (state: any) => void; // ナビゲーション状態変更のコールバック
   private onNavigationHistoryChange?: (history: any) => void; // ナビゲーション履歴変更のコールバック
+  private insertedCSSKey: string;
 
   constructor() {
     const size = screen.getPrimaryDisplay().workAreaSize;
@@ -121,6 +123,7 @@ export default class PlayerWindow {
 
       // did-finish-loadイベントでpointer-eventsを設定
       this.webView.webContents.once("did-finish-load", () => {
+        console.log("[Player] WebContentsView did-finish-load (showWebView), applying pointer-events");
         this.updateWebViewPointerEvents();
       });
 
@@ -159,6 +162,7 @@ export default class PlayerWindow {
 
       // did-finish-loadイベントでpointer-eventsを設定
       this.webView.webContents.once("did-finish-load", () => {
+        console.log("[Player] WebContentsView did-finish-load (openUrl), applying pointer-events");
         this.updateWebViewPointerEvents();
       });
 
@@ -180,6 +184,26 @@ export default class PlayerWindow {
 
   hideWebView() {
     this.detachView();
+  }
+
+  destroyWebView() {
+    if (this.webView) {
+      // ナビゲーションイベントをクリーンアップ
+      this.cleanupNavigationEvents();
+
+      // WebContentsViewをデタッチ
+      this.detachView();
+
+      // WebContentsを破棄してメディア再生を停止
+      if (!this.webView.webContents.isDestroyed()) {
+        this.webView.webContents.close();
+      }
+
+      // WebContentsViewを削除
+      this.webView = null;
+
+      console.log("[Player] WebContentsView destroyed");
+    }
   }
 
   setMode(mode: string) {
@@ -211,14 +235,17 @@ export default class PlayerWindow {
     }
   }
 
-  public updateWebViewPointerEvents() {
+  public async updateWebViewPointerEvents() {
     if (!this.webView || this.webView.webContents.isDestroyed()) return;
 
-    const css = this.ignoreMouseEvents 
-      ? `body, html { pointer-events: none !important; } button, a, input, select, textarea, [onclick], [data-click] { pointer-events: auto !important; }`
-      : `body, html { pointer-events: auto !important; }`;
+    const css = `body, html { pointer-events: none !important; } button, a, input, select, textarea, [onclick], [data-click] { pointer-events: none !important; }`;
 
-    this.webView.webContents.insertCSS(css);
+    if (this.ignoreMouseEvents) {
+      this.insertedCSSKey = await this.webView.webContents.insertCSS(css);
+    } else {
+      if (!this.insertedCSSKey) return;
+      this.webView.webContents.removeInsertedCSS(this.insertedCSSKey);
+    }
   }
 
   setIgnoreMouseEvents(ignore: boolean) {
