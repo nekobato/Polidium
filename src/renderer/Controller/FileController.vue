@@ -1,11 +1,5 @@
 <template>
   <div class="playlist">
-    <div class="add-video-section">
-      <el-button type="primary" @click="openFileDialog" round class="add-video-btn">
-        <Icon icon="mingcute:add-line" />
-        <span>Add Video</span>
-      </el-button>
-    </div>
     <div class="video-actions">
       <div class="action-buttons">
         <el-button class="prev-button" type="primary" circle :disabled="!canPlayPrevious" @click="playPrevious">
@@ -46,15 +40,18 @@
       <template #default="{ data }">
         <div class="tree-node-content">
           <span class="truncate">{{ data.name }}</span>
-          <el-button plain size="small" class="playlist-deleter" @click.stop.prevent="removeByData(data)">
+          <el-button plain size="small" class="playlist-deleter" text @click.stop.prevent="removeByData(data)">
             <Icon icon="mingcute:close-line" />
           </el-button>
         </div>
       </template>
     </el-tree>
 
-    <div class="clear-all" v-show="!queueIsEmpty">
-      <el-button type="danger" class="clear-btn" @click="clear" size="small">
+    <div class="list-actions">
+      <el-button type="primary" @click="openFileDialog" round size="small" class="add-video-btn">
+        <Icon icon="mingcute:add-line" />
+      </el-button>
+      <el-button v-show="!queueIsEmpty" class="clear-btn" @click="clear" size="small" round>
         <Icon icon="mingcute:delete-2-line" class="icon" />
       </el-button>
     </div>
@@ -102,8 +99,8 @@ const canPlayNext = computed(() => {
   return queues.value.length > 0 && videoStore.playPointer && videoStore.playPointer < queues.value.length - 1;
 });
 
-function removeByData(data: { name: string; path: string }) {
-  const index = queues.value.findIndex((q) => q === data);
+function removeByData(data: { name: string; path: string; id: number }) {
+  const index = data.id;
   remove(index);
 }
 
@@ -187,28 +184,31 @@ function inputCurrentTime(value: number) {
   ipc.commit(types.VIDEO_SEEK, { percentage: value });
 }
 
-function openFileDialog() {
-  // Electronのダイアログを開いてファイルを選択
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = 'video/*';
-  input.multiple = true;
-  
-  input.onchange = (event) => {
-    const files = (event.target as HTMLInputElement).files;
-    if (files) {
-      Array.from(files).forEach(file => {
-        // ファイルパスを取得して追加
+async function openFileDialog() {
+  try {
+    // Electronのネイティブダイアログを使用
+    const result = await ipc.showOpenDialog({
+      properties: ["openFile", "multiSelections"],
+      filters: [
+        { name: "Video Files", extensions: ["mp4", "webm", "mov", "avi", "mkv", "m4v", "3gp", "flv", "wmv"] }
+      ]
+    });
+
+    if (!result.canceled && result.filePaths) {
+      result.filePaths.forEach((filePath: string) => {
+        // ファイル名をパスから抽出
+        const fileName = filePath.split('/').pop() || filePath.split('\\').pop() || 'Unknown';
+        
         const fileInfo = {
-          name: file.name,
-          path: (file as any).path || file.name // Electronではpathプロパティが利用可能
+          name: fileName,
+          path: filePath
         };
         videoStore.addQueue(fileInfo);
       });
     }
-  };
-  
-  input.click();
+  } catch (error) {
+    console.error("Error opening file dialog:", error);
+  }
 }
 
 ipc.on(types.VIDEO_CANPLAY, (...args: unknown[]) => {
@@ -232,16 +232,10 @@ ipc.on(types.VIDEO_TIMEUPDATE, (...args: unknown[]) => {
   padding: 24px 0 0 0;
 }
 
-.add-video-section {
+.alist-actions {
   display: flex;
   justify-content: center;
-  margin-bottom: 16px;
-  
-  .add-video-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
+  gap: 8px;
 }
 
 .empty-queue {
@@ -262,8 +256,11 @@ ipc.on(types.VIDEO_TIMEUPDATE, (...args: unknown[]) => {
 }
 
 .queue-tree {
-  width: 100%;
-  background-color: #575757;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  margin: 8px 8px 0;
+  height: 120px;
+  overflow-y: scroll;
+  border-radius: 8px;
 }
 .tree-node-content {
   display: flex;
@@ -279,20 +276,13 @@ ipc.on(types.VIDEO_TIMEUPDATE, (...args: unknown[]) => {
   white-space: nowrap;
   font-size: 15px;
 }
-.clear-all {
-  display: flex;
-  justify-content: flex-end;
-  padding: 8px;
-}
-.clear-btn {
-  font-weight: 500;
-}
 .video-actions {
   position: relative;
   border-radius: 16px;
   margin: 0 auto;
 }
 .action-buttons {
+  padding: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -301,8 +291,7 @@ ipc.on(types.VIDEO_TIMEUPDATE, (...args: unknown[]) => {
 .seekbar-container {
   position: relative;
   flex: 1 1 auto;
-  margin: 0 16px;
-  padding: 8px;
+  padding: 0 16px;
 }
 .seekbar {
   width: 100%;
@@ -314,5 +303,15 @@ ipc.on(types.VIDEO_TIMEUPDATE, (...args: unknown[]) => {
   top: 10px;
   min-width: 60px;
   font-size: 14px;
+}
+.list-actions {
+  display: flex;
+  justify-content: space-between;
+  margin: 8px 8px 0;
+
+  .clear-btn {
+    font-weight: 500;
+    color: #ff4d4f;
+  }
 }
 </style>

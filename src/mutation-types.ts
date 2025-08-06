@@ -35,3 +35,7 @@ export const WEB_GO_TO_INDEX = "WEB_GO_TO_INDEX";
 export const RELOAD = "RELOAD";
 export const RESET = "RESET";
 export const QUIT = "QUIT";
+
+export const UPDATE_GLOBAL_SHORTCUT = "UPDATE_GLOBAL_SHORTCUT";
+export const TOGGLE_PLAYER_OPACITY = "TOGGLE_PLAYER_OPACITY";
+export const SET_PLAYER_HIDDEN = "SET_PLAYER_HIDDEN";

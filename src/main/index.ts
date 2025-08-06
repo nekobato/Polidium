@@ -1,4 +1,4 @@
-import { app, Tray, nativeImage, ipcMain, Menu, dialog, BrowserWindow, net, protocol } from "electron";
+import { app, Tray, nativeImage, ipcMain, Menu, dialog, BrowserWindow, net, protocol, globalShortcut } from "electron";
 import * as Sentry from "@sentry/electron";
 import { autoUpdater } from "electron-updater";
 import * as os from "os";
@@ -23,6 +23,9 @@ let player: PlayerWindow | null = null;
 let controller: ControllerWindow | null = null;
 let tray: Tray | null = null;
 let ipcHandlers: Array<() => void> = [];
+let currentGlobalShortcut: string | null = null;
+let savedOpacity: number = 0.05;
+let isPlayerHidden: boolean = false;
 
 // media://xxxx
 protocol.registerSchemesAsPrivileged([
@@ -99,6 +102,17 @@ ipcMain.handle("get-file-path", async (_event, fileInfo) => {
   } catch (error) {
     console.error("[Main] Error resolving file path:", error);
     return { success: false, error: String(error) };
+  }
+});
+
+// ファイル選択ダイアログを開くためのipcハンドラー
+ipcMain.handle("show-open-dialog", async (_event, options) => {
+  try {
+    const result = await dialog.showOpenDialog(options);
+    return result;
+  } catch (error) {
+    console.error("[Main] Error opening dialog:", error);
+    return { canceled: true, filePaths: [] };
   }
 });
 
@@ -192,6 +206,17 @@ function createWindows() {
 
   tray.on("click", (_event, bounds) => {
     controller?.toggle(bounds.x);
+    
+    // TrayIconクリック時はプレイヤーを表示状態にする
+    if (isPlayerHidden && player?.win && !player.win.isDestroyed()) {
+      player.win.setOpacity(savedOpacity);
+      isPlayerHidden = false;
+      
+      // Controllerにも通知
+      if (controller?.win && !controller.win.isDestroyed()) {
+        controller.win.webContents.send(types.CONNECT_COMMIT, types.SET_PLAYER_HIDDEN, JSON.stringify(false));
+      }
+    }
   });
 
   player.show();
@@ -234,6 +259,15 @@ function createWindows() {
       app.quit();
     }
 
+    if (typeName === types.UPDATE_GLOBAL_SHORTCUT) {
+      const shortcut = JSON.parse(payload);
+      registerGlobalShortcut(shortcut);
+    }
+
+    if (typeName === types.TOGGLE_PLAYER_OPACITY) {
+      togglePlayerOpacity();
+    }
+
     if (typeName === types.SET_CLICKTHROUGH) {
       const parsedPayload = JSON.parse(payload);
       player.setIgnoreMouseEvents(parsedPayload.clickThrough);
@@ -243,6 +277,7 @@ function createWindows() {
 
     if (typeName === types.CHANGE_OPACITY) {
       const value = JSON.parse(payload);
+      savedOpacity = value; // opacity値を保存
       player.win?.setOpacity(value);
     }
 
@@ -374,5 +409,53 @@ app.on("window-all-closed", () => {
 
 // ホットリロード前のクリーンアップ
 app.on("before-quit", () => {
+  // グローバルショートカットをアンレジスター
+  if (currentGlobalShortcut) {
+    globalShortcut.unregister(currentGlobalShortcut);
+  }
   cleanupWindows();
+});
+
+// グローバルショートカット関連の関数
+function registerGlobalShortcut(shortcut: string) {
+  // 既存のショートカットをアンレジスター
+  if (currentGlobalShortcut) {
+    globalShortcut.unregister(currentGlobalShortcut);
+  }
+
+  // 新しいショートカットを登録
+  const registered = globalShortcut.register(shortcut, () => {
+    togglePlayerOpacity();
+  });
+
+  if (registered) {
+    currentGlobalShortcut = shortcut;
+    console.log(`Global shortcut registered: ${shortcut}`);
+  } else {
+    console.error(`Failed to register global shortcut: ${shortcut}`);
+  }
+}
+
+function togglePlayerOpacity() {
+  if (!player?.win || player.win.isDestroyed()) return;
+
+  if (isPlayerHidden) {
+    // 表示する
+    player.win.setOpacity(savedOpacity);
+    isPlayerHidden = false;
+  } else {
+    // 非表示にする
+    player.win.setOpacity(0);
+    isPlayerHidden = true;
+  }
+
+  // Controllerに状態を通知
+  if (controller?.win && !controller.win.isDestroyed()) {
+    controller.win.webContents.send(types.CONNECT_COMMIT, types.SET_PLAYER_HIDDEN, JSON.stringify(isPlayerHidden));
+  }
+}
+
+// アプリ起動時にデフォルトのショートカットを登録
+app.whenReady().then(() => {
+  // デフォルトショートカットはControllerから設定される
 });

@@ -8,9 +8,14 @@
   >
     <div class="header">
       <h1 class="title">Polidium</h1>
-      <el-button class="quit" circle size="small">
-        <Icon icon="mingcute:power-line" @click="quit" />
-      </el-button>
+      <div class="header-buttons">
+        <el-button class="settings" circle size="small" @click="openSettingsDialog">
+          <Icon :icon="isPlayerHidden ? 'mingcute:ghost-fill' : 'mingcute:ghost-line'" />
+        </el-button>
+        <el-button class="quit" circle size="small">
+          <Icon icon="mingcute:power-line" @click="quit" />
+        </el-button>
+      </div>
     </div>
     <div class="actions">
       <el-popover
@@ -43,6 +48,38 @@
       </el-button>
     </div>
     <router-view />
+
+    <!-- 設定ダイアログ -->
+    <el-dialog
+      class="settings-dialog"
+      v-model="showSettingsDialog"
+      title="Settings"
+      width="320px"
+      :modal="true"
+      :close-on-click-modal="true"
+      :close-on-press-escape="true"
+    >
+      <div class="settings-content">
+        <el-form>
+          <el-form-item label="Global Shortcut">
+            <el-input
+              v-model="globalShortcut"
+              readonly
+              placeholder="Press keys..."
+              @focus="startCapturingShortcut"
+              @blur="stopCapturingShortcut"
+              @keydown="captureShortcut"
+              class="shortcut-input"
+            >
+              <template #append>
+                <el-button @click="resetShortcut" size="small">Reset</el-button>
+              </template>
+            </el-input>
+            <p class="shortcut-hint">Toggle player opacity between 0% and {{ opacityFloor }}%</p>
+          </el-form-item>
+        </el-form>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -52,7 +89,7 @@ import { useRouter, useRoute } from "vue-router";
 import { Icon } from "@iconify/vue";
 import { useVideoStore } from "@/renderer/store/modules/video";
 import { useSettingsStore } from "@/renderer/store/modules/settings";
-import { ElButton, ElPopover, ElSlider, ElFormItem } from "element-plus";
+import { ElButton, ElPopover, ElSlider, ElFormItem, ElInput, ElForm } from "element-plus";
 import ipc from "@/renderer/ipc";
 import * as types from "@/mutation-types";
 
@@ -114,6 +151,69 @@ function handleResize() {
   settingsStore.resizePlayer({ mode: newMode });
 }
 
+// Settings関連
+const showSettingsDialog = ref(false);
+const globalShortcut = ref(settingsStore.player.globalShortcut || "Ctrl+Alt+P");
+const isCapturingShortcut = ref(false);
+const isPlayerHidden = computed(() => settingsStore.player.isPlayerHidden);
+
+function openSettingsDialog() {
+  showSettingsDialog.value = true;
+  globalShortcut.value = settingsStore.player.globalShortcut;
+}
+
+function startCapturingShortcut() {
+  isCapturingShortcut.value = true;
+}
+
+function stopCapturingShortcut() {
+  isCapturingShortcut.value = false;
+}
+
+function captureShortcut(event: KeyboardEvent) {
+  if (!isCapturingShortcut.value) return;
+  
+  event.preventDefault();
+  
+  const modifiers = [];
+  if (event.ctrlKey || event.metaKey) modifiers.push("Ctrl");
+  if (event.altKey) modifiers.push("Alt");
+  if (event.shiftKey) modifiers.push("Shift");
+  
+  // 修飾キーのみの場合は無視
+  if (["Control", "Alt", "Shift", "Meta"].includes(event.key)) {
+    return;
+  }
+  
+  // Electronのキーコードマッピング
+  let key = event.key;
+  if (key.length === 1) {
+    key = key.toUpperCase();
+  } else {
+    // 特殊キーの変換
+    const keyMap: Record<string, string> = {
+      "ArrowUp": "Up",
+      "ArrowDown": "Down",
+      "ArrowLeft": "Left",
+      "ArrowRight": "Right",
+      " ": "Space",
+    };
+    key = keyMap[key] || key;
+  }
+  
+  const shortcut = [...modifiers, key].join("+");
+  globalShortcut.value = shortcut;
+  settingsStore.updateGlobalShortcut(shortcut);
+  
+  // フォーカスを外す
+  (event.target as HTMLElement).blur();
+}
+
+function resetShortcut() {
+  globalShortcut.value = "Ctrl+Alt+P";
+  settingsStore.updateGlobalShortcut("Ctrl+Alt+P");
+}
+
 function quit() {
   ipc.commit("QUIT");
 }
@@ -171,6 +271,17 @@ onMounted(() => {
   }
 
   settingsStore.changeOpacity(settingsStore.player.opacity);
+  
+  // グローバルショートカットキーを初期設定
+  if (settingsStore.player.globalShortcut) {
+    ipc.commit(types.UPDATE_GLOBAL_SHORTCUT, settingsStore.player.globalShortcut);
+  }
+  
+  // SET_PLAYER_HIDDENイベントをリッスン
+  ipc.on(types.SET_PLAYER_HIDDEN, (_event: unknown, isHidden: string) => {
+    const hidden = JSON.parse(isHidden);
+    settingsStore.setPlayerHidden(hidden);
+  });
 });
 </script>
 
@@ -192,9 +303,16 @@ onMounted(() => {
     margin: auto;
   }
 
-  .quit {
+  .header-buttons {
     position: absolute;
     right: 8px;
+    display: flex;
+    gap: 8px;
+    -webkit-app-region: no-drag;
+  }
+
+  .settings,
+  .quit {
     -webkit-app-region: no-drag;
   }
 }
@@ -243,6 +361,29 @@ onMounted(() => {
 }
 .opacity-input {
   align-items: center;
+}
+.settings-content {
+  padding: 16px 0;
+}
+
+.shortcut-input {
+  width: 100%;
+  
+  :deep(.el-input__inner) {
+    cursor: pointer;
+    font-family: monospace;
+  }
+}
+
+.shortcut-hint {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--el-text-color-secondary);
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
 }
 </style>
 

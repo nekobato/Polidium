@@ -16,6 +16,8 @@ interface SettingsState {
       width: number;
       height: number;
     };
+    globalShortcut: string;
+    isPlayerHidden: boolean;
   };
 }
 
@@ -26,8 +28,13 @@ export const useSettingsStore = defineStore("settings", () => {
       opacity: 0.05,
       clickThrough: true,
       resizeMode: false,
+      globalShortcut: "Ctrl+Alt+P",
+      isPlayerHidden: false,
     },
   });
+
+  // 起動時にisPlayerHiddenを必ずfalseに設定
+  state.value.player.isPlayerHidden = false;
 
   const player = computed(() => state.value.player);
 
@@ -84,6 +91,16 @@ export const useSettingsStore = defineStore("settings", () => {
     state.value.player.windowBounds = bounds;
   }
 
+  function updateGlobalShortcut(shortcut: string) {
+    state.value.player.globalShortcut = shortcut;
+    // メインプロセスに新しいショートカットを送信
+    ipc.commit(types.UPDATE_GLOBAL_SHORTCUT, shortcut);
+  }
+
+  function setPlayerHidden(hidden: boolean) {
+    state.value.player.isPlayerHidden = hidden;
+  }
+
   return {
     player,
     changeMode,
@@ -95,5 +112,7 @@ export const useSettingsStore = defineStore("settings", () => {
     videoSelect,
     resizePlayer,
     saveWindowBounds,
+    updateGlobalShortcut,
+    setPlayerHidden,
   };
 });

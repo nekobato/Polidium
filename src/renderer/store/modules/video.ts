@@ -95,6 +95,11 @@ export const useVideoStore = defineStore("video", () => {
     }
   }
 
+  function addQueue(file: QueueItem | { name: string; path: string }) {
+    // dropFileと同じ処理を実行
+    dropFile({ file });
+  }
+
   function setCurrentFile(payload: { file: QueueItem | null }) {
     // ファイルが指定されていて、パスが存在する場合のみ設定
     if (payload.file && payload.file.path) {
@@ -121,6 +126,7 @@ export const useVideoStore = defineStore("video", () => {
     currentFile,
     video,
     dropFile,
+    addQueue,
     pauseFile,
     resumeFile,
     selectVideo,

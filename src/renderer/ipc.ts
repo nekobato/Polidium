@@ -26,4 +26,7 @@ export default {
   pathToFileURL(filePath: string) {
     return ipc.pathToFileURL(filePath);
   },
+  async showOpenDialog(options: any) {
+    return ipc.invoke("show-open-dialog", options);
+  },
 };
