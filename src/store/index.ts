@@ -5,7 +5,7 @@ import { useVideoStore } from "./modules/video";
 import { useWebStore } from "./modules/web";
 import { useSettingsStore } from "./modules/settings";
 import { usePlayerStore } from "./modules/player";
-import ipc from "@/renderer/ipc";
+import ipc from "@/ipc";
 
 const { VITE_SENTRY_DSN } = import.meta.env;
 

@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { useStorage } from "@vueuse/core";
 import { computed } from "vue";
-import ipc from "@/renderer/ipc";
+import ipc from "@/ipc";
 import * as types from "@/mutation-types";
 
 interface SettingsState {

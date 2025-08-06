@@ -87,10 +87,10 @@
 import { ref, watch, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { Icon } from "@iconify/vue";
-import { useVideoStore } from "@/renderer/store/modules/video";
-import { useSettingsStore } from "@/renderer/store/modules/settings";
+import { useVideoStore } from "@/store/modules/video";
+import { useSettingsStore } from "@/store/modules/settings";
 import { ElButton, ElPopover, ElSlider, ElFormItem, ElInput, ElForm } from "element-plus";
-import ipc from "@/renderer/ipc";
+import ipc from "@/ipc";
 import * as types from "@/mutation-types";
 
 const router = useRouter();
@@ -170,21 +170,22 @@ function stopCapturingShortcut() {
   isCapturingShortcut.value = false;
 }
 
-function captureShortcut(event: KeyboardEvent) {
+function captureShortcut(event: Event | KeyboardEvent) {
   if (!isCapturingShortcut.value) return;
-  
+  if (!(event instanceof KeyboardEvent)) return;
+
   event.preventDefault();
-  
+
   const modifiers = [];
   if (event.ctrlKey || event.metaKey) modifiers.push("Ctrl");
   if (event.altKey) modifiers.push("Alt");
   if (event.shiftKey) modifiers.push("Shift");
-  
+
   // 修飾キーのみの場合は無視
   if (["Control", "Alt", "Shift", "Meta"].includes(event.key)) {
     return;
   }
-  
+
   // Electronのキーコードマッピング
   let key = event.key;
   if (key.length === 1) {
@@ -192,19 +193,19 @@ function captureShortcut(event: KeyboardEvent) {
   } else {
     // 特殊キーの変換
     const keyMap: Record<string, string> = {
-      "ArrowUp": "Up",
-      "ArrowDown": "Down",
-      "ArrowLeft": "Left",
-      "ArrowRight": "Right",
+      ArrowUp: "Up",
+      ArrowDown: "Down",
+      ArrowLeft: "Left",
+      ArrowRight: "Right",
       " ": "Space",
     };
     key = keyMap[key] || key;
   }
-  
+
   const shortcut = [...modifiers, key].join("+");
   globalShortcut.value = shortcut;
   settingsStore.updateGlobalShortcut(shortcut);
-  
+
   // フォーカスを外す
   (event.target as HTMLElement).blur();
 }
@@ -271,15 +272,15 @@ onMounted(() => {
   }
 
   settingsStore.changeOpacity(settingsStore.player.opacity);
-  
+
   // グローバルショートカットキーを初期設定
   if (settingsStore.player.globalShortcut) {
     ipc.commit(types.UPDATE_GLOBAL_SHORTCUT, settingsStore.player.globalShortcut);
   }
-  
+
   // SET_PLAYER_HIDDENイベントをリッスン
-  ipc.on(types.SET_PLAYER_HIDDEN, (_event: unknown, isHidden: string) => {
-    const hidden = JSON.parse(isHidden);
+  ipc.on(types.SET_PLAYER_HIDDEN, (_: any, payload) => {
+    const hidden = JSON.parse(payload as string);
     settingsStore.setPlayerHidden(hidden);
   });
 });
@@ -368,7 +369,7 @@ onMounted(() => {
 
 .shortcut-input {
   width: 100%;
-  
+
   :deep(.el-input__inner) {
     cursor: pointer;
     font-family: monospace;

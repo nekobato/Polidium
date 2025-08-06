@@ -72,11 +72,11 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
-import ipc from "@/renderer/ipc";
+import ipc from "@/ipc";
 import * as types from "@/mutation-types";
 import xss from "xss";
-import { useSettingsStore } from "@/renderer/store/modules/settings";
-import { useWebStore } from "@/renderer/store/modules/web";
+import { useSettingsStore } from "@/store/modules/settings";
+import { useWebStore } from "@/store/modules/web";
 import { Icon } from "@iconify/vue";
 
 const settingsStore = useSettingsStore();

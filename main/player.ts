@@ -1,4 +1,3 @@
-import { createPublicKey } from "crypto";
 import { BrowserWindow, screen, WebContentsView, shell } from "electron";
 import { join } from "path";
 

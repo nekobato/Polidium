@@ -15,8 +15,8 @@
 
 <script setup lang="ts">
 import { ref, watch, computed, onMounted, onUnmounted } from "vue";
-import { usePlayerStore } from "@/renderer/store/modules/player";
-import ipc from "@/renderer/ipc";
+import { usePlayerStore } from "@/store/modules/player";
+import ipc from "@/ipc";
 import * as types from "@/mutation-types";
 
 const playerStore = usePlayerStore();

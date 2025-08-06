@@ -22,10 +22,18 @@
     "baseUrl": "",
     "jsxImportSource": "vue",
     "paths": {
-      "@/*": ["src/*"],
-      "@shared/*": ["shared/*"]
+      "@/*": ["src/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "types/**/*.d.ts", "docs/**/*.ts", "docs/**/*.md"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "types/**/*.d.ts",
+    "docs/**/*.ts",
+    "docs/**/*.md",
+    "src/mutation-types.ts",
+    "main/preload.ts"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

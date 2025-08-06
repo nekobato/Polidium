@@ -9,9 +9,9 @@
 import { computed, watch, onMounted, onUnmounted } from "vue";
 import type { CSSProperties } from "vue";
 import { useRouter } from "vue-router";
-import { usePlayerStore } from "@/renderer/store/modules/player";
+import { usePlayerStore } from "@/store/modules/player";
 import ResizeMode from "./ResizeMode.vue";
-import ipc from "@/renderer/ipc";
+import ipc from "@/ipc";
 import * as types from "@/mutation-types";
 
 const playerStore = usePlayerStore();
@@ -33,7 +33,7 @@ watch(
 const handleConnectCommit = (...args: unknown[]) => {
   const [typeName, payload] = args as [string, string];
   console.log(`[Player] Received IPC event: ${typeName}`, payload);
-  
+
   if (typeName === types.RESIZE_PLAYER) {
     const parsedPayload = JSON.parse(payload);
     playerStore.setResizeMode(parsedPayload.mode);
@@ -45,7 +45,7 @@ onMounted(() => {
   console.log("[Player]");
   // 起動時は必ずresizeModeをfalseに設定
   playerStore.setResizeMode(false);
-  
+
   // IPCイベントリスナーを登録
   ipc.on(types.CONNECT_COMMIT, handleConnectCommit);
 });

@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
 import { ElButton } from "element-plus";
-import ipc from "@/renderer/ipc";
+import ipc from "@/ipc";
 import * as types from "@/mutation-types";
 
 function onRestore() {

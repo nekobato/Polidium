@@ -2,7 +2,7 @@ import { app, Tray, nativeImage, ipcMain, Menu, dialog, BrowserWindow, net, prot
 import * as Sentry from "@sentry/electron";
 import { autoUpdater } from "electron-updater";
 import * as os from "os";
-import * as types from "../mutation-types";
+import * as types from "../src/mutation-types";
 import PlayerWindow from "./player";
 import ControllerWindow from "./controller";
 import { join } from "path";
@@ -206,12 +206,12 @@ function createWindows() {
 
   tray.on("click", (_event, bounds) => {
     controller?.toggle(bounds.x);
-    
+
     // TrayIconクリック時はプレイヤーを表示状態にする
     if (isPlayerHidden && player?.win && !player.win.isDestroyed()) {
       player.win.setOpacity(savedOpacity);
       isPlayerHidden = false;
-      
+
       // Controllerにも通知
       if (controller?.win && !controller.win.isDestroyed()) {
         controller.win.webContents.send(types.CONNECT_COMMIT, types.SET_PLAYER_HIDDEN, JSON.stringify(false));

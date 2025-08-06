@@ -61,9 +61,9 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { Icon } from "@iconify/vue";
-import { useVideoStore } from "@/renderer/store/modules/video";
-import { useSettingsStore } from "@/renderer/store/modules/settings";
-import ipc from "@/renderer/ipc";
+import { useVideoStore } from "@/store/modules/video";
+import { useSettingsStore } from "@/store/modules/settings";
+import ipc from "@/ipc";
 import * as types from "@/mutation-types";
 import type { NodeDropType } from "element-plus/es/components/tree/src/tree.type";
 import type Node from "element-plus/es/components/tree/src/model/node";
@@ -189,19 +189,17 @@ async function openFileDialog() {
     // Electronのネイティブダイアログを使用
     const result = await ipc.showOpenDialog({
       properties: ["openFile", "multiSelections"],
-      filters: [
-        { name: "Video Files", extensions: ["mp4", "webm", "mov", "avi", "mkv", "m4v", "3gp", "flv", "wmv"] }
-      ]
+      filters: [{ name: "Video Files", extensions: ["mp4", "webm", "mov", "avi", "mkv", "m4v", "3gp", "flv", "wmv"] }],
     });
 
     if (!result.canceled && result.filePaths) {
       result.filePaths.forEach((filePath: string) => {
         // ファイル名をパスから抽出
-        const fileName = filePath.split('/').pop() || filePath.split('\\').pop() || 'Unknown';
-        
+        const fileName = filePath.split("/").pop() || filePath.split("\\").pop() || "Unknown";
+
         const fileInfo = {
           name: fileName,
-          path: filePath
+          path: filePath,
         };
         videoStore.addQueue(fileInfo);
       });

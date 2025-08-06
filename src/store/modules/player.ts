@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import * as types from "@/mutation-types";
-import ipc from "@/renderer/ipc";
+import ipc from "@/ipc";
 
 interface VideoFile {
   name: string;

@@ -10,3 +10,4 @@ app/js
 release/
 app/main.js
 dist-electron
+.env
