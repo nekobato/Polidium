@@ -8,7 +8,7 @@ const config = {
   asar: true,
   productName: "Polidium",
   directories: {
-    output: `release/${pkg.version}`
+    output: `release/${pkg.version}`,
   },
   files: [
     "dist",
@@ -17,25 +17,26 @@ const config = {
     "dist-electron",
     {
       from: "node_modules/file-icon/file-icon",
-      to: "dist-electron/file-icon"
-    }
+      to: "dist-electron/file-icon",
+    },
   ],
   mac: {
     target: ["default"],
-    icon: "dist/icons/mac/icon.icns",
+    icon: "public/icons/mac/icon.icns",
     category: "public.app-category.video",
     entitlements: "build/entitlements.mac.plist",
     entitlementsInherit: "build/entitlements.mac.plist",
-    publish: ["github"]
+    publish: ["github"],
+    notarize: true,
   },
   win: {
     target: [
       {
         target: "nsis",
-        arch: ["x64"]
-      }
-    ]
-  }
+        arch: ["x64"],
+      },
+    ],
+  },
   // nsis: {
   //   oneClick: false,
   //   perMachine: false,
