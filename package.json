@@ -9,7 +9,7 @@
     "prepare": "rm -rf node_modules/electron/dist && node node_modules/electron/install.js",
     "dev": "vite",
     "build": "pnpm prepare && vue-tsc && vite build && electron-builder --config electron-builder.config.cjs",
-    "build:icon": "electron-icon-builder --input=./public/images/logo/icon.png --output=./public",
+    "build:icon": "electron-icon-builder --input=./img/icon.png --output=./public",
     "lint": "tsc --noEmit && vue-tsc --noEmit",
     "release": "pnpm build && electron-builder --publish always -c --config electron-builder.config.cjs"
   },
@@ -29,6 +29,7 @@
     "electron": "^36.4.0",
     "electron-builder": "^26.0.12",
     "electron-debug": "^4.1.0",
+    "electron-icon-builder": "^2.0.1",
     "pinia": "^3.0.3",
     "sass-embedded": "^1.90.0",
     "typescript": "^5.8.3",

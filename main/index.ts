@@ -201,7 +201,7 @@ function createWindows() {
     player.win.setBounds(savedBounds);
   }
 
-  const trayIcon = nativeImage.createFromPath(join(__dirname, "../img", "tray_icon.png"));
+  const trayIcon = nativeImage.createFromPath(join(__dirname, "../img", "trayIconTemplate.png"));
   tray = new Tray(trayIcon);
 
   tray.on("click", (_event, bounds) => {
