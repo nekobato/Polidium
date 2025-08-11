@@ -46,7 +46,7 @@ export default class PlayerWindow {
       this.win.loadURL(devUrl + "#/player");
       this.win.webContents.openDevTools({ mode: "detach" });
     } else {
-      this.win.loadURL("file://" + __dirname + "/index.html#/player");
+      this.win.loadURL("file://" + __dirname + "/../dist/index.html#/player");
     }
 
     this.win.on("closed", () => {

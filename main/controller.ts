@@ -42,7 +42,7 @@ export default class ControllerWindow {
       this.win.loadURL(devUrl + "#/controller");
       this.win.webContents.openDevTools({ mode: "detach" });
     } else {
-      this.win.loadURL("file://" + __dirname + "/index.html#/controller");
+      this.win.loadURL("file://" + __dirname + "/../dist/index.html#/controller");
     }
   }
 
