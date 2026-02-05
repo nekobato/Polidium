@@ -36,6 +36,7 @@ const config = {
         arch: ["x64"],
       },
     ],
+    icon: "public/icons/win/icon.ico",
   },
   // nsis: {
   //   oneClick: false,
