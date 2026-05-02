@@ -5,6 +5,7 @@ export interface ElectronAPI {
   readClipboardText(): string;
   getFilePath: (file: File) => string;
   pathToFileURL: (filePath: string) => string;
+  showOpenDialog(options: unknown): Promise<unknown>;
 }
 
 declare global {

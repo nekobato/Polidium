@@ -14,9 +14,13 @@ export const SORT_QUEUE = "SORT_QUEUE";
 export const VIDEO_TIMEUPDATE = "VIDEO_TIMEUPDATE";
 export const VIDEO_CANPLAY = "VIDEO_CANPLAY";
 export const VIDEO_SEEK = "VIDEO_SEEK";
+export const VIDEO_VOLUME = "VIDEO_VOLUME";
+export const VIDEO_MUTED = "VIDEO_MUTED";
+export const VIDEO_PLAYBACK_RATE = "VIDEO_PLAYBACK_RATE";
 export const VIDEO_PLAYED = "VIDEO_PLAYED";
 export const VIDEO_PAUSED = "VIDEO_PAUSED";
 export const VIDEO_ENDED = "VIDEO_ENDED";
+export const VIDEO_ERROR = "VIDEO_ERROR";
 
 export const CHANGE_MODE = "CHANGE_MODE";
 export const CHANGE_OPACITY = "CHANGE_OPACITY";

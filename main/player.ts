@@ -3,6 +3,18 @@ import { join } from "path";
 
 const DEBUG = !!process.env.DEBUG;
 
+/**
+ * Checks whether a URL is safe to load as remote browser content.
+ */
+function isAllowedRemoteUrl(url: string): boolean {
+  try {
+    const parsedUrl = new URL(url);
+    return parsedUrl.protocol === "http:" || parsedUrl.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 export default class PlayerWindow {
   win: BrowserWindow | null;
   webView: WebContentsView | null = null;
@@ -46,7 +58,7 @@ export default class PlayerWindow {
       this.win.loadURL(devUrl + "#/player");
       this.win.webContents.openDevTools({ mode: "detach" });
     } else {
-      this.win.loadURL("file://" + __dirname + "/../dist/index.html#/player");
+      this.win.loadURL("polidium://app/index.html#/player");
     }
 
     this.win.on("closed", () => {
@@ -73,7 +85,7 @@ export default class PlayerWindow {
     // BrowserWindowのクリーンアップ
     if (this.win && !this.win.isDestroyed()) {
       this.win.removeAllListeners();
-      this.win.close();
+      this.win.destroy();
       this.win = null;
     }
   }
@@ -103,41 +115,57 @@ export default class PlayerWindow {
     }
   }
 
+  /**
+   * Creates an isolated view for untrusted web content.
+   */
+  private createWebView() {
+    const webView = new WebContentsView({
+      webPreferences: {
+        contextIsolation: true,
+        nodeIntegration: false,
+        sandbox: true,
+      },
+    });
+
+    this.win?.removeAllListeners("resize");
+    this.win?.on("resize", () => this.updateViewBounds());
+
+    webView.webContents.on("did-finish-load", () => {
+      console.log("[Player] WebContentsView did-finish-load, applying pointer-events");
+      this.updateWebViewPointerEvents();
+    });
+
+    webView.webContents.on("will-navigate", (event, url) => {
+      if (!isAllowedRemoteUrl(url)) {
+        event.preventDefault();
+      }
+    });
+
+    webView.webContents.on("will-redirect", (event, url) => {
+      if (!isAllowedRemoteUrl(url)) {
+        event.preventDefault();
+      }
+    });
+
+    // target="_blank"のリンクをデフォルトブラウザで開く
+    webView.webContents.setWindowOpenHandler(({ url }) => {
+      if (isAllowedRemoteUrl(url)) {
+        shell.openExternal(url);
+      }
+      return { action: "deny" };
+    });
+
+    this.setupWebViewNavigationEvents(webView);
+
+    return webView;
+  }
+
   showWebView() {
     if (!this.currentUrl) return;
 
     // 既存のWebContentsViewがある場合は再利用
     if (!this.webView) {
-      this.webView = new WebContentsView({
-        webPreferences: {
-          preload: join(__dirname, "preload.js"),
-          contextIsolation: true,
-          nodeIntegration: false,
-        },
-      });
-
-      // resizeイベントリスナーを一度だけ登録
-      this.win?.removeAllListeners("resize");
-      this.win?.on("resize", () => this.updateViewBounds());
-
-      // did-finish-loadイベントでpointer-eventsを設定
-      this.webView.webContents.once("did-finish-load", () => {
-        console.log("[Player] WebContentsView did-finish-load (showWebView), applying pointer-events");
-        this.updateWebViewPointerEvents();
-      });
-
-      // ナビゲーションイベントを設定
-      this.setupWebViewNavigationEvents();
-
-      // target="_blank"のリンクをデフォルトブラウザで開く
-      this.webView.webContents.setWindowOpenHandler(({ url }) => {
-        // HTTPとHTTPSのみ許可（セキュリティ対策）
-        if (url.startsWith("http:") || url.startsWith("https:")) {
-          shell.openExternal(url);
-        }
-        return { action: "deny" }; // 新しいElectronウィンドウの作成を拒否
-      });
-
+      this.webView = this.createWebView();
       this.webView.webContents.loadURL(this.currentUrl);
     }
 
@@ -146,36 +174,11 @@ export default class PlayerWindow {
   }
 
   openUrl(url: string) {
+    if (!isAllowedRemoteUrl(url)) return;
+
     this.currentUrl = url;
     if (!this.webView) {
-      this.webView = new WebContentsView({
-        webPreferences: {
-          preload: join(__dirname, "preload.js"),
-          contextIsolation: true,
-          nodeIntegration: false,
-        },
-      });
-      // resizeイベントリスナーを一度だけ登録
-      this.win?.removeAllListeners("resize");
-      this.win?.on("resize", () => this.updateViewBounds());
-
-      // did-finish-loadイベントでpointer-eventsを設定
-      this.webView.webContents.once("did-finish-load", () => {
-        console.log("[Player] WebContentsView did-finish-load (openUrl), applying pointer-events");
-        this.updateWebViewPointerEvents();
-      });
-
-      // ナビゲーションイベントを設定
-      this.setupWebViewNavigationEvents();
-
-      // target="_blank"のリンクをデフォルトブラウザで開く
-      this.webView.webContents.setWindowOpenHandler(({ url }) => {
-        // HTTPとHTTPSのみ許可（セキュリティ対策）
-        if (url.startsWith("http:") || url.startsWith("https:")) {
-          shell.openExternal(url);
-        }
-        return { action: "deny" }; // 新しいElectronウィンドウの作成を拒否
-      });
+      this.webView = this.createWebView();
     }
     this.attachView();
     this.webView!.webContents.loadURL(url);
@@ -253,10 +256,10 @@ export default class PlayerWindow {
     this.updateWebViewPointerEvents();
   }
 
-  private setupWebViewNavigationEvents() {
-    if (!this.webView || this.webView.webContents.isDestroyed()) return;
+  private setupWebViewNavigationEvents(webView = this.webView) {
+    if (!webView || webView.webContents.isDestroyed()) return;
 
-    const webContents = this.webView.webContents;
+    const webContents = webView.webContents;
 
     // ナビゲーション状態の更新を通知する関数
     const notifyNavigationState = () => {
@@ -326,6 +329,8 @@ export default class PlayerWindow {
       () => webContents.removeAllListeners("did-stop-loading"),
       () => webContents.removeAllListeners("did-navigate"),
       () => webContents.removeAllListeners("did-navigate-in-page"),
+      () => webContents.removeAllListeners("will-navigate"),
+      () => webContents.removeAllListeners("will-redirect"),
     ];
 
     // 初期状態を通知

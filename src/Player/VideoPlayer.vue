@@ -10,6 +10,7 @@
     @pause="onVideoPause"
     @ended="onVideoEnded"
     @loadstart="onVideoLoadStart"
+    @error="onVideoError"
   ></video>
 </template>
 
@@ -22,6 +23,7 @@ import * as types from "@/mutation-types";
 const playerStore = usePlayerStore();
 const video = ref<HTMLVideoElement | null>(null);
 const videoEl = ref<HTMLVideoElement | null>(null);
+const pendingStartTime = ref<number>(0);
 
 const currentFile = computed(() => playerStore.currentFile);
 const videoSource = computed(() => {
@@ -41,9 +43,44 @@ const videoSource = computed(() => {
 
 // 変数削除
 
+function applyPlaybackPreferences() {
+  if (!videoEl.value) return;
+
+  videoEl.value.volume = playerStore.volume;
+  videoEl.value.muted = playerStore.muted;
+  videoEl.value.playbackRate = playerStore.playbackRate;
+}
+
+function seekToPendingStartTime() {
+  if (!videoEl.value) return;
+  if (pendingStartTime.value <= 0) return;
+  if (!Number.isFinite(videoEl.value.duration)) return;
+  if (pendingStartTime.value >= videoEl.value.duration - 2) return;
+
+  videoEl.value.currentTime = pendingStartTime.value;
+  pendingStartTime.value = 0;
+}
+
+function getVideoErrorMessage(): string {
+  const error = videoEl.value?.error;
+  const fileName = currentFile.value?.name ?? "video";
+
+  if (!error) return `Failed to play ${fileName}.`;
+
+  const reasons: Record<number, string> = {
+    [MediaError.MEDIA_ERR_ABORTED]: "Playback was aborted.",
+    [MediaError.MEDIA_ERR_NETWORK]: "A network error occurred while loading the media.",
+    [MediaError.MEDIA_ERR_DECODE]: "The media could not be decoded.",
+    [MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED]: "The media format or path is not supported.",
+  };
+
+  return `${fileName}: ${reasons[error.code] ?? "The media could not be played."}`;
+}
+
 // コンポーネントがマウントされたときにビデオ要素への参照を設定
 onMounted(() => {
   videoEl.value = video.value;
+  applyPlaybackPreferences();
 
   // メインプロセスからのPLAY_FILEメッセージをリッスン
   ipc.on(types.CONNECT_COMMIT, (...args: unknown[]) => {
@@ -53,6 +90,8 @@ onMounted(() => {
         const data = JSON.parse(payload);
         if (data.file && data.file.path) {
           console.log("[VideoPlayer] Received file from main process:", data.file);
+
+          pendingStartTime.value = typeof data.startTime === "number" ? data.startTime : 0;
 
           // ストアを更新して再生を開始
           playerStore.openFile(data.file);
@@ -83,6 +122,24 @@ onMounted(() => {
       if (videoEl.value) {
         videoEl.value.play();
       }
+    }
+
+    if (typeName === types.VIDEO_VOLUME) {
+      const data = JSON.parse(payload);
+      playerStore.setVolume(data.volume);
+      applyPlaybackPreferences();
+    }
+
+    if (typeName === types.VIDEO_MUTED) {
+      const data = JSON.parse(payload);
+      playerStore.setMuted(data.muted);
+      applyPlaybackPreferences();
+    }
+
+    if (typeName === types.VIDEO_PLAYBACK_RATE) {
+      const data = JSON.parse(payload);
+      playerStore.setPlaybackRate(data.playbackRate);
+      applyPlaybackPreferences();
     }
   });
 });
@@ -120,8 +177,15 @@ watch(
   },
 );
 
+watch(
+  () => [playerStore.volume, playerStore.muted, playerStore.playbackRate],
+  () => applyPlaybackPreferences(),
+);
+
 function onVideoCanplay() {
   if (videoEl.value) {
+    applyPlaybackPreferences();
+    seekToPendingStartTime();
     playerStore.onVideoCanplay(videoEl.value.duration);
   }
 }
@@ -137,7 +201,7 @@ function onVideoPlay() {
 }
 
 function onVideoPause() {
-  playerStore.onVideoPause();
+  playerStore.onVideoPause(videoEl.value?.currentTime);
 }
 
 function onVideoEnded() {
@@ -145,7 +209,11 @@ function onVideoEnded() {
 }
 
 function onVideoLoadStart() {
-  playerStore.onVideoPause();
+  playerStore.pauseVideo();
+}
+
+function onVideoError() {
+  playerStore.onVideoError(getVideoErrorMessage());
 }
 </script>
 
