@@ -1,16 +1,23 @@
-import { app, Tray, nativeImage, ipcMain, Menu, dialog, BrowserWindow, net, protocol, globalShortcut } from "electron";
+import { app, Tray, nativeImage, ipcMain, Menu, dialog, BrowserWindow, net, protocol, globalShortcut, session } from "electron";
 import * as Sentry from "@sentry/electron";
 import { autoUpdater } from "electron-updater";
 import * as os from "os";
 import * as types from "../src/mutation-types";
 import PlayerWindow from "./player";
 import ControllerWindow from "./controller";
-import { join } from "path";
+import * as fs from "fs";
+import * as path from "path";
 import { saveWindowBounds, loadWindowBounds } from "./windowBounds";
 import { pathToFileURL } from "url";
+import { randomUUID } from "crypto";
 
 const DEBUG = process.env.DEBUG ? true : false;
 const MAC = os.type() === "Darwin";
+const APP_PROTOCOL = "polidium";
+const APP_PROTOCOL_HOST = "app";
+const MEDIA_PROTOCOL = "media";
+const MAX_FOLDER_VIDEO_FILES = 500;
+const VIDEO_FILE_EXTENSIONS = new Set([".mp4", ".webm", ".mov", ".avi", ".mkv", ".m4v", ".3gp", ".flv", ".wmv"]);
 
 if (process.env.SENTRY_DSN) {
   Sentry.init({ dsn: process.env.SENTRY_DSN });
@@ -26,19 +33,195 @@ let ipcHandlers: Array<() => void> = [];
 let currentGlobalShortcut: string | null = null;
 let savedOpacity: number = 0.05;
 let isPlayerHidden: boolean = false;
+let protocolHandlersRegistered: boolean = false;
+const mediaFileTokens = new Map<string, string>();
 
 // media://xxxx
 protocol.registerSchemesAsPrivileged([
   {
-    scheme: "media",
+    scheme: APP_PROTOCOL,
     privileges: {
+      standard: true,
       secure: true,
       supportFetchAPI: true,
-      bypassCSP: true,
+    },
+  },
+  {
+    scheme: MEDIA_PROTOCOL,
+    privileges: {
+      standard: true,
+      secure: true,
+      supportFetchAPI: true,
       stream: true,
     },
   },
 ]);
+
+/**
+ * Returns the production app entry URL for trusted renderer checks.
+ */
+function getProductionAppEntryFileUrl(): string {
+  return pathToFileURL(path.join(__dirname, "../dist/index.html")).href;
+}
+
+/**
+ * Checks whether a renderer URL belongs to this packaged app.
+ */
+function isTrustedAppUrl(url: string): boolean {
+  try {
+    const parsedUrl = new URL(url);
+    const devUrl = process.env.VITE_DEV_SERVER_URL;
+
+    if (devUrl && parsedUrl.origin === new URL(devUrl).origin) return true;
+    if (parsedUrl.protocol === `${APP_PROTOCOL}:` && parsedUrl.hostname === APP_PROTOCOL_HOST) return true;
+
+    return url.startsWith(getProductionAppEntryFileUrl());
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Checks whether an IPC event came from one of the trusted app windows.
+ */
+function isTrustedAppIpcEvent(event: Electron.IpcMainEvent | Electron.IpcMainInvokeEvent): boolean {
+  if (!event.senderFrame) return false;
+  if (event.senderFrame !== event.sender.mainFrame) return false;
+
+  const fromPlayerWindow = event.sender === player?.win?.webContents;
+  const fromControllerWindow = event.sender === controller?.win?.webContents;
+
+  return (fromPlayerWindow || fromControllerWindow) && isTrustedAppUrl(event.senderFrame.url);
+}
+
+/**
+ * Resolves a requested app protocol URL to a file inside dist.
+ */
+function resolveAppProtocolPath(requestUrl: string): string | null {
+  const parsedUrl = new URL(requestUrl);
+  if (parsedUrl.hostname !== APP_PROTOCOL_HOST) return null;
+
+  const distRoot = path.resolve(__dirname, "../dist");
+  const rawPathname = decodeURIComponent(parsedUrl.pathname || "/index.html");
+  const pathname = rawPathname === "/" ? "/index.html" : rawPathname;
+  const filePath = path.resolve(distRoot, `.${pathname}`);
+
+  if (filePath !== distRoot && !filePath.startsWith(`${distRoot}${path.sep}`)) {
+    return null;
+  }
+
+  return filePath;
+}
+
+/**
+ * Serves packaged renderer assets from the app custom protocol.
+ */
+async function handleAppProtocolRequest(req: Request): Promise<Response> {
+  const filePath = resolveAppProtocolPath(req.url);
+  if (!filePath) {
+    return new Response("Not found", { status: 404 });
+  }
+
+  try {
+    return await net.fetch(pathToFileURL(filePath).href);
+  } catch {
+    return new Response("Not found", { status: 404 });
+  }
+}
+
+/**
+ * Creates an opaque media URL for an explicitly selected local file.
+ */
+function createMediaUrlForFile(filePath: string, fileName: string): string {
+  if (!path.isAbsolute(filePath)) {
+    throw new Error("Media file path must be absolute");
+  }
+
+  mediaFileTokens.clear();
+  const token = randomUUID();
+  mediaFileTokens.set(token, filePath);
+
+  const safeName = encodeURIComponent(fileName || path.basename(filePath));
+  return `${MEDIA_PROTOCOL}://${token}/${safeName}`;
+}
+
+/**
+ * Serves only token-approved media files.
+ */
+async function handleMediaProtocolRequest(req: Request): Promise<Response> {
+  const parsedUrl = new URL(req.url);
+  const filePath = mediaFileTokens.get(parsedUrl.hostname);
+
+  if (!filePath) {
+    return new Response("Not found", { status: 404 });
+  }
+
+  try {
+    return await net.fetch(pathToFileURL(filePath).href, { headers: req.headers });
+  } catch {
+    return new Response("Not found", { status: 404 });
+  }
+}
+
+/**
+ * Registers custom protocol handlers once per app lifetime.
+ */
+function registerProtocolHandlers(): void {
+  if (protocolHandlersRegistered) return;
+
+  protocol.handle(APP_PROTOCOL, handleAppProtocolRequest);
+  protocol.handle(MEDIA_PROTOCOL, handleMediaProtocolRequest);
+  protocolHandlersRegistered = true;
+}
+
+/**
+ * Denies browser permission prompts from remote content by default.
+ */
+function configureSessionSecurity(): void {
+  session.defaultSession.setPermissionRequestHandler((_webContents, _permission, callback) => {
+    callback(false);
+  });
+}
+
+/**
+ * Returns whether a path looks like a supported video file.
+ */
+function isSupportedVideoFilePath(filePath: string): boolean {
+  return VIDEO_FILE_EXTENSIONS.has(path.extname(filePath).toLowerCase());
+}
+
+/**
+ * Recursively lists supported videos under a folder with a fixed result cap.
+ */
+async function listVideoFilesInFolder(folderPath: string, recursive: boolean): Promise<Array<{ name: string; path: string }>> {
+  const files: Array<{ name: string; path: string }> = [];
+
+  async function visit(directoryPath: string): Promise<void> {
+    if (files.length >= MAX_FOLDER_VIDEO_FILES) return;
+
+    let entries: Array<fs.Dirent>;
+    try {
+      entries = await fs.promises.readdir(directoryPath, { withFileTypes: true });
+    } catch (error) {
+      console.warn("[Main] Skipping unreadable folder:", directoryPath, error);
+      return;
+    }
+
+    for (const entry of entries) {
+      if (files.length >= MAX_FOLDER_VIDEO_FILES) return;
+
+      const entryPath = path.join(directoryPath, entry.name);
+      if (entry.isDirectory() && recursive) {
+        await visit(entryPath);
+      } else if (entry.isFile() && isSupportedVideoFilePath(entryPath)) {
+        files.push({ name: entry.name, path: entryPath });
+      }
+    }
+  }
+
+  await visit(folderPath);
+  return files.sort((a, b) => a.name.localeCompare(b.name));
+}
 
 function cleanupWindows() {
   // IPCハンドラーをクリーンアップ
@@ -47,22 +230,27 @@ function cleanupWindows() {
 
   // ウィンドウのクリーンアップ
   if (player) {
-    player.win?.removeAllListeners();
+    player.destroy();
     player = null;
   }
   if (controller) {
-    controller.win?.removeAllListeners();
+    controller.destroy();
     controller = null;
   }
 
   // Trayのクリーンアップ
   if (tray) {
+    tray.destroy();
     tray = null;
   }
 }
 
 // ファイルパスを取得するためのipcハンドラー
-ipcMain.handle("get-file-path", async (_event, fileInfo) => {
+ipcMain.handle("get-file-path", async (event, fileInfo) => {
+  if (!isTrustedAppIpcEvent(event)) {
+    return { success: false, error: "Forbidden" };
+  }
+
   console.log("[Main] get-file-path called with:", fileInfo);
 
   // fileInfoからパスを取得
@@ -106,13 +294,42 @@ ipcMain.handle("get-file-path", async (_event, fileInfo) => {
 });
 
 // ファイル選択ダイアログを開くためのipcハンドラー
-ipcMain.handle("show-open-dialog", async (_event, options) => {
+ipcMain.handle("show-open-dialog", async (event, options) => {
+  if (!isTrustedAppIpcEvent(event)) {
+    return { canceled: true, filePaths: [] };
+  }
+
   try {
     const result = await dialog.showOpenDialog(options);
     return result;
   } catch (error) {
     console.error("[Main] Error opening dialog:", error);
     return { canceled: true, filePaths: [] };
+  }
+});
+
+// フォルダ内の動画ファイルを列挙するためのipcハンドラー
+ipcMain.handle("list-video-files", async (event, payload: { folderPath?: string; recursive?: boolean }) => {
+  if (!isTrustedAppIpcEvent(event)) {
+    return { success: false, files: [], error: "Forbidden" };
+  }
+
+  const folderPath = payload.folderPath;
+  if (!folderPath || !path.isAbsolute(folderPath)) {
+    return { success: false, files: [], error: "Invalid folder path" };
+  }
+
+  try {
+    const stats = await fs.promises.stat(folderPath);
+    if (!stats.isDirectory()) {
+      return { success: false, files: [], error: "Selected path is not a folder" };
+    }
+
+    const files = await listVideoFilesInFolder(folderPath, payload.recursive ?? true);
+    return { success: true, files, truncated: files.length >= MAX_FOLDER_VIDEO_FILES };
+  } catch (error) {
+    console.error("[Main] Error listing video files:", error);
+    return { success: false, files: [], error: String(error) };
   }
 });
 
@@ -201,7 +418,7 @@ function createWindows() {
     player.win.setBounds(savedBounds);
   }
 
-  const trayIcon = nativeImage.createFromPath(join(__dirname, "../img", "trayIconTemplate.png"));
+  const trayIcon = nativeImage.createFromPath(path.join(__dirname, "../img", "trayIconTemplate.png"));
   tray = new Tray(trayIcon);
 
   tray.on("click", (_event, bounds) => {
@@ -238,18 +455,19 @@ function createWindows() {
     if (DEBUG) console.log(typeName, payload);
 
     if (!player || !controller) return;
+    if (!isTrustedAppIpcEvent(event)) {
+      console.warn("[Main] Rejected IPC from untrusted sender:", event.senderFrame?.url);
+      return;
+    }
 
     // 送信元のウィンドウを識別
-    const isFromPlayer = event.sender === player.win?.webContents || event.sender === player.webView?.webContents;
+    const isFromPlayer = event.sender === player.win?.webContents;
     const isFromController = event.sender === controller.win?.webContents;
 
     // 送信元でないウィンドウにのみイベントを転送
     if (isFromController) {
       // コントローラーからのイベントはプレイヤーに送信
       player.win?.webContents.send(types.CONNECT_COMMIT, typeName, payload);
-      if (player.webView?.webContents) {
-        player.webView.webContents.send(types.CONNECT_COMMIT, typeName, payload);
-      }
     } else if (isFromPlayer) {
       // プレイヤーからのイベントはコントローラーに送信
       controller.win?.webContents.send(types.CONNECT_COMMIT, typeName, payload);
@@ -350,15 +568,13 @@ function createWindows() {
           // ファイル情報を取得
           const filePath = parsedPayload.file.path || "";
           const fileName = parsedPayload.file.name || "";
+          const startTime = typeof parsedPayload.startTime === "number" ? parsedPayload.startTime : 0;
 
           // パスが有効かどうかチェック
           if (filePath) {
             console.log(`[Main] Processing video file: ${parsedPayload.name}, path: ${filePath}`);
 
-            // media://プロトコルを使用してパスを変換
-            const mediaPath = pathToFileURL(filePath).href.replace(/^file:\/\//, "");
-            console.log(`[Main] Converted media path: ${mediaPath}`);
-            const mediaUrl = `media://${mediaPath}`;
+            const mediaUrl = createMediaUrlForFile(filePath, fileName);
 
             // ファイル情報をmedia://プロトコルでプレイヤーに送信
             console.log(`[Main] Sending file to player: ${parsedPayload.name}, ${mediaUrl}`);
@@ -370,6 +586,7 @@ function createWindows() {
                   name: fileName,
                   path: mediaUrl,
                 },
+                startTime,
               }),
             );
           } else {
@@ -387,14 +604,11 @@ function createWindows() {
   // 既存のリスナーを削除してから新しいリスナーを追加
   ipcMain.removeAllListeners(types.CONNECT_COMMIT);
   ipcMain.on(types.CONNECT_COMMIT, ipcHandler);
-
-  protocol.handle("media", (req) => {
-    const filePath = decodeURIComponent(req.url.slice("media://".length));
-    return net.fetch(pathToFileURL(filePath).href);
-  });
 }
 
 app.whenReady().then(() => {
+  registerProtocolHandlers();
+  configureSessionSecurity();
   createWindows();
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindows();

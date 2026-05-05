@@ -11,7 +11,7 @@ export default class ControllerWindow {
   constructor() {
     this.win = new BrowserWindow({
       width: WINDOW_WIDTH,
-      height: 360,
+      height: 420,
       show: DEBUG ? true : false,
       resizable: false,
       frame: false,
@@ -42,7 +42,7 @@ export default class ControllerWindow {
       this.win.loadURL(devUrl + "#/controller");
       this.win.webContents.openDevTools({ mode: "detach" });
     } else {
-      this.win.loadURL("file://" + __dirname + "/../dist/index.html#/controller");
+      this.win.loadURL("polidium://app/index.html#/controller");
     }
   }
 
@@ -68,7 +68,7 @@ export default class ControllerWindow {
   destroy() {
     if (this.win && !this.win.isDestroyed()) {
       this.win.removeAllListeners();
-      this.win.close();
+      this.win.destroy();
     }
   }
 }

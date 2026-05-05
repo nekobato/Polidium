@@ -1,24 +1,62 @@
 <template>
   <div class="playlist">
+    <el-alert
+      v-if="videoError"
+      class="video-error"
+      type="error"
+      :title="videoError"
+      show-icon
+      closable
+      @close="videoStore.clearVideoError"
+    />
+
     <div class="video-actions">
       <div class="action-buttons">
-        <el-button class="prev-button" type="primary" circle :disabled="!canPlayPrevious" @click="playPrevious">
+        <el-button class="prev-button" type="primary" circle :disabled="!canPlayPrevious" title="Previous" aria-label="Previous" @click="playPrevious">
           <Icon icon="mingcute:skip-previous-line" class="white-text" />
         </el-button>
-        <el-button class="pause-button" v-if="isPlaying" type="primary" size="large" circle @click="pause">
+        <el-button class="pause-button" v-if="isPlaying" type="primary" size="large" circle title="Pause" aria-label="Pause" @click="pause">
           <Icon icon="mingcute:pause-line" class="white-text" />
         </el-button>
-        <el-button class="play-button" v-if="!isPlaying" type="primary" size="large" circle :disabled="!canPlay" @click="resume">
+        <el-button class="play-button" v-if="!isPlaying" type="primary" size="large" circle :disabled="!canPlay" title="Play" aria-label="Play" @click="resume">
           <Icon icon="mingcute:play-line" class="white-text" />
         </el-button>
-        <el-button class="next-button" type="primary" circle :disabled="!canPlayNext" @click="playNext">
+        <el-button class="next-button" type="primary" circle :disabled="!canPlayNext" title="Next" aria-label="Next" @click="playNext">
           <Icon icon="mingcute:skip-forward-line" class="white-text" />
         </el-button>
       </div>
+
       <div class="seekbar-container">
         <el-slider class="seekbar" id="seekbar" :min="0" :max="100" :model-value="currentTime" @input="inputCurrentTime" show-tooltip />
       </div>
       <el-tag type="info" class="duration" size="small">{{ videoRemaining }}</el-tag>
+
+      <div class="playback-tools">
+        <el-button class="tool-button" size="small" :class="{ active: playbackMode !== 'sequence' }" :title="playbackModeLabel" :aria-label="playbackModeLabel" @click="cyclePlaybackMode">
+          <Icon :icon="playbackModeIcon" />
+        </el-button>
+
+        <el-popover placement="bottom" width="220px" trigger="click" popper-class="volume-popover">
+          <template #reference>
+            <el-button class="tool-button" size="small" :class="{ active: muted || volume === 0 }" title="Volume" aria-label="Volume">
+              <Icon :icon="volumeIcon" />
+            </el-button>
+          </template>
+          <div class="volume-panel">
+            <div class="volume-header">
+              <span>Volume</span>
+              <el-button class="mute-toggle" text size="small" @click="toggleMuted">
+                {{ muted ? "Unmute" : "Mute" }}
+              </el-button>
+            </div>
+            <el-slider :model-value="volumePercentage" :min="0" :max="100" @input="inputVolume" />
+          </div>
+        </el-popover>
+
+        <el-select class="speed-select" size="small" :model-value="playbackRate" title="Playback speed" aria-label="Playback speed" @change="inputPlaybackRate">
+          <el-option v-for="rate in playbackRates" :key="rate" :label="`${rate}x`" :value="rate" />
+        </el-select>
+      </div>
     </div>
 
     <div class="empty-queue" v-show="queueIsEmpty">
@@ -39,8 +77,8 @@
     >
       <template #default="{ data }">
         <div class="tree-node-content">
-          <span class="truncate">{{ data.name }}</span>
-          <el-button plain size="small" class="playlist-deleter" text @click.stop.prevent="removeByData(data)">
+          <span class="truncate" :title="data.name">{{ data.name }}</span>
+          <el-button plain size="small" class="playlist-deleter" text title="Remove" aria-label="Remove" @click.stop.prevent="removeByData(data)">
             <Icon icon="mingcute:close-line" />
           </el-button>
         </div>
@@ -48,10 +86,29 @@
     </el-tree>
 
     <div class="list-actions">
-      <el-button type="primary" @click="openFileDialog" round size="small" class="add-video-btn">
-        <Icon icon="mingcute:add-line" />
-      </el-button>
-      <el-button v-show="!queueIsEmpty" class="clear-btn" @click="clear" size="small" round>
+      <div class="add-actions">
+        <el-button type="primary" @click="openFileDialog" round size="small" class="add-video-btn" title="Add videos" aria-label="Add videos">
+          <Icon icon="mingcute:add-line" />
+        </el-button>
+        <el-button @click="openFolderDialog" round size="small" title="Add folder" aria-label="Add folder">
+          <Icon icon="mingcute:folder-open-line" />
+        </el-button>
+        <el-dropdown trigger="click" :disabled="!videoStore.hasRecentFiles" @command="handleRecentCommand">
+          <el-button round size="small" :disabled="!videoStore.hasRecentFiles" title="Recent files" aria-label="Recent files">
+            <Icon icon="mingcute:time-line" />
+          </el-button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item v-for="file in recentFiles" :key="file.path" :command="file">
+                {{ file.name }}
+              </el-dropdown-item>
+              <el-dropdown-item divided command="clear">Clear recent</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </div>
+
+      <el-button v-show="!queueIsEmpty" class="clear-btn" @click="clear" size="small" round title="Clear playlist" aria-label="Clear playlist">
         <Icon icon="mingcute:delete-2-line" class="icon" />
       </el-button>
     </div>
@@ -68,16 +125,47 @@ import * as types from "@/mutation-types";
 import type { NodeDropType } from "element-plus/es/components/tree/src/tree.type";
 import type Node from "element-plus/es/components/tree/src/model/node";
 
+interface QueueItem {
+  name: string;
+  path: string;
+}
+
+type PlaybackMode = "sequence" | "repeat-all" | "repeat-one" | "shuffle";
+type RecentCommand = QueueItem | "clear";
+
+const playbackRates = [0.5, 0.75, 1, 1.25, 1.5, 2];
+const playbackModeOrder: Array<PlaybackMode> = ["sequence", "repeat-all", "repeat-one", "shuffle"];
+const playbackModeMeta: Record<PlaybackMode, { label: string; icon: string }> = {
+  sequence: { label: "Sequence", icon: "mingcute:playlist-line" },
+  "repeat-all": { label: "Repeat all", icon: "mingcute:repeat-line" },
+  "repeat-one": { label: "Repeat one", icon: "mingcute:repeat-one-line" },
+  shuffle: { label: "Shuffle", icon: "mingcute:shuffle-2-line" },
+};
+
 const videoStore = useVideoStore();
 const settingsStore = useSettingsStore();
 
 const queues = computed(() => videoStore.queues);
+const recentFiles = computed(() => videoStore.recentFiles);
 const playPointer = computed(() => videoStore.playPointer);
 const queueIsEmpty = computed(() => queues.value.length === 0);
 const video = computed(() => videoStore.video);
+const videoError = computed(() => video.value.error);
 const isPlaying = computed(() => video.value.isPlaying);
+const playbackMode = computed(() => videoStore.playbackMode);
+const playbackModeIcon = computed(() => playbackModeMeta[playbackMode.value].icon);
+const playbackModeLabel = computed(() => playbackModeMeta[playbackMode.value].label);
+const volume = computed(() => videoStore.volume);
+const muted = computed(() => videoStore.muted);
+const playbackRate = computed(() => videoStore.playbackRate);
+const volumePercentage = computed(() => Math.round(volume.value * 100));
+const volumeIcon = computed(() => {
+  if (muted.value || volume.value === 0) return "mingcute:volume-mute-line";
+  if (volume.value < 0.5) return "mingcute:volume-line";
+  return "mingcute:volume-fill";
+});
 const videoRemaining = computed(() => {
-  const remainSeconds = Math.floor(video.value.duration - video.value.currentTime);
+  const remainSeconds = Math.max(0, Math.floor(video.value.duration - video.value.currentTime));
   return `${Math.floor(remainSeconds / 60)}:${("0" + (remainSeconds % 60)).slice(-2)}`;
 });
 const currentTime = computed(() => {
@@ -87,21 +175,12 @@ const currentTime = computed(() => {
 
 const treeData = computed(() => queues.value.map((q, i) => ({ ...q, id: i })));
 
-const canPlay = computed(() => {
-  return queues.value.length > 0 && videoStore.playPointer !== undefined;
-});
-
-const canPlayPrevious = computed(() => {
-  return queues.value.length > 0 && videoStore.playPointer && videoStore.playPointer > 0;
-});
-
-const canPlayNext = computed(() => {
-  return queues.value.length > 0 && videoStore.playPointer && videoStore.playPointer < queues.value.length - 1;
-});
+const canPlay = computed(() => queues.value.length > 0);
+const canPlayPrevious = computed(() => getPreviousIndex() !== null);
+const canPlayNext = computed(() => getManualNextIndex() !== null);
 
 function removeByData(data: { name: string; path: string; id: number }) {
-  const index = data.id;
-  remove(index);
+  remove(data.id);
 }
 
 function allowDrop(_dragging: Node, _drop: Node, type: NodeDropType) {
@@ -109,7 +188,6 @@ function allowDrop(_dragging: Node, _drop: Node, type: NodeDropType) {
 }
 
 function onNodeClick(_data: any, node: Node) {
-  console.log("Node clicked:", _data, node);
   const index = (node.data as any).id;
   play(index);
 }
@@ -124,35 +202,42 @@ function onNodeDrop(draggingNode: Node, dropNode: Node, type: NodeDropType) {
   }
 }
 
-function play(index: number) {
+function play(index: number, options: { restorePosition?: boolean } = {}) {
   const file = queues.value[index];
-  console.log("Playing file:", file);
   if (!file) {
-    console.error("Invalid file");
+    videoStore.setVideoError({ message: "Selected video is no longer available." });
     return;
   }
 
-  // まずはビデオ選択状態を更新
   videoStore.selectVideo({ index });
+  videoStore.addRecentFiles([file]);
   ipc.commit(types.VIDEO_SELECT, { index });
 
-  // 次にビデオプレイヤーモードに切り替え
   settingsStore.changeMode("video-player");
   ipc.commit(types.CHANGE_MODE, "video-player");
 
-  // ファイル情報をIPCを通して送信
-  const fileInfo = {
-    name: file.name,
-    // storeに保存されているパスは既に絶対パスなので、そのまま使用
-    path: file.path || "",
-  };
-
-  // IPCでファイル情報を送信（メインプロセスでパス解決される）
-  ipc.commit(types.PLAY_FILE, { file: fileInfo });
+  const startTime = options.restorePosition === false ? 0 : videoStore.getPlaybackPosition(file.path);
+  ipc.commit(types.PLAY_FILE, {
+    file: {
+      name: file.name,
+      path: file.path || "",
+    },
+    startTime,
+  });
   settingsStore.videoSelect();
 }
 
 function resume() {
+  if (playPointer.value === null) {
+    play(0);
+    return;
+  }
+
+  if (!videoStore.currentFile) {
+    play(playPointer.value);
+    return;
+  }
+
   ipc.commit(types.RESUME_FILE, {});
 }
 
@@ -161,15 +246,13 @@ function pause() {
 }
 
 function playPrevious() {
-  if (canPlayPrevious.value) {
-    videoStore.selectVideo({ index: videoStore.playPointer! - 1 });
-  }
+  const previousIndex = getPreviousIndex();
+  if (previousIndex !== null) play(previousIndex);
 }
 
 function playNext() {
-  if (canPlayNext.value) {
-    videoStore.selectVideo({ index: videoStore.playPointer! + 1 });
-  }
+  const nextIndex = getManualNextIndex();
+  if (nextIndex !== null) play(nextIndex);
 }
 
 function remove(index: number) {
@@ -184,41 +267,150 @@ function inputCurrentTime(value: number) {
   ipc.commit(types.VIDEO_SEEK, { percentage: value });
 }
 
+function cyclePlaybackMode() {
+  const currentIndex = playbackModeOrder.indexOf(playbackMode.value);
+  const nextMode = playbackModeOrder[(currentIndex + 1) % playbackModeOrder.length];
+  videoStore.setPlaybackMode(nextMode);
+}
+
+function inputVolume(value: number | number[]) {
+  const nextValue = Array.isArray(value) ? value[0] : value;
+  const nextVolume = nextValue / 100;
+  videoStore.setVolume(nextVolume);
+  ipc.commit(types.VIDEO_VOLUME, { volume: nextVolume });
+}
+
+function toggleMuted() {
+  const nextMuted = !muted.value;
+  videoStore.setMuted(nextMuted);
+  ipc.commit(types.VIDEO_MUTED, { muted: nextMuted });
+}
+
+function inputPlaybackRate(rate: number) {
+  videoStore.setPlaybackRate(rate);
+  ipc.commit(types.VIDEO_PLAYBACK_RATE, { playbackRate: rate });
+}
+
+function addFilesToQueue(files: Array<QueueItem>) {
+  if (files.length === 0) return;
+  videoStore.addQueues(files);
+}
+
 async function openFileDialog() {
   try {
-    // Electronのネイティブダイアログを使用
     const result = await ipc.showOpenDialog({
       properties: ["openFile", "multiSelections"],
       filters: [{ name: "Video Files", extensions: ["mp4", "webm", "mov", "avi", "mkv", "m4v", "3gp", "flv", "wmv"] }],
     });
 
     if (!result.canceled && result.filePaths) {
-      result.filePaths.forEach((filePath: string) => {
-        // ファイル名をパスから抽出
-        const fileName = filePath.split("/").pop() || filePath.split("\\").pop() || "Unknown";
-
-        const fileInfo = {
-          name: fileName,
+      addFilesToQueue(
+        result.filePaths.map((filePath: string) => ({
+          name: filePath.split("/").pop() || filePath.split("\\").pop() || "Unknown",
           path: filePath,
-        };
-        videoStore.addQueue(fileInfo);
-      });
+        })),
+      );
     }
   } catch (error) {
-    console.error("Error opening file dialog:", error);
+    videoStore.setVideoError({ message: `Could not open files: ${String(error)}` });
   }
 }
 
-ipc.on(types.VIDEO_CANPLAY, (...args: unknown[]) => {
-  const data = args[0] as { duration: number };
-  console.log("[VideoPlayer] Video can play:", data);
-  videoStore.videoCanplay({ duration: data.duration });
-});
+async function openFolderDialog() {
+  try {
+    const result = await ipc.showOpenDialog({
+      properties: ["openDirectory"],
+    });
 
-ipc.on(types.VIDEO_TIMEUPDATE, (...args: unknown[]) => {
-  const data = args[0] as { currentTime: number };
-  console.log("[VideoPlayer] Video update:", data);
-  videoStore.videoTimeupdate({ currentTime: data.currentTime });
+    if (result.canceled || !result.filePaths?.[0]) return;
+
+    const response = await ipc.invoke("list-video-files", {
+      folderPath: result.filePaths[0],
+      recursive: true,
+    });
+
+    if (!response.success) {
+      videoStore.setVideoError({ message: response.error || "Could not read the selected folder." });
+      return;
+    }
+
+    if (response.files.length === 0) {
+      videoStore.setVideoError({ message: "No supported videos were found in the selected folder." });
+      return;
+    }
+
+    addFilesToQueue(response.files);
+    if (response.truncated) {
+      videoStore.setVideoError({ message: "Only the first 500 supported videos were added from this folder." });
+    }
+  } catch (error) {
+    videoStore.setVideoError({ message: `Could not add folder: ${String(error)}` });
+  }
+}
+
+function handleRecentCommand(command: RecentCommand) {
+  if (command === "clear") {
+    videoStore.clearRecentFiles();
+    return;
+  }
+
+  videoStore.addQueue(command);
+}
+
+function getShuffleIndex(currentIndex: number): number | null {
+  if (queues.value.length === 0) return null;
+  if (queues.value.length === 1) return currentIndex;
+
+  const candidates = queues.value.map((_file, index) => index).filter((index) => index !== currentIndex);
+  return candidates[Math.floor(Math.random() * candidates.length)] ?? null;
+}
+
+function getPreviousIndex(): number | null {
+  const currentIndex = playPointer.value;
+  if (currentIndex === null || queues.value.length === 0) return null;
+  if (playbackMode.value === "shuffle") return getShuffleIndex(currentIndex);
+  if (currentIndex > 0) return currentIndex - 1;
+  if (playbackMode.value === "repeat-all" && queues.value.length > 1) return queues.value.length - 1;
+  return null;
+}
+
+function getManualNextIndex(): number | null {
+  const currentIndex = playPointer.value;
+  if (currentIndex === null || queues.value.length === 0) return null;
+  if (playbackMode.value === "shuffle") return getShuffleIndex(currentIndex);
+  if (currentIndex + 1 < queues.value.length) return currentIndex + 1;
+  if (playbackMode.value === "repeat-all" && queues.value.length > 1) return 0;
+  return null;
+}
+
+function getNextAutoplayIndex(): number | null {
+  const currentIndex = playPointer.value;
+  if (currentIndex === null || queues.value.length === 0) return null;
+
+  if (playbackMode.value === "repeat-one") return currentIndex;
+
+  if (playbackMode.value === "shuffle") {
+    return getShuffleIndex(currentIndex);
+  }
+
+  const nextIndex = currentIndex + 1;
+  if (nextIndex < queues.value.length) return nextIndex;
+
+  return playbackMode.value === "repeat-all" ? 0 : null;
+}
+
+function playAfterEnded() {
+  const nextIndex = getNextAutoplayIndex();
+  if (nextIndex === null) return;
+
+  play(nextIndex, { restorePosition: false });
+}
+
+ipc.on(types.CONNECT_COMMIT, (...args: unknown[]) => {
+  const [typeName] = args as [string, string];
+  if (typeName === types.VIDEO_ENDED) {
+    playAfterEnded();
+  }
 });
 </script>
 
@@ -227,13 +419,19 @@ ipc.on(types.VIDEO_TIMEUPDATE, (...args: unknown[]) => {
   width: 100%;
   max-width: 480px;
   margin: 0 auto;
-  padding: 24px 0 0 0;
+  padding: 10px 0 0 0;
 }
 
-.alist-actions {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
+.video-error {
+  margin: 0 8px 8px;
+
+  :deep(.el-alert__title) {
+    display: block;
+    max-width: 236px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 
 .empty-queue {
@@ -241,7 +439,7 @@ ipc.on(types.VIDEO_TIMEUPDATE, (...args: unknown[]) => {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  height: 120px;
+  height: 92px;
   .empty-icon {
     font-size: 24px;
     color: #b0b0b0;
@@ -256,7 +454,7 @@ ipc.on(types.VIDEO_TIMEUPDATE, (...args: unknown[]) => {
 .queue-tree {
   border: 1px solid rgba(255, 255, 255, 0.16);
   margin: 8px 8px 0;
-  height: 120px;
+  height: 104px;
   overflow-y: scroll;
   border-radius: 8px;
 }
@@ -276,11 +474,11 @@ ipc.on(types.VIDEO_TIMEUPDATE, (...args: unknown[]) => {
 }
 .video-actions {
   position: relative;
-  border-radius: 16px;
+  border-radius: 8px;
   margin: 0 auto;
 }
 .action-buttons {
-  padding: 8px;
+  padding: 6px 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -298,18 +496,56 @@ ipc.on(types.VIDEO_TIMEUPDATE, (...args: unknown[]) => {
   padding: 0 4px;
   position: absolute;
   right: 24px;
-  top: 10px;
+  top: 8px;
   min-width: 60px;
   font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+.playback-tools {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 8px 4px;
+}
+.tool-button {
+  width: 32px;
+  min-width: 32px;
+
+  &.active {
+    background-color: var(--el-color-primary);
+    color: #ffffff;
+  }
+}
+.speed-select {
+  width: 82px;
+}
+.volume-panel {
+  width: 100%;
+}
+.volume-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--el-text-color-primary);
+  font-size: 13px;
+}
+.mute-toggle {
+  min-height: 28px;
 }
 .list-actions {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin: 8px 8px 0;
-
-  .clear-btn {
-    font-weight: 500;
-    color: #ff4d4f;
-  }
+}
+.add-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.clear-btn {
+  font-weight: 500;
+  color: #ff4d4f;
 }
 </style>

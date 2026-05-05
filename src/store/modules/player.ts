@@ -20,6 +20,9 @@ export const usePlayerStore = defineStore("player", () => {
   const isPlaying = ref<boolean>(false);
   const duration = ref<number>(0);
   const currentTime = ref<number>(0);
+  const volume = ref<number>(1);
+  const muted = ref<boolean>(false);
+  const playbackRate = ref<number>(1);
 
   // Web
   const currentUrl = ref<string>("");
@@ -72,14 +75,31 @@ export const usePlayerStore = defineStore("player", () => {
     ipc.commit(types.VIDEO_PLAYED);
   }
 
-  function onVideoPause() {
+  function setVolume(newVolume: number) {
+    volume.value = Math.min(1, Math.max(0, newVolume));
+  }
+
+  function setMuted(isMuted: boolean) {
+    muted.value = isMuted;
+  }
+
+  function setPlaybackRate(rate: number) {
+    playbackRate.value = rate;
+  }
+
+  function onVideoPause(time?: number) {
     isPlaying.value = false;
-    ipc.commit(types.VIDEO_PAUSED);
+    ipc.commit(types.VIDEO_PAUSED, typeof time === "number" ? { currentTime: time } : {});
   }
 
   function onVideoEnded() {
     isPlaying.value = false;
     ipc.commit(types.VIDEO_ENDED);
+  }
+
+  function onVideoError(message: string) {
+    isPlaying.value = false;
+    ipc.commit(types.VIDEO_ERROR, { message });
   }
 
   function seekVideo(percentage: number) {
@@ -113,6 +133,9 @@ export const usePlayerStore = defineStore("player", () => {
     isPlaying,
     duration,
     currentTime,
+    volume,
+    muted,
+    playbackRate,
     currentUrl,
 
     // 計算プロパティ
@@ -129,6 +152,9 @@ export const usePlayerStore = defineStore("player", () => {
     pauseVideo,
     resumeVideo,
     openUrl,
+    setVolume,
+    setMuted,
+    setPlaybackRate,
 
     // IPCへのアクション
     onVideoCanplay,
@@ -136,5 +162,6 @@ export const usePlayerStore = defineStore("player", () => {
     onVideoPlay,
     onVideoPause,
     onVideoEnded,
+    onVideoError,
   };
 });

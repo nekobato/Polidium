@@ -29,8 +29,9 @@ const controllerCommitMap: Record<string, (payload: any) => void> = {
   [types.VIDEO_TIMEUPDATE]: (payload) => videoStore.videoTimeupdate(payload),
   [types.VIDEO_SEEK]: (payload) => videoStore.videoSeek(payload),
   [types.VIDEO_PLAYED]: () => videoStore.videoPlayed(),
-  [types.VIDEO_PAUSED]: () => videoStore.videoPaused(),
+  [types.VIDEO_PAUSED]: (payload) => videoStore.videoPaused(payload),
   [types.VIDEO_ENDED]: () => videoStore.videoEnded(),
+  [types.VIDEO_ERROR]: (payload) => videoStore.setVideoError(payload),
   [types.RELOAD]: () => settingsStore.reload(),
   [types.RESET]: () => settingsStore.reset(),
   [types.RESIZED_PLAYER]: () => settingsStore.resizePlayer({ mode: false }),
@@ -46,6 +47,9 @@ const playerCommitMap: Record<string, (payload: any) => void> = {
   [types.SET_CLICKTHROUGH]: (payload) => playerStore.setClickthrough(payload.clickThrough),
   [types.RESIZE_PLAYER]: (payload) => playerStore.setResizeMode(payload.mode),
   [types.VIDEO_SEEK]: (payload) => playerStore.seekVideo(payload.percentage),
+  [types.VIDEO_VOLUME]: (payload) => playerStore.setVolume(payload.volume),
+  [types.VIDEO_MUTED]: (payload) => playerStore.setMuted(payload.muted),
+  [types.VIDEO_PLAYBACK_RATE]: (payload) => playerStore.setPlaybackRate(payload.playbackRate),
   [types.PAUSE_FILE]: () => playerStore.pauseVideo(),
   [types.RESUME_FILE]: () => playerStore.resumeVideo(),
   [types.OPEN_URL]: (payload) => playerStore.openUrl(payload.src),
@@ -57,7 +61,7 @@ const playerCommitMap: Record<string, (payload: any) => void> = {
 };
 
 // 現在のウィンドウがPlayerかControllerかを判定
-const isPlayerWindow = window.location.pathname.includes("/player");
+const isPlayerWindow = window.location.pathname.includes("/player") || window.location.hash.startsWith("#/player");
 const commitMap = isPlayerWindow ? playerCommitMap : controllerCommitMap;
 
 ipc.on(types.CONNECT_COMMIT, (...args: unknown[]) => {
