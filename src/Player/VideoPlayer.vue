@@ -68,10 +68,10 @@ function getVideoErrorMessage(): string {
   if (!error) return `Failed to play ${fileName}.`;
 
   const reasons: Record<number, string> = {
-    [MediaError.MEDIA_ERR_ABORTED]: "Playback was aborted.",
-    [MediaError.MEDIA_ERR_NETWORK]: "A network error occurred while loading the media.",
-    [MediaError.MEDIA_ERR_DECODE]: "The media could not be decoded.",
-    [MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED]: "The media format or path is not supported.",
+    1: "Playback was aborted.",
+    2: "A network error occurred while loading the media.",
+    3: "The media could not be decoded.",
+    4: "The media format or path is not supported.",
   };
 
   return `${fileName}: ${reasons[error.code] ?? "The media could not be played."}`;

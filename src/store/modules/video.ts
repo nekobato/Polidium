@@ -83,6 +83,7 @@ export const useVideoStore = defineStore("video", () => {
   function selectVideo(payload: { index: number }) {
     playPointer.value = payload.index;
     currentFile.value = queues.value[payload.index] ?? null;
+    lastPositionSaveSecond.value = 0;
     video.error = "";
   }
 
@@ -161,6 +162,7 @@ export const useVideoStore = defineStore("video", () => {
         name: payload.file.name,
         path: payload.file.path,
       };
+      lastPositionSaveSecond.value = 0;
       video.error = "";
 
       // ファイルが設定されたら、自動的に再生スイッチをオンにする

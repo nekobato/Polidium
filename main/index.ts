@@ -199,7 +199,14 @@ async function listVideoFilesInFolder(folderPath: string, recursive: boolean): P
   async function visit(directoryPath: string): Promise<void> {
     if (files.length >= MAX_FOLDER_VIDEO_FILES) return;
 
-    const entries = await fs.promises.readdir(directoryPath, { withFileTypes: true });
+    let entries: Array<fs.Dirent>;
+    try {
+      entries = await fs.promises.readdir(directoryPath, { withFileTypes: true });
+    } catch (error) {
+      console.warn("[Main] Skipping unreadable folder:", directoryPath, error);
+      return;
+    }
+
     for (const entry of entries) {
       if (files.length >= MAX_FOLDER_VIDEO_FILES) return;
 
