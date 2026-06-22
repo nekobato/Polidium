@@ -24,10 +24,10 @@
   },
   "homepage": "https://github.com/nekobato/Polidium",
   "devDependencies": {
-    "@types/node": "25.9.2",
+    "@types/node": "25.9.3",
     "@vitejs/plugin-vue": "6.0.7",
-    "electron": "42.3.3",
-    "electron-builder": "26.15.2",
+    "electron": "42.4.0",
+    "electron-builder": "26.15.3",
     "electron-debug": "4.1.0",
     "electron-icon-builder": "2.0.1",
     "pinia": "3.0.4",
@@ -36,15 +36,15 @@
     "vite": "8.0.16",
     "vite-plugin-electron": "1.0.4",
     "vite-plugin-electron-renderer": "1.0.0",
-    "vue": "3.5.35",
-    "vue-tsc": "3.3.3"
+    "vue": "3.5.38",
+    "vue-tsc": "3.3.5"
   },
   "dependencies": {
     "@iconify/vue": "5.0.1",
     "@sentry/electron": "7.13.0",
     "@vueuse/core": "14.3.0",
     "electron-updater": "6.8.9",
-    "element-plus": "2.14.1",
+    "element-plus": "2.14.2",
     "vue-router": "5.1.0",
     "xss": "1.0.15"
   },
