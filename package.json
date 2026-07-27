@@ -5,13 +5,14 @@
   "description": "Polid Movie Screen",
   "main": "./dist-electron/index.js",
   "scripts": {
-    "test": "pnpm run test:e2e",
+    "test": "pnpm run lint",
     "prepare": "rm -rf node_modules/electron/dist && node node_modules/electron/install.js",
     "dev": "vite",
-    "build": "pnpm prepare && vue-tsc && vite build && electron-builder --config electron-builder.config.cjs",
+    "build:app": "pnpm prepare && vue-tsc && vite build",
+    "build": "pnpm run build:app && electron-builder --config electron-builder.config.cjs",
     "build:icon": "electron-icon-builder --input=./img/icon.png --output=./public",
     "lint": "tsc --noEmit && vue-tsc --noEmit",
-    "release": "pnpm build && electron-builder --publish always -c --config electron-builder.config.cjs"
+    "release": "pnpm run build:app && electron-builder --publish always --config electron-builder.config.cjs"
   },
   "repository": {
     "type": "git",
