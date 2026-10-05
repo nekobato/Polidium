@@ -33,12 +33,13 @@
     "electron-icon-builder": "2.0.1",
     "pinia": "4.0.3",
     "sass-embedded": "1.105.0",
-    "typescript": "7.0.2",
+    "typescript": "6.0.3",
     "vite": "8.3.1",
     "vite-plugin-electron": "1.1.2",
     "vite-plugin-electron-renderer": "1.0.0",
     "vue": "3.5.43",
-    "vue-tsc": "3.3.11"
+    "vue-tsc": "3.3.11",
+    "electron-builder-squirrel-windows": "26.15.3"
   },
   "dependencies": {
     "@iconify/vue": "5.0.3",
@@ -60,6 +61,9 @@
     "ignoredBuiltDependencies": [
       "@parcel/watcher",
       "phantomjs-prebuilt"
-    ]
+    ],
+    "overrides": {
+      "form-data@2": "2.5.6"
+    }
   }
 }
