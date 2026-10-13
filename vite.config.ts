@@ -22,12 +22,4 @@ export default defineConfig({
     jsxFactory: "h",
     jsxFragment: "Fragment",
   },
-
-  css: {
-    preprocessorOptions: {
-      scss: {
-        api: "modern-compiler",
-      },
-    },
-  },
 });
