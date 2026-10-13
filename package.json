@@ -11,7 +11,7 @@
     "build:app": "pnpm prepare && vue-tsc && vite build",
     "build": "pnpm run build:app && electron-builder --config electron-builder.config.cjs",
     "build:icon": "electron-icon-builder --input=./img/icon.png --output=./public",
-    "lint": "tsc --noEmit && vue-tsc --noEmit",
+    "lint": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit && vue-tsc --noEmit",
     "release": "pnpm run build:app && electron-builder --publish always --config electron-builder.config.cjs"
   },
   "repository": {
