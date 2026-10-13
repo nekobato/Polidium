@@ -1,5 +1,5 @@
 import { app, Tray, nativeImage, ipcMain, Menu, dialog, BrowserWindow, net, protocol, globalShortcut, session } from "electron";
-import * as Sentry from "@sentry/electron";
+import * as Sentry from "@sentry/electron/renderer";
 import { autoUpdater } from "electron-updater";
 import * as os from "os";
 import * as types from "../src/mutation-types";
@@ -20,7 +20,22 @@ const MAX_FOLDER_VIDEO_FILES = 500;
 const VIDEO_FILE_EXTENSIONS = new Set([".mp4", ".webm", ".mov", ".avi", ".mkv", ".m4v", ".3gp", ".flv", ".wmv"]);
 
 if (process.env.SENTRY_DSN) {
-  Sentry.init({ dsn: process.env.SENTRY_DSN });
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+    dataCollection: {
+      userInfo: false,
+      cookies: false,
+      httpHeaders: false,
+      httpBodies: [],
+      urlQueryParams: false,
+      genAI: { inputs: false, outputs: false },
+      databaseQueryData: false,
+      graphQL: { document: false, variables: false },
+      queues: false,
+      stackFrameVariables: false,
+    },
+    beforeSendLog: () => null,
+  });
 }
 
 if (MAC) app.dock?.hide();
