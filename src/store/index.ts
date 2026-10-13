@@ -1,6 +1,6 @@
 import { createPinia } from "pinia";
 import * as types from "@/mutation-types";
-import * as Sentry from "@sentry/electron";
+import * as Sentry from "@sentry/electron/renderer";
 import { useVideoStore } from "./modules/video";
 import { useWebStore } from "./modules/web";
 import { useSettingsStore } from "./modules/settings";
@@ -10,7 +10,22 @@ import ipc from "@/ipc";
 const { VITE_SENTRY_DSN } = import.meta.env;
 
 if (VITE_SENTRY_DSN) {
-  Sentry.init({ dsn: VITE_SENTRY_DSN });
+  Sentry.init({
+    dsn: VITE_SENTRY_DSN,
+    dataCollection: {
+      userInfo: false,
+      cookies: false,
+      httpHeaders: false,
+      httpBodies: [],
+      urlQueryParams: false,
+      genAI: { inputs: false, outputs: false },
+      databaseQueryData: false,
+      graphQL: { document: false, variables: false },
+      queues: false,
+      stackFrameVariables: false,
+    },
+    beforeSendLog: () => null,
+  });
 }
 
 export const pinia = createPinia();
