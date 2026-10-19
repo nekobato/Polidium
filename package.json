@@ -11,7 +11,7 @@
     "build:app": "pnpm prepare && vue-tsc && vite build",
     "build": "pnpm run build:app && electron-builder --config electron-builder.config.cjs",
     "build:icon": "electron-icon-builder --input=./img/icon.png --output=./public",
-    "lint": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit && vue-tsc --noEmit",
+    "lint": "tsc6 --noEmit -p tsconfig.node.json && tsc6 --noEmit && vue-tsc --noEmit",
     "release": "pnpm run build:app && electron-builder --publish always --config electron-builder.config.cjs"
   },
   "repository": {
@@ -33,7 +33,7 @@
     "electron-icon-builder": "2.0.1",
     "pinia": "4.0.3",
     "sass-embedded": "1.105.1",
-    "typescript": "7.0.2",
+    "typescript": "npm:@typescript/typescript6@6.0.2",
     "vite": "8.3.4",
     "vite-plugin-electron": "1.1.2",
     "vite-plugin-electron-renderer": "1.0.0",
