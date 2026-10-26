@@ -27,25 +27,25 @@
   "devDependencies": {
     "@types/node": "26.6.5",
     "@vitejs/plugin-vue": "6.0.10",
-    "electron": "44.7.0",
-    "electron-builder": "26.15.3",
+    "electron": "44.9.1",
+    "electron-builder": "26.17.0",
     "electron-debug": "5.0.0",
     "electron-icon-builder": "2.0.1",
-    "pinia": "4.0.3",
-    "sass-embedded": "1.105.1",
+    "pinia": "4.1.0",
+    "sass-embedded": "1.105.2",
     "typescript": "npm:@typescript/typescript6@6.0.2",
     "vite": "8.3.4",
     "vite-plugin-electron": "1.1.2",
     "vite-plugin-electron-renderer": "1.0.0",
-    "vue": "3.5.43",
+    "vue": "3.5.44",
     "vue-tsc": "3.3.13",
-    "electron-builder-squirrel-windows": "26.15.3"
+    "electron-builder-squirrel-windows": "26.17.0"
   },
   "dependencies": {
     "@iconify/vue": "5.0.3",
-    "@sentry/electron": "8.1.0",
+    "@sentry/electron": "8.2.0",
     "@vueuse/core": "15.0.0",
-    "electron-updater": "6.8.9",
+    "electron-updater": "6.8.10",
     "element-plus": "2.14.7",
     "vue-router": "5.4.0",
     "xss": "1.0.15"
