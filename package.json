@@ -27,7 +27,7 @@
   "devDependencies": {
     "@types/node": "26.6.5",
     "@vitejs/plugin-vue": "6.0.10",
-    "electron": "44.9.0",
+    "electron": "44.9.1",
     "electron-builder": "26.17.0",
     "electron-debug": "5.0.0",
     "electron-icon-builder": "2.0.1",
